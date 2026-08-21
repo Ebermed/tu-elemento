@@ -113,6 +113,7 @@
   <section class="pantalla" id="p-resultado">
     <p class="marca">Tu Elemento</p>
     <div id="tarjetaCaja"></div>
+    <div class="bajoTarjeta"><div class="ctaLectura">↓ Lee tu interpretación completa abajo</div></div>
     <div class="lectura" id="lectura"></div>
     <div class="acciones" style="justify-content:center; margin-top:28px; flex-wrap:wrap">
       <button class="btn" id="bajar">Descargar tarjeta</button>
@@ -336,7 +337,7 @@
     var cortos = { 'De dónde vienes':'Origen', 'Cómo trabajas':'Trabajo',
                    'Quién eres':'Tú', 'Hacia dónde vas':'Destino' };
     html += '<div class="hoja">' +
-              '<h2>Tus ' + lec.pilares.length + ' pilares</h2>' +
+              '<h2 class="titIcon">' + iconoMini('origen') + '<span>Tus ' + lec.pilares.length + ' pilares</span></h2>' +
               '<p class="sub">' + esc(t.encuadre) + ' <b>Toca cada pilar para leerlo.</b></p>' +
               '<div class="columnas" style="--n:' + lec.pilares.length + '">';
     lec.pilares.forEach(function (p, i) {
@@ -362,7 +363,7 @@
     // 3 · interacciones internas
     if (lec.tensiones.length) {
       html += '<div class="hoja">' +
-                '<h2>Lo que se jala por dentro</h2>' +
+                '<h2 class="titIcon">' + iconoMini('brasa') + '<span>Lo que se jala por dentro</span></h2>' +
                 '<p class="sub">Esto no le sale a todo el mundo. Son choques y alianzas ' +
                 'entre tus propios pilares.</p>';
       lec.tensiones.forEach(function (x) {
@@ -376,7 +377,7 @@
 
     // 4 · los vacíos
     if (lec.vacios.length) {
-      html += '<div class="hoja"><h2>Tus vacíos</h2>' +
+      html += '<div class="hoja"><h2 class="titIcon">' + iconoMini('acero') + '<span>Tus vacíos</span></h2>' +
               '<p class="sub">Hay diez tallos y doce ramas. Al emparejarlos siempre ' +
               'sobran dos ramas sin tallo: esas son tus vacíos. Un pilar vacío marca ' +
               'un territorio que tuviste que construir a mano.</p>';
