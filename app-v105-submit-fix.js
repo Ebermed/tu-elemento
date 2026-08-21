@@ -1,9 +1,42 @@
-/* TU ELEMENTO — V10.5.2 · envío robusto del formulario
+/* TU ELEMENTO — V10.5.5 · envío robusto + hotfix de render de la carta
    Una carta nueva se guarda primero y después abre por la misma ruta
-   que usa el mosaico de cartas guardadas. */
+   que usa el mosaico de cartas guardadas.
+
+   HOTFIX PILARES:
+   La lectura conserva el acordeón original. Únicamente desactiva filter y
+   backdrop-filter dentro de #lectura para evitar que un cambio de altura
+   recomponga docenas de capas glass y congele Safari/Chromium. */
 (function () {
   'use strict';
   if (typeof document === 'undefined') return;
+
+  /* Se inyecta al final del <body>, después de estilo.css, así estas reglas
+     ganan por cascada sin modificar el aspecto del resto de la aplicación. */
+  var estiloSeguro = document.createElement('style');
+  estiloSeguro.id = 'v1055-pillar-render-hotfix';
+  estiloSeguro.textContent = [
+    '#lectura .hoja,#lectura .inter,#lectura .col,#lectura .panel{',
+      '-webkit-backdrop-filter:none!important;',
+      'backdrop-filter:none!important;',
+      'filter:none!important;',
+      'will-change:auto!important;',
+    '}',
+    '#lectura .revela-prep,#lectura .revela-prep.revela-viva{',
+      'opacity:1!important;',
+      'transform:none!important;',
+      'filter:none!important;',
+      'transition:none!important;',
+    '}',
+    '#lectura .hoja{background:rgba(255,253,249,.90)!important;}',
+    '#lectura .inter{background:rgba(255,255,255,.62)!important;}',
+    '#lectura .col{',
+      'background:rgba(255,255,255,.66)!important;',
+      'transition:background .12s ease,border-color .12s ease!important;',
+    '}',
+    '#lectura .col[aria-expanded="true"]{background:rgba(255,255,255,.96)!important;}',
+    '#lectura .panel.abierto{animation:none!important;}'
+  ].join('');
+  document.head.appendChild(estiloSeguro);
 
   var boton = document.getElementById('calcular');
   var forma = document.getElementById('forma');
@@ -81,20 +114,16 @@
       });
       if (!perfil || !perfil.id) throw new Error('profile-save');
 
-      // Reutiliza la ruta estable de apertura de perfiles. El cálculo y el
-      // render ocurren tras la navegación, igual que al tocar "Ver carta".
-      globalThis.location.href = 'index.html?perfil=' + encodeURIComponent(perfil.id) + '&r=10.5.2';
+      /* Reutiliza la ruta estable de apertura de perfiles. */
+      globalThis.location.href = 'index.html?perfil=' + encodeURIComponent(perfil.id) + '&r=10.5.5';
     } catch (ex) {
       console.error('Tu Elemento · guardar carta nueva', ex);
       fallo('La carta encontró un tropiezo al guardarse. Vuelve a tocar el botón para intentarlo otra vez.');
     }
   }
 
-  // Captura vence al manejador anterior del botón y evita que dos caminos
-  // intenten generar la misma carta a la vez.
+  /* Captura vence al manejador anterior del botón y evita dos generaciones. */
   boton.addEventListener('click', enviar, true);
   forma.addEventListener('submit', enviar, true);
-
-  // Semántica nativa para teclado, lectores de pantalla y navegadores móviles.
   boton.type = 'submit';
 })();
