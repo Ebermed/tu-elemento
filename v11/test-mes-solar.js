@@ -1,3 +1,8 @@
+const M=require('./motor');
+const Z=require('./zonas');
+Object.assign(globalThis,M,Z);
+const C=require('./calendario-solar');
+Object.assign(globalThis,C);
 const S=require('./mes-solar');
 let ok=0,fail=0;
 function check(n,a,b){const bien=String(a)===String(b);console.log(`${bien?'  ok  ':' FALLA'} │ ${n.padEnd(38)} │ ${a}`);if(!bien)console.log(`       │ ${''.padEnd(38)} │ esperado: ${b}`);bien?ok++:fail++;}
