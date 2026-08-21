@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tu Elemento — ¿de qué estás hecho?</title>
+<meta name="description" content="Hace mil años, en China se leía el momento exacto de un nacimiento para saber de qué estaba hecha una persona. Esa lectura se llama BaZi. La tuya, gratis, en treinta segundos.">
+<style>
+  :root {
+    --tinta:#2E2A26; --tinta-suave:#6B6259; --papel:#FBF7F0;
+    --serif:Georgia,'Iowan Old Style','Times New Roman',serif;
+    --sans:ui-sans-serif,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; padding:0; }
+  body { background:var(--papel); color:var(--tinta); font-family:var(--sans);
+         font-size:17px; line-height:1.65; overflow-x:hidden; }
+  #fondo { position:fixed; inset:0; z-index:0; transition:opacity .8s ease; }
+  #fondo svg { width:100%; height:100%; display:block; }
+  main { position:relative; z-index:1; min-height:100vh;
+         display:flex; align-items:center; justify-content:center; padding:40px 24px; }
+  .pantalla { display:none; width:100%; max-width:560px; text-align:center;
+              animation:entrar .55s cubic-bezier(.2,.7,.3,1) both; }
+  .pantalla.viva { display:block; }
+  @keyframes entrar { from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
+  @media (prefers-reduced-motion:reduce){ .pantalla{animation:none} #fondo{transition:none} }
+
+  .marca { font-family:var(--sans); font-size:13px; letter-spacing:5px;
+           text-transform:uppercase; color:var(--tinta-suave); margin:0 0 40px; }
+  h1 { font-family:var(--serif); font-weight:400; font-size:clamp(34px,7vw,50px);
+       line-height:1.15; letter-spacing:-.5px; margin:0 0 22px; }
+  .bajada { font-size:18px; color:var(--tinta-suave); margin:0 auto 36px; max-width:430px; }
+  .bajada strong { color:var(--tinta); font-weight:500; }
+
+  .btn { font-family:var(--sans); font-size:17px; font-weight:500; color:var(--papel);
+         background:var(--tinta); border:0; border-radius:100px; padding:16px 38px;
+         cursor:pointer; transition:transform .15s, opacity .15s; }
+  .btn:hover { transform:translateY(-2px); }
+  .btn:active { transform:translateY(0); }
+  .btn:disabled { opacity:.35; cursor:default; transform:none; }
+  .btn.fantasma { background:transparent; color:var(--tinta-suave);
+                  border:1px solid rgba(0,0,0,.18); font-size:15px; padding:12px 26px; }
+
+  .diez { display:flex; flex-wrap:wrap; gap:7px 10px; justify-content:center;
+          margin:44px auto 0; max-width:420px; }
+  .diez span { font-family:var(--serif); font-size:16px; font-style:italic;
+               color:var(--tinta-suave); opacity:.75; }
+  .diez span::after { content:'·'; margin-left:10px; opacity:.4; }
+  .diez span:last-child::after { content:''; }
+
+  details { margin-top:34px; text-align:left; max-width:430px; margin-inline:auto; }
+  summary { cursor:pointer; font-size:15px; color:var(--tinta-suave); text-align:center; }
+  details p { font-size:15px; color:var(--tinta-suave); margin:14px 0 0; }
+
+  form { text-align:left; }
+  .campo { margin-bottom:22px; }
+  label { display:block; font-size:14px; font-weight:500; margin-bottom:7px; }
+  .pista { font-weight:400; color:var(--tinta-suave); font-size:13px; }
+  select, input { width:100%; font-family:var(--sans); font-size:16px; padding:12px 14px;
+                  border:1px solid rgba(0,0,0,.16); border-radius:10px;
+                  background:rgba(255,255,255,.62); color:var(--tinta); }
+  select:focus, input:focus { outline:2px solid rgba(0,0,0,.35); outline-offset:1px; }
+  .trio { display:grid; grid-template-columns:1fr 1.4fr 1fr; gap:9px; }
+  .duo { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+  #sugerencias { list-style:none; margin:4px 0 0; padding:5px; position:absolute;
+                 left:0; right:0; z-index:20; background:#FFFDF9; border-radius:11px;
+                 box-shadow:0 6px 24px rgba(0,0,0,.14); max-height:250px; overflow-y:auto;
+                 display:none; }
+  #sugerencias.abierto { display:block; }
+  #sugerencias li { padding:10px 12px; border-radius:7px; cursor:pointer; font-size:15px; }
+  #sugerencias li[aria-selected="true"], #sugerencias li:hover { background:rgba(0,0,0,.06); }
+  #sugerencias li .pais { color:var(--tinta-suave); font-size:13px; }
+  .elegido { font-size:14px; color:var(--tinta-suave); margin:8px 0 0; }
+  .elegido b { font-weight:500; color:var(--tinta); }
+  .error { color:#A33; font-size:14px; margin:8px 0 0; min-height:20px; }
+  .acciones { display:flex; gap:10px; align-items:center; margin-top:8px; }
+
+  #tarjetaCaja svg { width:100%; max-width:352px; height:auto; border-radius:14px;
+                     box-shadow:0 6px 34px rgba(0,0,0,.16); }
+
+  /* Todo el contenido va sobre papel sólido. El texto plano sobre acuarela
+     era ilegible y además no invitaba a leer nada. */
+  .hoja { background:rgba(255,253,249,.93); border-radius:16px;
+          box-shadow:0 2px 18px rgba(0,0,0,.07); padding:22px 24px;
+          margin:16px auto 0; max-width:520px; text-align:left; }
+  .hoja h2 { font-family:var(--serif); font-weight:400; font-size:23px;
+             margin:0 0 4px; letter-spacing:-.3px; }
+  .hoja .sub { font-size:14px; color:var(--tinta-suave); margin:0 0 16px; }
+  .hoja p { margin:0 0 11px; }
+  .hoja p:last-child { margin-bottom:0; }
+  .tension { font-family:var(--serif); font-style:italic; }
+
+  /* LOS CUATRO PILARES COMO CUATRO COLUMNAS.
+     Se llaman pilares porque la carta clásica se dibuja así: en columnas
+     verticales. Renderizarlos como lista era perder la estructura. */
+  .columnas { display:grid; grid-template-columns:repeat(var(--n,4),1fr);
+              gap:7px; margin:6px 0 0; }
+  /* Cada pilar es un botón que SE VE botón. Antes eran columnas
+     transparentes con un ▾ gris: nadie adivinaba que se podían tocar,
+     y en celular no hay hover que lo insinúe. */
+  .col { border:1px solid rgba(0,0,0,.13); border-radius:11px;
+         background:rgba(255,255,255,.55); font:inherit; color:inherit;
+         cursor:pointer; padding:12px 4px 10px; text-align:center;
+         transition:background .18s, border-color .18s, transform .12s; }
+  .col:hover { background:#fff; border-color:rgba(0,0,0,.26); }
+  .col:active { transform:scale(.97); }
+  .col:focus-visible { outline:2px solid var(--tinta); outline-offset:2px; }
+  .col[aria-expanded="true"] { background:#fff; border-color:var(--acento,#777);
+                               border-width:2px; padding:11px 3px 9px; }
+  .col .rot { display:block; font-size:10px; letter-spacing:1.5px;
+              text-transform:uppercase; color:var(--tinta-suave); margin-bottom:6px; }
+  .col .an { display:block; font-family:var(--serif); font-size:20px; line-height:1.15; }
+  .col .el { display:block; font-family:var(--serif); font-style:italic;
+             font-size:13px; color:var(--tinta-suave); margin-top:1px; }
+  /* La etiqueta dice con palabras lo que un icono nunca dice bien */
+  .col .vac { display:inline-block; margin-top:5px; font-size:9.5px; letter-spacing:1.3px;
+              text-transform:uppercase; padding:2px 7px; border-radius:100px;
+              background:rgba(0,0,0,.09); color:var(--tinta-suave); }
+  .col .mas { display:inline-block; margin-top:9px; font-size:11px; letter-spacing:.6px;
+              padding:3px 10px; border-radius:100px; background:var(--acento,#777);
+              color:#fff; opacity:.88; }
+  .col[aria-expanded="true"] .mas { background:transparent; color:var(--tinta-suave);
+                                    box-shadow:inset 0 0 0 1px rgba(0,0,0,.2); }
+
+  .panel { display:none; border-top:1px solid rgba(0,0,0,.10);
+           padding:16px 2px 2px; margin-top:14px; }
+  .panel.abierto { display:block; animation:entrar .3s both; }
+  .panel .quien { font-size:13px; letter-spacing:1.4px; text-transform:uppercase;
+                  color:var(--tinta-suave); margin:0 0 6px; }
+
+  /* Interacciones: lo específico, lo que no le sale a todos */
+  .inter { border-left:3px solid var(--acento,#999); padding:2px 0 2px 14px; margin:0 0 16px; }
+  .inter:last-child { margin-bottom:0; }
+  .inter .quienes { font-family:var(--serif); font-size:18px; margin:0 0 4px; }
+
+  /* Balance como barras, no como frases */
+  .barras { display:grid; grid-template-columns:repeat(5,1fr); gap:9px;
+            align-items:end; height:74px; margin:2px 0 14px; }
+  .barra { display:flex; flex-direction:column; justify-content:flex-end; height:100%; }
+  .barra i { display:block; border-radius:4px 4px 0 0; background:var(--acento,#999); }
+  .barra b { font-size:10.5px; font-weight:400; letter-spacing:1.2px; text-transform:uppercase;
+             color:var(--tinta-suave); text-align:center; margin-top:6px; }
+  .barra.cero i { opacity:.2; }
+  .barra.cero b { opacity:.45; }
+
+  /* LÍNEA DEL TIEMPO. Vertical, no horizontal: en celular una tira de
+     nueve décadas de lado obliga a hacer scroll lateral, que nadie hace. */
+  .tl { list-style:none; margin:0; padding:0; text-align:left; }
+  .tl li { display:grid; grid-template-columns:66px 1fr; gap:14px;
+           padding:14px 0; border-top:1px solid rgba(0,0,0,.09); }
+  .tl li:first-child { border-top:0; }
+  .tl .edad { font-family:var(--serif); font-size:20px; line-height:1.1; padding-top:2px; }
+  .tl .edad small { display:block; font-family:var(--sans); font-size:11px;
+                    color:var(--tinta-suave); letter-spacing:.4px; }
+  .tl .cuerpo p { margin:0 0 6px; }
+  .tl .cuerpo p:last-child { margin-bottom:0; }
+  .tl .cab { font-family:var(--serif); font-size:19px; }
+  .tl .cab em { font-style:italic; color:var(--tinta-suave); font-size:15px; }
+  .tl .ahora { background:rgba(255,255,255,.72); border-radius:12px;
+               padding:16px 14px; border-top:0; box-shadow:inset 0 0 0 2px var(--acento,#999); }
+  .tl .sello { display:inline-block; font-size:10px; letter-spacing:1.6px;
+               text-transform:uppercase; background:var(--acento,#777); color:#fff;
+               padding:3px 9px; border-radius:100px; margin-bottom:7px; }
+  .tl .futuro { opacity:.62; }
+  .tl .vac { font-size:10px; letter-spacing:1.2px; text-transform:uppercase;
+             background:rgba(0,0,0,.08); padding:2px 7px; border-radius:100px;
+             color:var(--tinta-suave); margin-left:6px; }
+  .pie { position:relative; z-index:1; text-align:center; padding:26px;
+         font-size:13px; color:var(--tinta-suave); }
+  .pie a { color:inherit; }
+</style>
+</head>
+<body>
+
+<div id="fondo" aria-hidden="true"></div>
+
+<main>
+
+  <!-- ── PORTADA ────────────────────────────────────────── -->
+  <section class="pantalla viva" id="p-portada">
+    <p class="marca">Tu Elemento</p>
+    <h1>¿De qué estás hecho?</h1>
+    <p class="bajada">
+      Hace más de mil años, en China se leía el momento exacto de un nacimiento
+      para saber de qué estaba hecha una persona: su carácter, su destino, lo que
+      se le iba a dar fácil y lo que le iba a costar toda la vida.
+    </p>
+    <p class="bajada">
+      Esa lectura todavía se hace. De los cuatro pilares que la forman, uno manda
+      sobre los demás: <strong>tu elemento</strong>. Hay diez. ¿Sabes cuál es el tuyo?
+    </p>
+    <button class="btn" id="irForm">Descubre tu elemento</button>
+
+    <div class="diez" aria-label="Los diez elementos">
+      <span>Roble</span><span>Hiedra</span><span>Sol</span><span>Brasa</span><span>Montaña</span><span>Huerto</span><span>Acero</span><span>Joya</span><span>Marea</span><span>Rocío</span>
+    </div>
+
+    <details>
+      <summary>¿Y esto qué es exactamente?</summary>
+      <p>Se llama BaZi. Es el sistema completo del que sale el animal que ya conoces,
+      y lleva más de mil años usándose en China. Se calcula con la posición del Sol
+      en tu momento exacto de nacimiento.</p>
+      <p>Los maestros clásicos lo usaban también para leer el destino. Nosotros nos
+      quedamos con quién eres, cómo te mueves y qué te cuesta. El código del cálculo
+      es abierto; puedes revisarlo tú mismo.</p>
+    </details>
+  </section>
+
+  <!-- ── FORMULARIO ─────────────────────────────────────── -->
+  <section class="pantalla" id="p-form">
+    <p class="marca">Tu Elemento</p>
+    <h1 style="font-size:clamp(27px,5.5vw,36px)">¿Cuándo llegaste?</h1>
+    <p class="bajada">Nada de esto se guarda ni se envía. El cálculo entero ocurre
+      en tu teléfono.</p>
+
+    <form id="forma" novalidate>
+      <div class="campo">
+        <label for="dia">Fecha de nacimiento</label>
+        <div class="trio">
+          <input type="number" id="dia" placeholder="Día" min="1" max="31" inputmode="numeric">
+          <select id="mes"><option value="">Mes</option></select>
+          <input type="number" id="anio" placeholder="Año" min="1900" max="2030" inputmode="numeric">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="hora">Hora <span class="pista">— opcional, afina el resultado</span></label>
+        <div class="duo">
+          <input type="number" id="hora" placeholder="Hora (0-23)" min="0" max="23" inputmode="numeric">
+          <input type="number" id="minuto" placeholder="Minutos" min="0" max="59" inputmode="numeric">
+        </div>
+        <p class="pista" style="margin:7px 0 0">Si no la sabes, déjala vacía. Tu elemento
+          no depende de la hora.</p>
+      </div>
+
+      <div class="campo">
+        <label for="sexo">Sexo registrado al nacer <span class="pista">— opcional</span></label>
+        <select id="sexo">
+          <option value="">Prefiero no decirlo</option>
+          <option value="m">Mujer</option>
+          <option value="h">Hombre</option>
+        </select>
+        <p class="pista" style="margin:7px 0 0">Solo se usa para la dirección de tus
+          décadas: el método clásico las hace avanzar o retroceder según esto. No afecta
+          nada más de tu carta.</p>
+      </div>
+
+      <div class="campo">
+        <label for="buscaLugar">Lugar de nacimiento</label>
+        <div style="position:relative">
+          <input type="text" id="buscaLugar" placeholder="Escribe tu ciudad" autocomplete="off"
+                 role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias">
+          <ul id="sugerencias" role="listbox"></ul>
+        </div>
+        <p class="pista" id="pistaLugar" style="margin:7px 0 0"></p>
+      </div>
+
+      <p class="error" id="err" role="alert"></p>
+
+      <div class="acciones">
+        <button type="submit" class="btn" id="calcular">Ver mi elemento</button>
+        <button type="button" class="btn fantasma" data-ir="p-portada">Atrás</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ── RESULTADO ──────────────────────────────────────── -->
+  <section class="pantalla" id="p-resultado">
+    <p class="marca">Tu Elemento</p>
+    <div id="tarjetaCaja"></div>
+    <div class="lectura" id="lectura"></div>
+    <div class="acciones" style="justify-content:center; margin-top:28px; flex-wrap:wrap">
+      <button class="btn" id="bajar">Descargar tarjeta</button>
+      <button class="btn fantasma" data-ir="p-form">Otra fecha</button>
+    </div>
+  </section>
+
+  <!-- ── CARTA COMPLETA ─────────────────────────────────── -->
+  <section class="pantalla" id="p-carta">
+    <p class="marca">Tu Elemento</p>
+    <div id="cartaCaja"></div>
+    <div class="acciones" style="justify-content:center; margin-top:24px; flex-wrap:wrap">
+      <button class="btn fantasma" data-ir="p-resultado">Volver a mi carta</button>
+    </div>
+  </section>
+
+</main>
+
+<p class="pie">Hecho con ♥ por Ebermedia · <a href="#" id="verCodigo">código abierto</a></p>
+
+<script src="acuarela.js"></script>
+<script src="lugares.js"></script>
+<script src="zonas.js"></script>
+<script src="motor.js"></script>
+<script src="traduccion.js"></script>
+<script src="tarjeta.js"></script>
+<script src="lectura.js"></script>
+<script src="decadas.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // Si falta un archivo, decir CUÁL en vez de soltar un ReferenceError críptico.
+  var REQUIERE = {
+    'acuarela.js':   'fondoAcuarela',
+    'zonas.js':      'utcDesdeLocal',
+    'lugares.js':    'LUGARES',
+    'motor.js':      'cuatroPilares',
+    'traduccion.js': 'traducir',
+    'tarjeta.js':    'tarjetaSVG',
+    'lectura.js':    'lecturaCompleta',
+    'decadas.js':    'decadas'
+  };
+  var faltan = [];
+  for (var arch in REQUIERE) {
+    if (typeof globalThis[REQUIERE[arch]] === 'undefined') faltan.push(arch);
+  }
+  if (faltan.length) {
+    document.querySelector('main').innerHTML =
+      '<div style="max-width:520px;text-align:left">' +
+      '<h1 style="font-size:28px">Faltan archivos</h1>' +
+      '<p>Estos deben estar en la misma carpeta que <code>index.html</code>:</p>' +
+      '<ul>' + faltan.map(function (f) { return '<li><code>' + f + '</code></li>'; }).join('') + '</ul>' +
+      '<p class="pista">Si los bajaste de uno en uno, revisa que no falte ninguno ' +
+      'y que los nombres estén idénticos.</p></div>';
+    return;
+  }
+
+  var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
+               'agosto','septiembre','octubre','noviembre','diciembre'];
+
+  // LUGARES viene de zonas.js: cada uno con su zona IANA, que resuelve el
+  // horario de verano histórico. México lo suprimió en 2022, pero quien nació
+  // en verano antes de esa fecha necesita el offset de su época.
+
+  var $ = function (s) { return document.querySelector(s); };
+  var fondo = $('#fondo');
+
+  function pintarFondo(paleta, semilla, opac) {
+    fondo.innerHTML = fondoAcuarela(paleta, 1200, 1600, {
+      semilla: semilla, opacidad: opac == null ? 1.9 : opac
+    });
+  }
+  pintarFondo(PALETA_NEUTRA, 88);
+
+  function ir(id) {
+    var vivas = document.querySelectorAll('.pantalla.viva');
+    for (var i = 0; i < vivas.length; i++) vivas[i].classList.remove('viva');
+    $('#' + id).classList.add('viva');
+    window.scrollTo(0, 0);
+  }
+
+  MESES.forEach(function (m, i) {
+    var o = document.createElement('option');
+    o.value = i + 1; o.textContent = m.charAt(0).toUpperCase() + m.slice(1);
+    $('#mes').appendChild(o);
+  });
+  // ── Combobox de ciudades ─────────────────────────────────
+  var lugarElegido = null, sugerencias = [], resaltado = -1;
+  var caja = $('#buscaLugar'), lista = $('#sugerencias');
+
+  function pintarSugerencias() {
+    lista.innerHTML = '';
+    sugerencias.forEach(function (l, i) {
+      var li = document.createElement('li');
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', i === resaltado ? 'true' : 'false');
+      li.innerHTML = l.c + ' <span class="pais">' + l.p + '</span>';
+      li.addEventListener('mousedown', function (e) { e.preventDefault(); elegir(l); });
+      lista.appendChild(li);
+    });
+    var abrir = sugerencias.length > 0;
+    lista.classList.toggle('abierto', abrir);
+    caja.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+  }
+
+  function elegir(l) {
+    lugarElegido = l;
+    caja.value = etiquetaLugar(l);
+    sugerencias = []; resaltado = -1;
+    pintarSugerencias();
+    $('#pistaLugar').innerHTML = 'Usaremos la hora solar de <b>' + l.c + '</b>.';
+    $('#pistaLugar').className = 'elegido';
+  }
+
+  caja.addEventListener('input', function () {
+    lugarElegido = null;
+    $('#pistaLugar').textContent = '';
+    $('#pistaLugar').className = 'pista';
+    sugerencias = this.value.trim() ? buscarLugares(this.value, 8) : [];
+    resaltado = sugerencias.length ? 0 : -1;
+    pintarSugerencias();
+  });
+
+  caja.addEventListener('keydown', function (e) {
+    if (!sugerencias.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); resaltado = (resaltado + 1) % sugerencias.length; pintarSugerencias(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); resaltado = (resaltado - 1 + sugerencias.length) % sugerencias.length; pintarSugerencias(); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (resaltado >= 0) elegir(sugerencias[resaltado]); }
+    else if (e.key === 'Escape') { sugerencias = []; pintarSugerencias(); }
+  });
+
+  caja.addEventListener('blur', function () {
+    setTimeout(function () { sugerencias = []; pintarSugerencias(); }, 120);
+  });
+
+  if (!soportaZonasHistoricas()) {
+    $('#pistaLugar').insertAdjacentHTML('afterend',
+      '<p class="pista" style="margin:7px 0 0">Tu navegador no trae el historial ' +
+      'de horarios; si naciste en verano antes de 2022 el pilar de hora puede ' +
+      'correrse una hora.</p>');
+  }
+
+  $('#irForm').addEventListener('click', function () { ir('p-form'); });
+  document.addEventListener('click', function (e) {
+    var d = e.target.getAttribute && e.target.getAttribute('data-ir');
+    if (d) ir(d);
+  });
+
+  var ultimo = null;
+
+  $('#forma').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var err = $('#err');
+    err.textContent = '';
+
+    var dia = parseInt($('#dia').value, 10);
+    var mes = parseInt($('#mes').value, 10);
+    var anio = parseInt($('#anio').value, 10);
+
+    if (!dia || !mes || !anio) { err.textContent = 'Faltan datos de la fecha.'; return; }
+    if (anio < 1900 || anio > 2030) { err.textContent = 'El año debe estar entre 1900 y 2030.'; return; }
+    var maxDia = new Date(anio, mes, 0).getDate();
+    if (dia < 1 || dia > maxDia) {
+      err.textContent = MESES[mes - 1] + ' de ' + anio + ' tiene ' + maxDia + ' días.'; return;
+    }
+
+    var hTxt = $('#hora').value, mTxt = $('#minuto').value;
+    var sinHora = hTxt === '';
+    var hora = sinHora ? 12 : parseInt(hTxt, 10);
+    var minuto = mTxt === '' ? 0 : parseInt(mTxt, 10);
+    if (!sinHora && (hora < 0 || hora > 23)) { err.textContent = 'La hora va de 0 a 23.'; return; }
+    if (minuto < 0 || minuto > 59) { err.textContent = 'Los minutos van de 0 a 59.'; return; }
+
+    if (!lugarElegido) {
+      err.textContent = 'Elige tu ciudad de la lista.';
+      caja.focus(); return;
+    }
+    var lug = lugarElegido;
+    var sexoElegido = $('#sexo').value;
+
+    var carta;
+    try {
+      carta = cuatroPilares({
+        anio: anio, mes: mes, dia: dia, hora: hora, minuto: minuto,
+        zona: lug.z, longitud: lug.lon
+      });
+    } catch (ex) {
+      err.textContent = 'No se pudo calcular esa fecha. Revisa los datos.';
+      return;
+    }
+
+    var t = traducir(carta);
+    ultimo = { t: t, sinHora: sinHora, semilla: dia * 31 + mes, sexo: sexoElegido,
+               carta: carta, nacAnio: anio, nacMes: mes, nacDia: dia,
+               nacimiento: dia + ' de ' + MESES[mes - 1] + ' de ' + anio +
+                 (sinHora ? '' : ' · ' + String(hora).padStart(2,'0') + ':' + String(minuto).padStart(2,'0')) +
+                 ' · ' + lug.c };
+
+    var id = IDENTIDADES[carta.diaMaestro.pinyin];
+    var lec = lecturaCompleta(carta, sinHora);
+    pintarFondo(id.paleta, dia * 31 + mes, 1.15);
+
+    $('#tarjetaCaja').innerHTML = tarjetaSVG(t, {
+      semilla: dia * 31 + mes,
+      lectura: lec,
+      pie: 'hecho por Ebermedia'
+    });
+
+    var L = t.lectura;
+    var esc = function (x) { return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;'); };
+
+    // Acento del elemento, para que la pantalla entera tome su color
+    document.documentElement.style.setProperty('--acento', id.paleta[2]);
+
+    var html = '';
+
+    // 1 · quién eres
+    html += '<div class="hoja">' +
+              '<h2>' + esc(L.titular) + '</h2>' +
+              '<p class="sub">' + esc(L.imagen) + '</p>' +
+              '<p>' + esc(lec.elemento.movimiento) + '</p>' +
+              '<p class="tension">' + esc(lec.elemento.tension) + '</p>' +
+            '</div>';
+
+    // 2 · los cuatro pilares, en columnas
+    var cortos = { 'De dónde vienes':'Origen', 'Cómo trabajas':'Trabajo',
+                   'Quién eres':'Tú', 'Hacia dónde vas':'Destino' };
+    html += '<div class="hoja">' +
+              '<h2>Tus ' + lec.pilares.length + ' pilares</h2>' +
+              '<p class="sub">' + esc(t.encuadre) + ' <b>Toca cada pilar para leerlo.</b></p>' +
+              '<div class="columnas" style="--n:' + lec.pilares.length + '">';
+    lec.pilares.forEach(function (p, i) {
+      html += '<button class="col" type="button" data-p="' + i + '" aria-expanded="' + (i === 0 ? 'true' : 'false') + '" aria-controls="pan' + i + '">' +
+                '<span class="rot">' + esc(cortos[p.titulo] || p.titulo) + '</span>' +
+                '<span class="an">' + esc(p.animal) + '</span>' +
+                '<span class="el">' + esc(p.elementoCrudo) + '</span>' +
+                (p.vacio ? '<span class="vac">vacío</span>' : '') +
+                '<span class="mas">' + (i === 0 ? 'cerrar' : 'leer') + '</span>' +
+              '</button>';
+    });
+    html += '</div>';
+    lec.pilares.forEach(function (p, i) {
+      html += '<div class="panel' + (i === 0 ? ' abierto' : '') + '" id="pan' + i + '">' +
+                '<p class="quien">' + esc(p.titulo) + ' · ' + esc(p.etapa) + '</p>' +
+                '<p>' + esc(p.intro) + '</p>' +
+                '<p>' + esc(p.movimiento) + '</p>' +
+                '<p class="tension">' + esc(p.tension) + '</p>' +
+              '</div>';
+    });
+    html += '</div>';
+
+    // 3 · interacciones internas
+    if (lec.tensiones.length) {
+      html += '<div class="hoja">' +
+                '<h2>Lo que se jala por dentro</h2>' +
+                '<p class="sub">Esto no le sale a todo el mundo. Son choques y alianzas ' +
+                'entre tus propios pilares.</p>';
+      lec.tensiones.forEach(function (x) {
+        html += '<div class="inter">' +
+                  '<p class="quienes">' + esc(x.detalle) + '</p>' +
+                  '<p>' + esc(x.texto) + '</p>' +
+                '</div>';
+      });
+      html += '</div>';
+    }
+
+    // 4 · los vacíos
+    if (lec.vacios.length) {
+      html += '<div class="hoja"><h2>Tus vacíos</h2>' +
+              '<p class="sub">Hay diez tallos y doce ramas. Al emparejarlos siempre ' +
+              'sobran dos ramas sin tallo: esas son tus vacíos. Un pilar vacío marca ' +
+              'un territorio que tuviste que construir a mano.</p>';
+      lec.vacios.forEach(function (v) {
+        html += '<div class="inter">' +
+                  '<p class="quienes">' + esc(v.titulo) + '</p>' +
+                  '<p>' + esc(v.texto) + '</p>' +
+                  '<p class="tension">' + esc(v.filo) + '</p>' +
+                '</div>';
+      });
+      html += '</div>';
+    }
+
+    // 5 · balance, como barras
+    var orden = ['madera','fuego','tierra','metal','agua'];
+    var maxN = 1;
+    orden.forEach(function (e) { maxN = Math.max(maxN, lec.balance.conteo[e] || 0); });
+    html += '<div class="hoja"><h2>Tu balance</h2>' +
+            '<p class="sub">Cuánto de cada elemento traes en los ' +
+            (lec.pilares.length * 2) + ' caracteres de tu carta.</p><div class="barras">';
+    orden.forEach(function (e) {
+      var n = lec.balance.conteo[e] || 0;
+      html += '<div class="barra' + (n === 0 ? ' cero' : '') + '">' +
+                '<i style="height:' + Math.max(5, (n / maxN) * 100) + '%"></i>' +
+                '<b>' + e + '</b>' +
+              '</div>';
+    });
+    html += '</div>';
+    lec.balance.matices.forEach(function (m) { html += '<p>' + esc(m) + '</p>'; });
+    if (!lec.balance.matices.length) html += '<p>Tus cinco elementos están repartidos sin extremos.</p>';
+    html += '</div>';
+
+    // 6 · avisos
+    var aviso = '';
+    if (sinHora) aviso = 'Sin tu hora de nacimiento falta un pilar de los cuatro. Tu elemento es correcto, pero con la hora la carta se completa.';
+    else if (carta.avisoZona === 'repetida') aviso = 'Naciste durante el cambio de horario, en una hora que ocurrió dos veces esa noche. Tomamos la primera.';
+    else if (carta.avisoZona === 'hueco') aviso = 'Naciste en el salto del cambio de horario: esa hora de reloj no existió. Ajustamos al horario que entró.';
+    if (aviso) html += '<div class="hoja"><p class="pista">' + aviso + '</p></div>';
+
+    html += '<div class="hoja" style="text-align:center">' +
+              '<h2>Tus décadas</h2>' +
+              '<p class="sub">Todo lo de arriba es quién eres, y se queda igual toda ' +
+              'la vida. Tus décadas marcan por dónde vas pasando: cada diez años entras ' +
+              'a un pilar nuevo que le cambia el clima a tu carta.</p>' +
+              (sexoElegido
+                ? '<button class="btn" id="verCarta" style="margin-top:6px">Ver mi línea del tiempo</button>'
+                : '<p class="pista">Para calcularlas hace falta el sexo registrado al nacer, ' +
+                  'porque el método clásico lo usa para saber si tus décadas avanzan o retroceden. ' +
+                  'Vuelve al formulario si quieres agregarlo.</p>') +
+            '</div>';
+
+    $('#lectura').innerHTML = html;
+
+    // Las columnas abren su lectura. Así no hay un scroll larguísimo de
+    // texto plano: cada quien abre el pilar que le interesa.
+    var cols = $('#lectura').querySelectorAll('.col');
+    Array.prototype.forEach.call(cols, function (b) {
+      b.addEventListener('click', function () {
+        var i = b.getAttribute('data-p');
+        var pan = $('#pan' + i);
+        var abierto = b.getAttribute('aria-expanded') === 'true';
+        Array.prototype.forEach.call(cols, function (o) {
+          o.setAttribute('aria-expanded','false');
+          o.querySelector('.mas').textContent = 'leer';
+        });
+        Array.prototype.forEach.call($('#lectura').querySelectorAll('.panel'),
+          function (o) { o.classList.remove('abierto'); });
+        if (!abierto) {
+          b.setAttribute('aria-expanded','true');
+          b.querySelector('.mas').textContent = 'cerrar';
+          pan.classList.add('abierto');
+        }
+      });
+    });
+
+    ultimo.lec = lec;
+
+    var btnCarta = $('#verCarta');
+    if (btnCarta) btnCarta.addEventListener('click', function () {
+      var dec = decadas(ultimo.carta, ultimo.sexo, 9);
+      var edad = edadHoy(ultimo.nacAnio, ultimo.nacMes, ultimo.nacDia);
+      $('#cartaCaja').innerHTML = lineaTiempoHTML(ultimo.t, ultimo.lec, dec, edad);
+      ir('p-carta');
+    });
+
+    ir('p-resultado');
+  });
+
+  /* La línea del tiempo. Es la razón de ser de esta segunda pantalla:
+     un EJE DISTINTO. La primera dice quién eres y no cambia; esta dice
+     por dónde vas pasando. Repetir la primera con otro formato no
+     aportaba nada. */
+  function lineaTiempoHTML(t, lec, dec, edad) {
+    var esc = function (x) { return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;'); };
+    var actual = decadaActual(dec, edad);
+    var h = '<div class="hoja"><h2>Tu línea del tiempo</h2>' +
+            '<p class="sub">Tus décadas ' +
+            (dec.direccion === 'adelante' ? 'avanzan' : 'retroceden') +
+            ' en el ciclo y arrancaron a los ' + dec.edadInicio + '. ' +
+            'Hoy tienes ' + edad + '.</p><ul class="tl">';
+
+    dec.lista.forEach(function (d, i) {
+      var esAhora = i === actual;
+      var esFuturo = i > actual;
+      var an = ANIMALES[d.rama.pinyin];
+      var idn = IDENTIDADES[d.tallo.pinyin];
+      h += '<li class="' + (esAhora ? 'ahora' : esFuturo ? 'futuro' : '') + '">' +
+             '<div class="edad">' + d.desde + '<small>a ' + d.hasta + '</small></div>' +
+             '<div class="cuerpo">' +
+               (esAhora ? '<span class="sello">Aquí andas</span>' : '') +
+               '<p class="cab">' + esc(an.nombre) + ' de ' + esc(d.elemento) +
+                 ' <em>· ' + esc(idn.nombre) + '</em>' +
+                 (d.enVacio ? '<span class="vac">vacío</span>' : '') + '</p>' +
+               (esAhora
+                 ? '<p>' + esc(an.movimiento) + '</p><p class="tension">' + esc(an.tension) + '</p>'
+                 : '<p class="pista">' + esc(an.frase) + '</p>') +
+             '</div>' +
+           '</li>';
+    });
+    h += '</ul></div>';
+
+    if (actual >= 0 && actual + 1 < dec.lista.length) {
+      var sig = dec.lista[actual + 1];
+      h += '<div class="hoja"><h2>Lo que sigue</h2>' +
+           '<p class="sub">A los ' + sig.desde + ' cambias de década.</p>' +
+           '<p>' + esc(ANIMALES[sig.rama.pinyin].movimiento) + '</p>' +
+           '<p class="tension">' + esc(ANIMALES[sig.rama.pinyin].tension) + '</p></div>';
+    }
+    return h;
+  }
+
+  /* Descarga un <svg> del DOM como PNG. El tamaño sale del propio SVG,
+     porque la carta completa crece según cuánto contenido tenga. */
+  function descargarSVG(svg, nombre) {
+    if (!svg) return;
+    var w = parseInt(svg.getAttribute('width'), 10) || 1080;
+    var h = parseInt(svg.getAttribute('height'), 10) || 1350;
+    var s = new XMLSerializer().serializeToString(svg);
+    var url = URL.createObjectURL(new Blob([s], { type: 'image/svg+xml;charset=utf-8' }));
+    var img = new Image();
+    img.onload = function () {
+      var c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#FBF7F0'; ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      c.toBlob(function (b) {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(b);
+        a.download = nombre + '.png';
+        a.click();
+      });
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); };
+    img.src = url;
+  }
+
+  $('#bajar').addEventListener('click', function () {
+    if (!ultimo) return;
+    descargarSVG($('#tarjetaCaja svg'), 'tu-elemento-' + ultimo.t.tarjeta.nombre.toLowerCase());
+  });
+
+
+})();
+</script>
+</body>
+</html>
