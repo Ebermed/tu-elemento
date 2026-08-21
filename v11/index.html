@@ -5,11 +5,53 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
 <meta name="theme-color" content="#FBF7F0">
+<meta name="tu-elemento-release" content="V1 Artx">
 <title>Tu Elemento</title>
 <meta name="description" content="Descubre tu elemento base, guarda tus cartas y consulta su calendario.">
-<link rel="stylesheet" href="app.css?b=11.2">
+<link rel="stylesheet" href="app.css?b=1.0.0-artx">
 <style>
 .perfilIcono .iconito{width:42px!important;height:42px!important;min-width:42px!important;margin:0!important;background:transparent!important;box-shadow:none!important}.perfilIcono .iconito svg{width:27px!important;height:27px!important;max-width:27px!important;max-height:27px!important;stroke-width:2.15!important;opacity:.88}
+
+/* V1 Artx · navegación de carta */
+#p-resultado{position:relative}
+.cartaVolver{
+  position:absolute;top:-10px;left:0;z-index:5;
+  width:44px;height:44px;padding:0;
+  display:grid;place-items:center;
+  appearance:none;-webkit-appearance:none;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.82);
+  background:linear-gradient(150deg,rgba(255,255,255,.76),rgba(255,255,255,.38));
+  -webkit-backdrop-filter:blur(16px) saturate(155%);
+  backdrop-filter:blur(16px) saturate(155%);
+  box-shadow:0 8px 24px rgba(58,43,34,.09),inset 0 1px 0 rgba(255,255,255,.95);
+  color:var(--tinta);font-family:var(--serif);font-size:28px;line-height:1;
+  cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,background .16s ease;
+}
+.cartaVolver:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(58,43,34,.12),inset 0 1px 0 rgba(255,255,255,1)}
+.cartaVolver:active{transform:scale(.96)}
+.cartaVolver:focus-visible{outline:2px solid var(--acento,var(--tinta));outline-offset:3px}
+
+/* V1 Artx · la tarjeta compartible vive en su propia placa */
+#compartirMarco #tarjetaCaja{
+  width:min(100%,390px);
+  margin:22px auto 18px;
+  padding:14px;
+  display:grid;place-items:center;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.86);
+  background:linear-gradient(155deg,rgba(255,255,255,.56),rgba(255,250,244,.34));
+  box-shadow:0 12px 34px rgba(58,43,34,.07),inset 0 1px 0 rgba(255,255,255,.95);
+}
+#compartirMarco #tarjetaCaja svg{
+  display:block!important;
+  width:100%!important;
+  max-width:352px!important;
+  height:auto!important;
+  margin:0 auto!important;
+}
+#compartirMarco .compartirAcciones{justify-content:center}
+@media(max-width:620px){.cartaVolver{top:-4px;left:2px;width:42px;height:42px;font-size:27px}#compartirMarco #tarjetaCaja{padding:11px;border-radius:21px}}
 </style>
 </head>
 <body>
@@ -52,17 +94,18 @@
 <section class="pantalla" id="p-carta"><p class="marca">Tu Elemento</p><div id="cartaCaja"></div><div class="acciones" style="justify-content:center;margin-top:24px;flex-wrap:wrap"><button class="btn fantasma" type="button" id="volverResultado">Volver a mi carta</button></div></section>
 </main>
 <p class="pie">Hecho con ♥ por Ebermedia · <a href="calendario.html">calendario del día</a></p>
-<script src="acuarela.js?b=11.2"></script>
-<script src="lugares.js?b=11.2"></script>
-<script src="zonas.js?b=11.2"></script>
-<script src="motor.js?b=11.2"></script>
-<script src="traduccion.js?b=11.2"></script>
-<script src="tarjeta.js?b=11.2"></script>
-<script src="lectura.js?b=11.2"></script>
-<script src="lectura-personalizada.js?b=11.2"></script>
-<script src="decadas.js?b=11.2"></script>
-<script src="base.js?b=11.2"></script>
-<script src="pilares.js?b=11.2"></script>
-<script src="app.js?b=11.2"></script>
+<script src="release.js?b=1.0.0-artx"></script>
+<script src="acuarela.js?b=1.0.0-artx"></script>
+<script src="lugares.js?b=1.0.0-artx"></script>
+<script src="zonas.js?b=1.0.0-artx"></script>
+<script src="motor.js?b=1.0.0-artx"></script>
+<script src="traduccion.js?b=1.0.0-artx"></script>
+<script src="tarjeta.js?b=1.0.0-artx"></script>
+<script src="lectura.js?b=1.0.0-artx"></script>
+<script src="lectura-personalizada.js?b=1.0.0-artx"></script>
+<script src="decadas.js?b=1.0.0-artx"></script>
+<script src="base.js?b=1.0.0-artx"></script>
+<script src="pilares.js?b=1.0.0-artx"></script>
+<script src="app.js?b=1.0.0-artx"></script>
 </body>
 </html>
