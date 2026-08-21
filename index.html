@@ -12,9 +12,8 @@
 <script>
 (function(){
   'use strict';
-  var extra=location.search ? '&'+location.search.slice(1) : '';
-  var destino='app-source-v10.html?v=10.4.0'+extra;
-  window.location.replace(destino);
+  var extra=location.search ? location.search : '';
+  window.location.replace('app-v105.html'+extra);
 })();
 </script>
 </body>
