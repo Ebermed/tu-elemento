@@ -22,6 +22,23 @@ jobs:
           node test.js
           node test-decadas.js
           node test-mensual.js
+      - name: Monthly vocabulary guard
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const files=['v11/lectura-mensual.js','v11/mes.js','v11/test-mensual.js'];
+          const text=files.map(f=>fs.readFileSync(f,'utf8')).join('\n');
+          const forbidden=[
+            /\bRD\b/,/\bRI\b/,/\bCD\b/,/\bCI\b/,/\bPD\b/,/\bPI\b/,/\bED\b/,/\bEI\b/,/\bID\b/,/\bII\b/,
+            /Relación Directa/i,/Relación Indirecta/i,/Creatividad Directa/i,/Creatividad Indirecta/i,
+            /Prosperidad Directa/i,/Prosperidad Indirecta/i,/Emoción Directa/i,/Emoción Indirecta/i,
+            /Intelecto Directo/i,/Intelecto Indirecto/i,
+            /\bFlorecer\b/i,/\bProsperar\b/i,/\bCoronar\b/i,/\bRenovar\b/i,/\bExtinguir\b/i,/\bConcebir\b/i,/\bNutrir\b/i
+          ];
+          const hits=forbidden.filter(r=>r.test(text)).map(String);
+          if(hits.length) throw new Error('Vocabulario mensual reservado detectado: '+hits.join(', '));
+          console.log('Monthly vocabulary guard: OK');
+          NODE
       - name: V11 architecture contract
         run: |
           node - <<'NODE'
