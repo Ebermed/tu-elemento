@@ -6,21 +6,23 @@ function $(s,r){return (r||document).querySelector(s);}
 function esc(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 var css=document.createElement('style');
-css.id='te-pulido-103-css';
+css.id='te-pulido-104-css';
 css.textContent=[
   '#lectura .pilarEstaticoLectura>p:nth-of-type(2){margin-bottom:13px!important}',
   '#lectura .pilarEstaticoLectura>p:nth-of-type(n+3){font-size:15px!important;line-height:1.58!important;color:rgba(107,98,89,.82)!important}',
   '#lectura .pilarEstaticoLectura>p.tension:nth-of-type(n+3){font-size:15px!important;color:rgba(91,82,74,.76)!important}',
   '@media(max-width:540px){#lectura .pilarEstaticoLectura>p:nth-of-type(n+3){font-size:14.5px!important;line-height:1.57!important}}',
 
-  /* La continuidad depende solo de que la carta esté activa. */
+  /* Affordance explícito: la carta continúa por debajo del primer viewport. */
   '#seguirCarta{display:none!important}',
-  '#p-resultado.viva #seguirCarta{display:grid!important;position:fixed!important;z-index:140!important;left:50%!important;bottom:max(22px,env(safe-area-inset-bottom,0px))!important;transform:translateX(-50%)!important;width:min(382px,calc(100vw - 28px))!important;margin:0!important;padding:12px 12px 12px 18px!important;border:1px solid rgba(255,255,255,.92)!important;border-radius:999px!important;background:linear-gradient(155deg,rgba(255,255,255,.91),rgba(255,255,255,.64))!important;box-shadow:0 18px 48px rgba(58,43,34,.20),inset 0 1px 0 rgba(255,255,255,1)!important;-webkit-backdrop-filter:blur(22px) saturate(165%)!important;backdrop-filter:blur(22px) saturate(165%)!important;opacity:1!important;pointer-events:auto!important;transition:opacity .22s ease,transform .22s ease!important}',
+  '#p-resultado.viva::after{content:"";position:fixed;z-index:125;left:0;right:0;bottom:0;height:128px;pointer-events:none;background:linear-gradient(to bottom,rgba(251,247,240,0),rgba(251,247,240,.34) 38%,rgba(251,247,240,.74) 100%);opacity:1;transition:opacity .22s ease}',
+  '#p-resultado.viva.teYaLeyendo::after{opacity:0}',
+  '#p-resultado.viva #seguirCarta{display:grid!important;grid-template-columns:1fr 42px!important;grid-template-rows:auto auto!important;column-gap:10px!important;align-items:center!important;position:fixed!important;z-index:140!important;left:50%!important;bottom:calc(env(safe-area-inset-bottom,0px) + 96px)!important;transform:translateX(-50%)!important;width:min(360px,calc(100vw - 34px))!important;margin:0!important;padding:12px 12px 12px 18px!important;border:1px solid rgba(255,255,255,.96)!important;border-radius:999px!important;background:linear-gradient(155deg,rgba(255,255,255,.96),rgba(255,255,255,.72))!important;box-shadow:0 16px 44px rgba(58,43,34,.18),inset 0 1px 0 rgba(255,255,255,1)!important;-webkit-backdrop-filter:blur(22px) saturate(165%)!important;backdrop-filter:blur(22px) saturate(165%)!important;opacity:1!important;pointer-events:auto!important;transition:opacity .22s ease,transform .22s ease!important;text-align:left!important}',
   '#p-resultado.viva #seguirCarta.teContinuidadOculta{opacity:0!important;pointer-events:none!important;transform:translate(-50%,12px)!important}',
-  '#p-resultado.viva #seguirCarta .seguirTexto{font-size:16px!important;font-weight:680!important;font-style:normal!important;letter-spacing:-.1px!important}',
-  '#p-resultado.viva #seguirCarta small{font-size:9px!important;letter-spacing:.72px!important;color:var(--tinta-suave)!important}',
-  '#p-resultado.viva #seguirCarta .seguirFlecha{width:38px!important;height:38px!important;font-size:22px!important;background:rgba(255,255,255,.72)!important;border:1px solid rgba(255,255,255,.92)!important;box-shadow:0 4px 13px rgba(58,43,34,.08)!important}',
-  '@media(max-width:430px){#p-resultado.viva #seguirCarta{width:calc(100vw - 24px)!important;bottom:max(14px,env(safe-area-inset-bottom,0px))!important;padding:11px 11px 11px 16px!important}#p-resultado.viva #seguirCarta .seguirTexto{font-size:15.5px!important}}',
+  '#p-resultado.viva #seguirCarta .seguirTexto{grid-column:1;grid-row:1;font-size:16px!important;font-weight:700!important;font-style:normal!important;letter-spacing:-.1px!important;line-height:1.15!important;color:var(--tinta)!important}',
+  '#p-resultado.viva #seguirCarta small{grid-column:1;grid-row:2;font-size:10.5px!important;letter-spacing:.15px!important;line-height:1.25!important;color:var(--tinta-suave)!important;margin-top:2px!important;text-transform:none!important}',
+  '#p-resultado.viva #seguirCarta .seguirFlecha{grid-column:2;grid-row:1/3;width:42px!important;height:42px!important;display:grid!important;place-items:center!important;border-radius:50%!important;font-size:24px!important;line-height:1!important;background:rgba(255,255,255,.82)!important;border:1px solid rgba(255,255,255,.98)!important;box-shadow:0 4px 14px rgba(58,43,34,.10)!important;color:var(--tinta)!important}',
+  '@media(max-width:430px){#p-resultado.viva #seguirCarta{width:calc(100vw - 26px)!important;bottom:calc(env(safe-area-inset-bottom,0px) + 88px)!important;padding:11px 11px 11px 16px!important}#p-resultado.viva #seguirCarta .seguirTexto{font-size:15.5px!important}#p-resultado.viva #seguirCarta small{font-size:10px!important}}',
 
   '#lectura .teBloqueMes{text-align:center}',
   '#lectura .teBloqueMes .btn{display:inline-block;margin-top:6px;text-decoration:none}',
@@ -73,10 +75,12 @@ function actualizarContinuidad(){
   scrollPendiente=false;
   var btn=$('#seguirCarta'),res=$('#p-resultado');
   if(!btn||!res)return;
-  btn.classList.toggle('teContinuidadOculta',window.scrollY>180);
+  var ya=window.scrollY>170;
+  btn.classList.toggle('teContinuidadOculta',ya);
+  res.classList.toggle('teYaLeyendo',ya);
   var t=$('.seguirTexto',btn),s=$('small',btn);
-  if(t)t.textContent='Hay mucho más en tu carta';
-  if(s)s.textContent='4 pilares · balance · tu mes · calendario · ciclos';
+  if(t)t.textContent='Sigue leyendo';
+  if(s)s.textContent='Tu carta completa continúa abajo';
 }
 function pedirContinuidad(){
   if(scrollPendiente)return;
