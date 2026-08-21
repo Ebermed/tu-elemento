@@ -12,46 +12,11 @@
 <link rel="stylesheet" href="solar.css?b=solar-0.1">
 <style>
 .perfilIcono .iconito{width:42px!important;height:42px!important;min-width:42px!important;margin:0!important;background:transparent!important;box-shadow:none!important}.perfilIcono .iconito svg{width:27px!important;height:27px!important;max-width:27px!important;max-height:27px!important;stroke-width:2.15!important;opacity:.88}
-
-/* V1 Artx · navegación de carta */
 #p-resultado{position:relative}
-.cartaVolver{
-  position:absolute;top:-10px;left:0;z-index:5;
-  width:44px;height:44px;padding:0;
-  display:grid;place-items:center;
-  appearance:none;-webkit-appearance:none;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.82);
-  background:linear-gradient(150deg,rgba(255,255,255,.76),rgba(255,255,255,.38));
-  -webkit-backdrop-filter:blur(16px) saturate(155%);
-  backdrop-filter:blur(16px) saturate(155%);
-  box-shadow:0 8px 24px rgba(58,43,34,.09),inset 0 1px 0 rgba(255,255,255,.95);
-  color:var(--tinta);font-family:var(--serif);font-size:28px;line-height:1;
-  cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,background .16s ease;
-}
-.cartaVolver:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(58,43,34,.12),inset 0 1px 0 rgba(255,255,255,1)}
-.cartaVolver:active{transform:scale(.96)}
-.cartaVolver:focus-visible{outline:2px solid var(--acento,var(--tinta));outline-offset:3px}
-
-/* V1 Artx · la tarjeta compartible vive en su propia placa */
-#compartirMarco #tarjetaCaja{
-  width:min(100%,390px);
-  margin:22px auto 18px;
-  padding:14px;
-  display:grid;place-items:center;
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,.86);
-  background:linear-gradient(155deg,rgba(255,255,255,.56),rgba(255,250,244,.34));
-  box-shadow:0 12px 34px rgba(58,43,34,.07),inset 0 1px 0 rgba(255,255,255,.95);
-}
-#compartirMarco #tarjetaCaja svg{
-  display:block!important;
-  width:100%!important;
-  max-width:352px!important;
-  height:auto!important;
-  margin:0 auto!important;
-}
-#compartirMarco .compartirAcciones{justify-content:center}
+.cartaVolver{position:absolute;top:-10px;left:0;z-index:5;width:44px;height:44px;padding:0;display:grid;place-items:center;appearance:none;-webkit-appearance:none;border-radius:50%;border:1px solid rgba(255,255,255,.82);background:linear-gradient(150deg,rgba(255,255,255,.76),rgba(255,255,255,.38));-webkit-backdrop-filter:blur(16px) saturate(155%);backdrop-filter:blur(16px) saturate(155%);box-shadow:0 8px 24px rgba(58,43,34,.09),inset 0 1px 0 rgba(255,255,255,.95);color:var(--tinta);font-family:var(--serif);font-size:28px;line-height:1;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+.cartaVolver:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(58,43,34,.12),inset 0 1px 0 rgba(255,255,255,1)}.cartaVolver:active{transform:scale(.96)}.cartaVolver:focus-visible{outline:2px solid var(--acento,var(--tinta));outline-offset:3px}
+#compartirMarco #tarjetaCaja{width:min(100%,390px);margin:22px auto 18px;padding:14px;display:grid;place-items:center;border-radius:24px;border:1px solid rgba(255,255,255,.86);background:linear-gradient(155deg,rgba(255,255,255,.56),rgba(255,250,244,.34));box-shadow:0 12px 34px rgba(58,43,34,.07),inset 0 1px 0 rgba(255,255,255,.95)}
+#compartirMarco #tarjetaCaja svg{display:block!important;width:100%!important;max-width:352px!important;height:auto!important;margin:0 auto!important}#compartirMarco .compartirAcciones{justify-content:center}
 @media(max-width:620px){.cartaVolver{top:-4px;left:2px;width:42px;height:42px;font-size:27px}#compartirMarco #tarjetaCaja{padding:11px;border-radius:21px}}
 </style>
 </head>
@@ -71,7 +36,6 @@
 <section class="bibliotecaCartas" id="bibliotecaCartas" hidden><div class="bibliotecaCab"><div><p class="miniKicker">Tus cartas</p><h2>Aquí están tus cartas</h2><p class="sub">Elige una para abrir su lectura o entra a su calendario.</p></div><button class="btn fantasma miniBtn" type="button" data-nueva-carta>+ Nueva carta</button></div><div class="listaPerfiles" id="listaPerfiles"></div></section>
 <p id="portadaCalendario" style="margin-top:22px"><a class="btn fantasma" href="calendario.html">Ver el calendario de hoy</a></p>
 </section>
-
 <section class="pantalla" id="p-form">
 <p class="marca">Tu Elemento</p>
 <h1 id="tituloForm" style="font-size:clamp(27px,5.5vw,36px)">¿Cuándo naciste?</h1>
@@ -86,12 +50,10 @@
 <div class="acciones"><button type="submit" class="btn" id="calcular">Ver mi elemento</button><button type="button" class="btn fantasma" id="volverPortada">Atrás</button></div>
 </form>
 </section>
-
 <section class="pantalla" id="p-resultado">
 <button class="cartaVolver" id="volverCartas" type="button" aria-label="Volver a tus cartas">‹</button><p class="marca">Tu Elemento</p><p class="resultadoContexto" id="resultadoContexto" hidden></p><div id="resultadoHero" class="resultadoHero"></div><div class="acciones resultadoAcciones"><button class="btn" type="button" id="bajarTop">Descargar tarjeta</button></div><button class="seguirCarta" id="seguirCarta" type="button" aria-label="Seguir leyendo tu carta"><span class="seguirTexto">Tu carta sigue</span><small>4 pilares · balance · calendario · ciclos</small><span class="seguirFlecha" aria-hidden="true">↓</span></button><div class="lectura" id="lectura"></div>
 <section class="compartirMarco" id="compartirMarco"><h2 class="titIcon cent" id="compartirTitulo">Tu tarjeta para compartir</h2><p class="sub compartirIntro">Esta es la versión breve de tu carta, pensada para guardar o compartir. El resto de la lectura queda aquí contigo.</p><div id="tarjetaCaja"></div><div class="acciones compartirAcciones"><button class="btn" type="button" id="bajarFinal">Descargar tarjeta</button><button class="btn fantasma" type="button" data-nueva-carta>Calcular otra carta</button></div></section>
 </section>
-
 <section class="pantalla" id="p-carta"><p class="marca">Tu Elemento</p><div id="cartaCaja"></div><div class="acciones" style="justify-content:center;margin-top:24px;flex-wrap:wrap"><button class="btn fantasma" type="button" id="volverResultado">Volver a mi carta</button></div></section>
 </main>
 <p class="pie">Hecho con ♥ por Ebermedia · <a href="calendario.html">calendario del día</a></p>
@@ -110,6 +72,6 @@
 <script src="pilares.js?b=1.0.1-artx"></script>
 <script src="app.js?b=1.0.0-artx"></script>
 <script src="solar-presentacion.js?b=solar-0.1"></script>
-<script src="pulido-ui.js?b=1.0.2-artx"></script>
+<script src="pulido-ui.js?b=1.0.3-artx"></script>
 </body>
 </html>
