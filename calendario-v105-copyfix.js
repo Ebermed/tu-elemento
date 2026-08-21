@@ -34,8 +34,8 @@
 
     var si = caja.querySelector('.listas .si h3');
     var evitar = caja.querySelector('.listas .no h3');
-    if (si) si.textContent = 'Te recomendamos';
-    if (evitar) evitar.textContent = 'Es mejor no hacer';
+    if (si && si.textContent !== 'Te recomendamos') si.textContent = 'Te recomendamos';
+    if (evitar && evitar.textContent !== 'Es mejor no hacer') evitar.textContent = 'Es mejor no hacer';
 
     if (sinCartas()) {
       var pil = caja.querySelector('.pil');
