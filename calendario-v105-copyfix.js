@@ -48,6 +48,7 @@
     var st = document.createElement('style');
     st.id = 'te-cal-copyfix-css';
     st.textContent = [
+      '.calSinPerfil{display:none!important}',
       '.lecturaGeneralEtiqueta{position:relative;display:inline-flex;align-items:center;gap:8px;font-family:inherit}',
       '.lecturaGeneralAyuda{width:22px;height:22px;border-radius:999px;border:1px solid rgba(46,42,38,.22);background:rgba(255,255,255,.52);color:var(--tinta);font:600 12px/1 Georgia,serif;display:inline-grid;place-items:center;padding:0;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}',
       '.lecturaGeneralTooltip{position:absolute;z-index:40;left:50%;bottom:calc(100% + 12px);transform:translateX(-50%);width:min(290px,78vw);padding:13px 14px;border-radius:16px;background:rgba(255,253,249,.94);border:1px solid rgba(255,255,255,.9);box-shadow:0 12px 34px rgba(46,42,38,.14);font-family:var(--sans);font-size:13px;line-height:1.45;text-align:left;color:var(--tinta-suave);-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%)}',
