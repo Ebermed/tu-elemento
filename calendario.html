@@ -80,6 +80,17 @@
   })) return;
 
   var diaVisto = null;
+
+  function iconoMini(tipo) {
+    var path = {
+      madera:'M11 19c0-5 3-9 5-12 2 3 5 7 5 12M16 11c-2 0-4-1-5-3',
+      fuego:'M14 20c0-4 5-5 5-9 0-3-2-5-4-7 0 3-2 4-4 6-2 2-3 4-3 7 0 4 3 7 6 7s5-2 5-4z',
+      tierra:'M5 17 12 7l7 10H5z',
+      metal:'M12 4l7 7-7 9-7-9 7-7z',
+      agua:'M12 4c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z'
+    };
+    return '<span class="iconito" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="' + (path[tipo] || path.tierra) + '"/></svg></span>';
+  }
   // Si ya calculó su carta antes, el calendario la recuerda y personaliza.
   var mia = cartaGuardada();
 
@@ -106,7 +117,7 @@
         '<p class="dow">' + DOW[f.getDay()] + '</p>' +
         '<p class="num">' + f.getDate() + '</p>' +
         '<p class="mes">' + MESES[f.getMonth()] + ' de ' + f.getFullYear() + '</p>' +
-        '<p class="pil">' + esc(p.rama.animal) + ' de ' + esc(p.tallo.elemento) + '</p>' +
+        '<p class="pil">' + iconoMini(p.tallo.elemento) + esc(p.rama.animal) + ' de ' + esc(p.tallo.elemento) + '</p>' +
       '</div>' +
       '<p class="tipoDia">Día para ' + esc(d.oficial.nombre.toLowerCase()) + '</p>' +
       '<div class="medidor"><i style="width:' + d.puntaje + '%"></i></div>' +
@@ -154,7 +165,11 @@
 
   $('#diaAnt').addEventListener('click', function () { moverDia(-1); });
   $('#diaSig').addEventListener('click', function () { moverDia(1); });
-  $('#diaHoy').addEventListener('click', function () { pintarDia(new Date(), 0); });
+  $('#diaHoy').addEventListener('click', function () {
+    var hoy = new Date();
+    if (enMes) verDia(hoy, 'zoom');
+    else pintarDia(hoy, 0);
+  });
 
   document.addEventListener('keydown', function (e) {
     var n = e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowRight' ? 1 : 0;
@@ -162,20 +177,6 @@
     if (enMes) { var f = new Date(mesVisto.getTime()); f.setMonth(f.getMonth() + n); pintarMes(f, n); }
     else moverDia(n);
   });
-  (function () {
-    var x0 = null, z = $('#p-dias');
-    z.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, {passive:true});
-    z.addEventListener('touchend', function (e) {
-      if (x0 === null) return;
-      var dx = e.changedTouches[0].clientX - x0;
-      if (Math.abs(dx) > 55) {
-        var n = dx < 0 ? 1 : -1;
-        if (enMes) { var f = new Date(mesVisto.getTime()); f.setMonth(f.getMonth() + n); pintarMes(f, n); }
-        else moverDia(n);
-      }
-      x0 = null;
-    }, {passive:true});
-  })();
 
   // ── VISTA DE MES ────────────────────────────────────────
   var mesVisto = null;
@@ -210,8 +211,7 @@
              '<span class="pt" style="opacity:' + (0.18 + ev.puntaje / 125).toFixed(2) + '"></span>' +
            '</button>';
     }
-    h += '</div><p class="leyenda" style="margin-top:14px">La barra de cada día crece con ' +
-         'lo que sopla a favor. Toca uno para verlo.</p></div>';
+    h += '</div></div>';
 
     var caja = $('#mesCaja');
     caja.innerHTML = h;

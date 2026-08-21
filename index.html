@@ -237,6 +237,26 @@
 
   var ultimo = null;
 
+  function iconoMini(tipo) {
+    var path = {
+      roble:'M11 19c0-5 3-9 5-12 2 3 5 7 5 12M16 11c-2 0-4-1-5-3',
+      hiedra:'M6 16c4-6 7-8 12-10-1 5-4 9-10 13-1-2-2-2-2-3z',
+      sol:'M12 5v2M12 17v2M5 12h2M17 12h2M7.5 7.5l1.5 1.5M15 15l1.5 1.5M16.5 7.5 15 9M9 15l-1.5 1.5M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8z',
+      brasa:'M14 20c0-4 5-5 5-9 0-3-2-5-4-7 0 3-2 4-4 6-2 2-3 4-3 7 0 4 3 7 6 7s5-2 5-4z',
+      montaña:'M5 17 12 7l7 10H5z',
+      huerto:'M7 17h10M9 17v-4m6 4v-6M8 10c1-2 3-3 4-5 1 2 3 3 4 5',
+      acero:'M12 4l7 7-7 9-7-9 7-7z',
+      joya:'M12 5l6 4-2 8h-8L6 9l6-4z',
+      marea:'M4 14c2-2 4-2 6 0s4 2 6 0 4-2 4-2M4 10c2-2 4-2 6 0s4 2 6 0 4-2 4-2',
+      rocío:'M12 4c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z',
+      origen:'M5 17 12 7l7 10H5z',
+      trabajo:'M7 8h10v10H7zM9 8V6h6v2',
+      tú:'M12 12a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM6 19a6.5 6.5 0 0 1 12 0',
+      destino:'M12 5v14M12 5l-4 4M12 5l4 4'
+    };
+    return '<span class="iconito" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="' + (path[tipo] || path.tú) + '"/></svg></span>';
+  }
+
   $('#forma').addEventListener('submit', function (e) {
     e.preventDefault();
     var err = $('#err');
@@ -305,7 +325,7 @@
 
     // 1 · quién eres
     html += '<div class="hoja">' +
-              '<h2>' + esc(L.titular) + '</h2>' +
+              '<h2 class="titIcon">' + iconoMini(t.tarjeta.nombre.toLowerCase()) + '<span>' + esc(L.titular) + '</span></h2>' +
               '<p class="sub">' + esc(L.imagen) + '</p>' +
               '<p>' + esc(lec.elemento.movimiento) + '</p>' +
               '<p class="tension">' + esc(lec.elemento.tension) + '</p>' +
@@ -320,7 +340,7 @@
               '<div class="columnas" style="--n:' + lec.pilares.length + '">';
     lec.pilares.forEach(function (p, i) {
       html += '<button class="col" type="button" data-p="' + i + '" aria-expanded="' + (i === 0 ? 'true' : 'false') + '" aria-controls="pan' + i + '">' +
-                '<span class="rot">' + esc(cortos[p.titulo] || p.titulo) + '</span>' +
+                '<span class="rot">' + iconoMini((cortos[p.titulo] || p.titulo).toLowerCase()) + esc(cortos[p.titulo] || p.titulo) + '</span>' +
                 '<span class="an">' + esc(p.animal) + '</span>' +
                 '<span class="el">' + esc(p.elementoCrudo) + '</span>' +
                 (p.vacio ? '<span class="vac">vacío</span>' : '') +
@@ -373,7 +393,7 @@
     var orden = ['madera','fuego','tierra','metal','agua'];
     var maxN = 1;
     orden.forEach(function (e) { maxN = Math.max(maxN, lec.balance.conteo[e] || 0); });
-    html += '<div class="hoja"><h2>Tu balance</h2>' +
+    html += '<div class="hoja"><h2 class="titIcon">' + iconoMini('joya') + '<span>Tu balance</span></h2>' +
             '<p class="sub">Cuánto de cada elemento traes en los ' +
             (lec.pilares.length * 2) + ' caracteres de tu carta.</p><div class="barras">';
     orden.forEach(function (e) {
@@ -389,7 +409,7 @@
     html += '</div>';
 
     html += '<div class="hoja" style="text-align:center">' +
-              '<h2>La energía de cada día</h2>' +
+              '<h2 class="titIcon cent">' + iconoMini('marea') + '<span>La energía de cada día</span></h2>' +
               '<p class="sub">Tu carta no cambia, pero los días sí. Mira para qué sirve ' +
               'hoy, y qué días chocan con tu signo.</p>' +
               '<a class="btn" href="calendario.html" style="margin-top:6px;display:inline-block">Ver el calendario</a>' +
@@ -403,7 +423,7 @@
     if (aviso) html += '<div class="hoja"><p class="pista">' + aviso + '</p></div>';
 
     html += '<div class="hoja" style="text-align:center">' +
-              '<h2>Tus décadas</h2>' +
+              '<h2 class="titIcon cent">' + iconoMini('destino') + '<span>Tus décadas</span></h2>' +
               '<p class="sub">Todo lo de arriba es quién eres, y se queda igual toda ' +
               'la vida. Tus décadas marcan por dónde vas pasando: cada diez años entras ' +
               'a un pilar nuevo que le cambia el clima a tu carta.</p>' +
@@ -416,6 +436,7 @@
 
     $('#lectura').innerHTML = html;
     $('#lectura').classList.add('escalona');   // las hojas entran una tras otra
+    activarApariciones($('#lectura'));
 
     // Las columnas abren su lectura. Así no hay un scroll larguísimo de
     // texto plano: cada quien abre el pilar que le interesa.
@@ -453,6 +474,7 @@
       var edad = edadHoy(ultimo.nacAnio, ultimo.nacMes, ultimo.nacDia);
       $('#cartaCaja').innerHTML = lineaTiempoHTML(ultimo.t, ultimo.lec, dec, edad);
       $('#cartaCaja').classList.add('escalona');
+      activarApariciones($('#cartaCaja'));
       ir('p-carta');
     });
 
@@ -466,7 +488,7 @@
   function lineaTiempoHTML(t, lec, dec, edad) {
     var esc = function (x) { return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;'); };
     var actual = decadaActual(dec, edad);
-    var h = '<div class="hoja"><h2>Tu línea del tiempo</h2>' +
+    var h = '<div class="hoja"><h2 class="titIcon">' + iconoMini('destino') + '<span>Tu línea del tiempo</span></h2>' +
             '<p class="sub">Tus décadas ' +
             (dec.direccion === 'adelante' ? 'avanzan' : 'retroceden') +
             ' en el ciclo y arrancaron a los ' + dec.edadInicio + '. ' +
