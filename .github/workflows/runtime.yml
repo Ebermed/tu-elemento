@@ -1,4 +1,4 @@
-name: Tu Elemento runtime
+name: Tu Elemento V11 runtime
 
 on:
   push:
@@ -13,9 +13,30 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install jsdom
-        run: npm install --no-save jsdom@24
-      - name: UI contract
-        run: node test-ui-v105.js
-      - name: Runtime new-chart flow
-        run: node test-runtime-v105.js
+      - name: Syntax
+        run: |
+          for f in v11/*.js; do node --check "$f"; done
+      - name: Core calculations
+        run: |
+          cd v11
+          node test.js
+          node test-decadas.js
+      - name: V11 architecture contract
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const index=fs.readFileSync('v11/index.html','utf8');
+          const base=fs.readFileSync('v11/base.js','utf8');
+          const pillars=fs.readFileSync('v11/pilares.js','utf8');
+          const calendar=fs.readFileSync('v11/calendario.html','utf8');
+          function ok(v,msg){if(!v)throw new Error(msg)}
+          ok(index.includes('app.css')&&index.includes('app.js')&&index.includes('pilares.js'),'V11 index asset graph');
+          ok(index.includes('id="calcular"')&&index.includes('type="button"'),'single-click form route');
+          ok(!index.includes('?v=')&&!index.includes('v105')&&!index.includes('v10'),'legacy entry reference');
+          ok(base.includes("tuelemento.v11.perfiles"),'V11 storage key');
+          ok(base.includes("11-clean-20260821"),'V11 reset epoch');
+          ok(!base.includes('LLAVE_ANTERIOR')&&!base.includes('_migrarNacimientoAnterior')&&!base.includes('guardarNacimiento'),'legacy storage API');
+          ok(!pillars.includes('requestAnimationFrame')&&!pillars.includes('cloneNode')&&!pillars.includes('scrollHeight'),'pillar layout work');
+          ok(calendar.includes('calendario.js')&&calendar.includes('calendario-presentacion.js'),'calendar graph');
+          console.log('V11 architecture contract: OK');
+          NODE
