@@ -22,6 +22,7 @@ jobs:
           node test.js
           node test-decadas.js
           node test-mensual.js
+          node test-mes-solar.js
       - name: Monthly vocabulary guard
         run: |
           node - <<'NODE'
@@ -47,6 +48,7 @@ jobs:
           const base=fs.readFileSync('v11/base.js','utf8');
           const pillars=fs.readFileSync('v11/pilares.js','utf8');
           const calendar=fs.readFileSync('v11/calendario.html','utf8');
+          const month=fs.readFileSync('v11/mes.html','utf8');
           function ok(v,msg){if(!v)throw new Error(msg)}
           ok(index.includes('app.css')&&index.includes('app.js')&&index.includes('pilares.js'),'V11 index asset graph');
           ok(index.includes('id="calcular"')&&index.includes('type="button"'),'single-click form route');
@@ -56,5 +58,6 @@ jobs:
           ok(!base.includes('LLAVE_ANTERIOR')&&!base.includes('_migrarNacimientoAnterior')&&!base.includes('guardarNacimiento'),'legacy storage API');
           ok(!pillars.includes('requestAnimationFrame')&&!pillars.includes('cloneNode')&&!pillars.includes('scrollHeight'),'pillar layout work');
           ok(calendar.includes('calendario.js')&&calendar.includes('calendario-presentacion.js'),'calendar graph');
+          ok(month.includes('mes-solar.js')&&month.includes('mes.js'),'monthly solar graph');
           console.log('V11 architecture contract: OK');
           NODE
