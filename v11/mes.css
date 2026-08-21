@@ -1,0 +1,87 @@
+/* TU ELEMENTO — sección independiente Tu mes */
+
+body.mesApp main{align-items:flex-start;padding-top:34px;padding-bottom:52px}
+.mensualPantalla{max-width:620px!important}
+.mensualPantalla .marca{margin-bottom:22px}
+.mensualPantalla>h1{font-size:clamp(30px,6vw,44px);margin-bottom:10px}
+.mesBajada{max-width:470px;margin:0 auto 24px;color:var(--tinta-suave);font-size:16px;line-height:1.6}
+
+.mesPerfilBox{max-width:520px;margin:0 auto 18px;padding:14px 16px;border:1px solid rgba(255,255,255,.62);border-radius:18px;background:rgba(255,255,255,.35);box-shadow:0 6px 24px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,.8);text-align:left}
+.mesPerfilBox label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tinta-suave);margin-bottom:5px}
+.mesPerfilBox select{padding:9px 12px;background:rgba(255,255,255,.58)}
+.mesPerfilMeta{margin:6px 2px 0;font-size:12px;color:var(--tinta-suave)}
+
+.mesNavBar{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:10px;max-width:520px;margin:0 auto 14px}
+.mesNavBar button{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.68);background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 3px 14px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,.86);font:inherit;font-size:22px;color:var(--tinta);cursor:pointer}
+.mesNavCentro{display:flex;justify-content:center;align-items:center;min-width:0}
+.mesNavCentro button{width:auto;height:auto;min-height:42px;border-radius:999px;padding:9px 18px;font-size:14px;line-height:1.15;max-width:100%}
+.mesNavCentro button strong{display:block;font-family:var(--serif);font-size:19px;font-weight:400;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mesNavCentro button span{display:block;font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--tinta-suave);margin-top:2px}
+
+#mesContenido{max-width:520px;margin:0 auto}
+.mesHero{overflow:hidden;padding:28px 24px 24px}
+.mesHero:before{content:'';position:absolute;inset:auto -30% -44% 18%;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.42),rgba(255,255,255,0) 70%);pointer-events:none}
+.mesEyebrow{margin:0 0 7px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--tinta-suave)}
+.mesHero h2{font-family:var(--serif);font-size:clamp(29px,7vw,40px);font-weight:400;line-height:1.08;letter-spacing:-.4px;margin:0 0 8px}
+.mesPilar{margin:0;color:var(--tinta-suave);font-family:var(--serif);font-style:italic;font-size:16px;text-transform:capitalize}
+.mesEtapaWrap{margin-top:25px;padding-top:20px;border-top:1px solid rgba(0,0,0,.09)}
+.mesEtapaRot{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--tinta-suave);margin:0 0 2px}
+.mesEtapa{font-family:var(--serif);font-size:31px;line-height:1.1;margin:0}
+.mesEtapaTitular{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.35;margin:10px 0 0}
+.mesIntro{margin:14px 0 0;color:var(--tinta-suave);font-size:15px;line-height:1.62}
+
+.mesSeccion{margin-top:14px;background:rgba(255,253,249,.9);border:1px solid rgba(255,255,255,.72);border-radius:20px;box-shadow:0 5px 22px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.9);padding:21px 21px;text-align:left}
+.mesSeccion h3{font-family:var(--serif);font-size:22px;font-weight:400;line-height:1.2;margin:0 0 8px}
+.mesSeccion p{margin:0 0 10px;line-height:1.62}
+.mesSeccion p:last-child{margin-bottom:0}
+.mesSeccion .mesSub{font-size:13px;color:var(--tinta-suave);margin-bottom:11px}
+.mesLista{list-style:none;margin:10px 0 0;padding:0}
+.mesLista li{position:relative;padding:9px 0 9px 22px;border-top:1px solid rgba(0,0,0,.07);line-height:1.5}
+.mesLista li:first-child{border-top:0}
+.mesLista li:before{content:'·';position:absolute;left:4px;top:7px;font-family:var(--serif);font-size:25px;line-height:1;color:var(--acento,var(--tinta-suave))}
+
+.mesDos{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.mesDos .mesSeccion{margin-top:0}
+.mesClave{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--tinta-suave);margin-bottom:5px!important}
+.mesFoco{font-family:var(--serif);font-size:18px;line-height:1.45}
+
+.mesInter{padding:13px 0;border-top:1px solid rgba(0,0,0,.08)}
+.mesInter:first-of-type{border-top:0;padding-top:4px}
+.mesInter b{font-family:var(--serif);font-weight:400;font-size:18px}
+.mesInter span{display:inline-block;margin-left:7px;padding:2px 8px;border-radius:999px;font-size:9px;letter-spacing:1px;text-transform:uppercase;background:rgba(0,0,0,.06);color:var(--tinta-suave);vertical-align:2px}
+.mesInter p{font-size:14px;color:var(--tinta-suave);margin:4px 0 0}
+
+.mesPerfilFila{display:grid;grid-template-columns:72px 1fr;gap:12px;padding:10px 0;border-top:1px solid rgba(0,0,0,.07);align-items:start}
+.mesPerfilFila:first-of-type{border-top:0}
+.mesPerfilCodigo{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:var(--acento,var(--tinta));color:white;font-size:10px;letter-spacing:1px;padding:4px 7px;min-width:38px}
+.mesPerfilFila b{font-weight:500}
+.mesPerfilFila small{display:block;color:var(--tinta-suave);line-height:1.45;margin-top:2px}
+
+.mesTecnico{margin-top:18px;max-width:520px}
+.mesTecnico summary{text-align:left;padding:0 4px}
+.mesTecnico p{font-size:13px}
+.mesNota{font-size:12px!important;line-height:1.5!important;padding-top:10px;border-top:1px solid rgba(0,0,0,.08)}
+
+.mesAcciones{justify-content:center!important;margin-top:22px!important;flex-wrap:wrap}
+.mesAcciones a{text-decoration:none}
+
+.mesSinCarta{max-width:520px;margin:26px auto 0;padding:28px 24px;text-align:center}
+.mesSinCarta h2{font-family:var(--serif);font-size:28px;font-weight:400;margin:0 0 9px}
+.mesSinCarta p{color:var(--tinta-suave);margin:0 auto 20px;max-width:390px}
+.mesSinCarta a{text-decoration:none;display:inline-block}
+
+.mesEntrada{animation:mesEntrada .34s cubic-bezier(.22,.68,.24,1) both}
+@keyframes mesEntrada{from{opacity:0;transform:translateY(8px) scale(.995)}to{opacity:1;transform:none}}
+
+@media(max-width:520px){
+  body.mesApp main{padding:24px 14px 42px}
+  .mesPerfilBox{padding:12px 13px}
+  .mesHero{padding:24px 20px 21px;border-radius:22px}
+  .mesSeccion{padding:19px 18px;border-radius:18px}
+  .mesDos{grid-template-columns:1fr;gap:12px}
+  .mesNavBar{grid-template-columns:44px 1fr 44px}
+  .mesNavBar>button{width:44px;height:44px}
+  .mesNavCentro button{padding:8px 14px}
+}
+
+@media(prefers-reduced-motion:reduce){.mesEntrada{animation:none}}
