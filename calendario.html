@@ -154,6 +154,7 @@
       caja.style.setProperty('--dir', (dir || 0) >= 0 ? '16px' : '-16px');
       caja.style.animation = 'none'; void caja.offsetWidth; caja.style.animation = '';
     }
+    activarApariciones(caja);
     diaVisto = f;
   }
 
@@ -205,7 +206,7 @@
       // el retraso escalonado hace que la rejilla se arme en cascada
       var retraso = (arranque + d - 1) * 8;
       h += '<button class="celda' + (esHoy(d) ? ' hoy' : '') + '" data-d="' + d + '" ' +
-             'style="animation-delay:' + retraso + 'ms" ' +
+             'style="animation-delay:' + retraso + 'ms;--nivel:' + (ev.puntaje / 100).toFixed(2) + '" ' +
              'aria-label="' + d + ' de ' + MESES[m] + '. ' + vientoDelDia(ev.puntaje) + '">' +
              '<span class="n">' + d + '</span>' +
              '<span class="pt" style="opacity:' + (0.18 + ev.puntaje / 125).toFixed(2) + '"></span>' +
@@ -225,6 +226,7 @@
         verDia(f, 'zoom');
       });
     });
+    activarApariciones(caja);
     mesVisto = new Date(y, m, 1);
   }
 
@@ -234,6 +236,7 @@
     $('#mesCaja').hidden = false; $('#navMes').hidden = false;
     $('#vDia').setAttribute('aria-pressed', 'false');
     $('#vMes').setAttribute('aria-pressed', 'true');
+    $('.cambiaVista').classList.add('mes-activo');
     pintarMes(base || mesVisto || diaVisto || new Date(), dir);
   }
 
@@ -243,6 +246,7 @@
     $('#diaCaja').hidden = false; $('#navDia').hidden = false;
     $('#vDia').setAttribute('aria-pressed', 'true');
     $('#vMes').setAttribute('aria-pressed', 'false');
+    $('.cambiaVista').classList.remove('mes-activo');
     pintarDia(f, dir === 'zoom' ? 'zoom' : 0);
   }
 
