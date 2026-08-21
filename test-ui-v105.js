@@ -2,6 +2,7 @@ const fs = require('fs');
 
 const appHtml = fs.readFileSync('app-v105.html','utf8');
 const appJs = fs.readFileSync('app-v105.js','utf8');
+const submitFix = fs.readFileSync('app-v105-submit-fix.js','utf8');
 const calHtml = fs.readFileSync('calendario-v105.html','utf8');
 const calJs = fs.readFileSync('calendario-v105.js','utf8');
 const index = fs.readFileSync('index.html','utf8');
@@ -11,27 +12,26 @@ let fallos = [];
 function ok(cond, msg) { if (!cond) fallos.push(msg); }
 function has(txt, s, msg) { ok(txt.includes(s), msg || ('Falta: ' + s)); }
 
-// Sintaxis de los dos controladores nuevos.
 try { new Function(appJs); } catch (e) { fallos.push('app-v105.js tiene error de sintaxis: ' + e.message); }
+try { new Function(submitFix); } catch (e) { fallos.push('app-v105-submit-fix.js tiene error de sintaxis: ' + e.message); }
 try { new Function(calJs); } catch (e) { fallos.push('calendario-v105.js tiene error de sintaxis: ' + e.message); }
 
-// Todos los assets de las páginas nuevas deben romper caché juntos.
-for (const [nombre, html] of [['app',appHtml],['calendario',calHtml]]) {
+function revisarAssets(nombre, html, version) {
   const assets = [...html.matchAll(/(?:src|href)="([^"]+\.(?:js|css))(?:\?([^\"]+))?"/g)];
   ok(assets.length >= 2, nombre + ': faltan assets');
-  assets.forEach(m => ok(String(m[2]||'').includes('v=10.5.0'), nombre + ': asset sin versión: ' + m[1]));
+  assets.forEach(m => ok(String(m[2]||'').includes('v=' + version), nombre + ': asset con versión distinta: ' + m[1]));
 }
+revisarAssets('app', appHtml, '10.5.2');
+revisarAssets('calendario', calHtml, '10.5.0');
 
-// Formulario desde cero: click explícito + submit de teclado -> misma función.
-has(appHtml, 'id="calcular"', 'Falta Ver mi elemento');
-has(appHtml, 'id="calcular">Ver mi elemento</button>', 'Ver mi elemento debe ser botón explícito');
-has(appJs, "$('#calcular').addEventListener('click', generarDesdeFormulario)", 'Ver mi elemento quedó sin click');
-has(appJs, "$('#forma').addEventListener('submit'", 'Enter del formulario quedó sin submit');
-has(appJs, 'function generarDesdeFormulario()', 'Falta controlador de generación');
-has(appJs, 'resolverLugarEscrito()', 'La generación debe resolver la ciudad escrita');
-has(appJs, "li.addEventListener('pointerdown'", 'La ciudad debe responder al toque móvil');
-has(appJs, "mostrarResultado(perfil, carta)", 'La generación debe llegar al resultado');
-has(appJs, 'try {\n      var n = datos.nacimiento;', 'La generación debe capturar fallos visibles');
+// Formulario desde cero: usa submit nativo y una ruta estable de perfil guardado.
+has(appHtml, 'type="submit" class="btn" id="calcular"', 'Ver mi elemento debe ser submit nativo');
+has(appHtml, 'app-v105-submit-fix.js?v=10.5.2', 'Falta el controlador robusto del formulario');
+has(submitFix, "boton.addEventListener('click', enviar, true)", 'El toque de Ver mi elemento quedó sin captura');
+has(submitFix, "forma.addEventListener('submit', enviar, true)", 'El submit del formulario quedó sin captura');
+has(submitFix, 'guardarPerfil({', 'La carta nueva debe guardarse antes de abrir');
+has(submitFix, "globalThis.location.href = 'index.html?perfil='", 'La carta nueva debe reutilizar la ruta de perfiles guardados');
+has(submitFix, 'buscarLugares(texto, 8)', 'La ciudad escrita debe resolverse durante el submit');
 
 // Primera visita y usuarios recurrentes.
 has(appJs, "titulo.textContent = 'Bienvenido de nuevo'", 'Falta portada recurrente');
@@ -41,9 +41,8 @@ has(appJs, "href=\"calendario.html?perfil=", 'Cada carta debe enlazar a su calen
 has(appJs, "if (mPerfil)", 'La app debe abrir ?perfil=');
 has(appJs, "/[?&]nueva=1", 'La app debe abrir ?nueva=1');
 
-// Botones de carta / lectura.
 const appClicks = {
-  irForm:'nuevaCarta', paraMi:'ponerTipoCarta', paraOtra:'ponerTipoCarta', calcular:'generarDesdeFormulario',
+  irForm:'nuevaCarta', paraMi:'ponerTipoCarta', paraOtra:'ponerTipoCarta',
   volverPortada:'pintarPerfilesGuardados', volverCartas:'pintarPerfilesGuardados', volverResultado:"ir('p-resultado')",
   bajarTop:'descargarTarjetaActual', bajarFinal:'descargarTarjetaActual', seguirCarta:'scrollIntoView'
 };
@@ -52,12 +51,11 @@ for (const [id, fn] of Object.entries(appClicks)) {
   has(appJs, "$('#"+id+"').addEventListener", '#'+id+' quedó sin manejador');
   has(appJs, fn, '#'+id+' quedó sin acción esperada');
 }
-has(appJs, "data-olvidar-perfil", 'Olvidar carta quedó sin ruta');
+has(appJs, 'data-olvidar-perfil', 'Olvidar carta quedó sin ruta');
 has(appJs, 'olvidarPerfil(id)', 'Olvidar carta quedó sin acción');
 has(appJs, 'btnCiclos.addEventListener', 'Ver ciclos quedó sin click');
 has(appJs, "b.addEventListener('click'", 'Los pilares quedaron sin click');
 
-// Calendario: cada control visible debe tener acción.
 const calClicks = ['olvidar','diaAnt','diaSig','diaHoy','vDia','vMes','mesAnt','mesSig'];
 calClicks.forEach(id => {
   has(calHtml, 'id="'+id+'"', 'Calendario: falta #'+id);
@@ -70,21 +68,19 @@ has(calJs, "$('#verCartaPerfil').href = 'index.html?perfil='", 'Ver esta carta d
 has(calHtml, 'href="index.html?nueva=1"', 'Calcular otra carta debe abrir formulario nuevo');
 has(calJs, "if(enMes) verDia(hoy,'zoom')", 'Hoy debe salir de mes y abrir el día de hoy');
 
-// Jerarquía del calendario: intro explicativo abajo, día visible arriba.
 const h1Pos = calHtml.indexOf('¿Cómo viene el día?');
 const selectorPos = calHtml.indexOf('id="calPerfilBox"');
 const introPos = calHtml.indexOf('Cada fecha mezcla dos ritmos');
 ok(h1Pos >= 0 && selectorPos > h1Pos && introPos > selectorPos, 'El texto explicativo volvió al hero del calendario');
 
-// Redirects públicos conservan query y apuntan a V10.5.
-has(index, "app-v105.html", 'index.html sigue apuntando a versión anterior');
-has(index, "location.search", 'index.html pierde ?perfil o ?nueva');
-has(calendarIndex, "calendario-v105.html", 'calendario.html sigue apuntando a versión anterior');
-has(calendarIndex, "location.search", 'calendario.html pierde ?perfil');
+has(index, 'app-v105.html?v=10.5.2', 'index.html debe pedir V10.5.2');
+has(index, 'location.search', 'index.html pierde ?perfil o ?nueva');
+has(calendarIndex, 'calendario-v105.html', 'calendario.html sigue apuntando a versión anterior');
+has(calendarIndex, 'location.search', 'calendario.html pierde ?perfil');
 
 if (fallos.length) {
   console.error('\nV10.5 UI: ' + fallos.length + ' problema(s)');
   fallos.forEach(x => console.error('  - ' + x));
   process.exit(1);
 }
-console.log('V10.5 UI: contrato de botones y navegación OK');
+console.log('V10.5.2 UI: contrato de botones y navegación OK');
