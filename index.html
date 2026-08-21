@@ -19,13 +19,10 @@
     <p class="marca">Tu Elemento</p>
     <h1>¿De qué estás hecho?</h1>
     <p class="bajada">
-      Hace más de mil años, en China se leía el momento exacto de un nacimiento
-      para saber de qué estaba hecha una persona: su carácter, su destino, lo que
-      se le iba a dar fácil y lo que le iba a costar toda la vida.
+      Tu fecha de nacimiento se reparte en cuatro pilares. Cada uno mira una parte distinta de tu historia: tu origen, tu trayectoria, tú y lo que vas construyendo hacia el futuro.
     </p>
     <p class="bajada">
-      Esa lectura todavía se hace. De los cuatro pilares que la forman, uno manda
-      sobre los demás: <strong>tu elemento</strong>. Hay diez. ¿Sabes cuál es el tuyo?
+      En el centro aparece tu elemento base. Aquí lo convertimos en una imagen fácil de recordar —Roble, Hiedra, Sol, Brasa, Montaña y cinco más— y desde ahí abrimos el resto de tu carta.
     </p>
     <button class="btn" id="irForm">Descubre tu elemento</button>
 
@@ -34,26 +31,21 @@
     </div>
 
     <p style="margin-top:26px">
-      <a class="btn fantasma" href="calendario.html">Ver la energía de hoy</a>
+      <a class="btn fantasma" href="calendario.html">Ver el calendario de hoy</a>
     </p>
 
     <details>
       <summary>¿Y esto qué es exactamente?</summary>
-      <p>Se llama BaZi. Es el sistema completo del que sale el animal que ya conoces,
-      y lleva más de mil años usándose en China. Se calcula con la posición del Sol
-      en tu momento exacto de nacimiento.</p>
-      <p>Los maestros clásicos lo usaban también para leer el destino. Nosotros nos
-      quedamos con quién eres, cómo te mueves y qué te cuesta. El código del cálculo
-      es abierto; puedes revisarlo tú mismo.</p>
+      <p>BaZi organiza año, mes, día y hora con el calendario solar chino. De ahí salen los cuatro pilares que usamos para construir esta lectura.</p>
+      <p>El cálculo conserva la estructura tradicional por dentro. Lo que lees en pantalla usa nombres y explicaciones propias de Tu Elemento para que la carta se entienda sin aprender un diccionario antes.</p>
     </details>
   </section>
 
   <!-- ── FORMULARIO ─────────────────────────────────────── -->
   <section class="pantalla" id="p-form">
     <p class="marca">Tu Elemento</p>
-    <h1 style="font-size:clamp(27px,5.5vw,36px)">¿Cuándo llegaste?</h1>
-    <p class="bajada">El cálculo entero ocurre en tu teléfono. Tus datos se quedan
-      guardados aquí mismo para no volver a pedírtelos, y no salen a ningún lado.</p>
+    <h1 style="font-size:clamp(27px,5.5vw,36px)">¿Cuándo naciste?</h1>
+    <p class="bajada">Todo el cálculo ocurre en tu teléfono. Tu fecha y lugar se guardan en este navegador para recuperar la carta y hacer que el calendario también pueda leerte a ti.</p>
 
     <form id="forma" novalidate>
       <div class="campo">
@@ -71,20 +63,17 @@
           <input type="number" id="hora" placeholder="Hora (0-23)" min="0" max="23" inputmode="numeric">
           <input type="number" id="minuto" placeholder="Minutos" min="0" max="59" inputmode="numeric">
         </div>
-        <p class="pista" style="margin:7px 0 0">Si no la sabes, déjala vacía. Tu elemento
-          no depende de la hora.</p>
+        <p class="pista" style="margin:7px 0 0">La hora completa Tu futuro, el pilar donde aparecen proyectos, vida interior y lo que vas construyendo con el tiempo. Si la tienes, úsala; si falta, la lectura puede empezar con los otros tres pilares.</p>
       </div>
 
       <div class="campo">
         <label for="sexo">Sexo registrado al nacer <span class="pista">— opcional</span></label>
         <select id="sexo">
-          <option value="">Prefiero no decirlo</option>
+          <option value="">Prefiero omitirlo</option>
           <option value="m">Mujer</option>
           <option value="h">Hombre</option>
         </select>
-        <p class="pista" style="margin:7px 0 0">Solo se usa para la dirección de tus
-          décadas: el método clásico las hace avanzar o retroceder según esto. No afecta
-          nada más de tu carta.</p>
+        <p class="pista" style="margin:7px 0 0">Este dato solo entra cuando calculamos tus ciclos de diez años. Tu elemento base y los pilares salen de la fecha, la hora y el lugar de nacimiento.</p>
       </div>
 
       <div class="campo">
@@ -95,9 +84,7 @@
           <ul id="sugerencias" role="listbox"></ul>
         </div>
         <p class="pista" id="pistaLugar" style="margin:7px 0 0"></p>
-        <p class="pista" style="margin:6px 0 0">Si no está la tuya, usa la ciudad grande
-          más cercana: cien kilómetros al este o al oeste mueven la hora solar unos
-          cuatro minutos, y eso rara vez cambia algo.</p>
+        <p class="pista" style="margin:6px 0 0">Elige tu ciudad o una cercana. La app toma en cuenta el horario que estaba vigente cuando naciste y hace una pequeña corrección por la posición del Sol.</p>
       </div>
 
       <p class="error" id="err" role="alert"></p>
@@ -112,13 +99,23 @@
   <!-- ── RESULTADO ──────────────────────────────────────── -->
   <section class="pantalla" id="p-resultado">
     <p class="marca">Tu Elemento</p>
-    <div id="tarjetaCaja"></div>
-    <div class="bajoTarjeta"><div class="ctaLectura">↓ Lee tu interpretación completa abajo</div></div>
-    <div class="lectura" id="lectura"></div>
-    <div class="acciones" style="justify-content:center; margin-top:28px; flex-wrap:wrap">
-      <button class="btn" id="bajar">Descargar tarjeta</button>
-      <button class="btn fantasma" data-ir="p-form">Otra fecha</button>
+
+    <div id="resultadoHero" class="resultadoHero"></div>
+    <div class="acciones resultadoAcciones">
+      <button class="btn" id="bajarTop">Descargar tarjeta</button>
     </div>
+
+    <div class="lectura" id="lectura"></div>
+
+    <section class="compartirMarco" id="compartirMarco">
+      <h2 class="titIcon cent" id="compartirTitulo">Tu tarjeta para compartir</h2>
+      <p class="sub compartirIntro">Esta es la versión breve de tu carta, pensada para guardar o compartir. El resto de la lectura queda aquí contigo.</p>
+      <div id="tarjetaCaja"></div>
+      <div class="acciones compartirAcciones">
+        <button class="btn" id="bajarFinal">Descargar tarjeta</button>
+        <button class="btn fantasma" data-ir="p-form">Otra fecha</button>
+      </div>
+    </section>
   </section>
 
   <!-- ── CARTA COMPLETA ─────────────────────────────────── -->
@@ -226,8 +223,8 @@
 
   if (!soportaZonasHistoricas()) {
     $('#pistaLugar').insertAdjacentHTML('afterend',
-      '<p class="pista" style="margin:7px 0 0">Tu navegador no trae el historial ' +
-      'de horarios; si naciste en verano antes de 2022 el pilar de hora puede ' +
+      '<p class="pista" style="margin:7px 0 0">Tu navegador usa un soporte limitado para horarios históricos; ' +
+      'en nacimientos antiguos el pilar de hora puede ' +
       'correrse una hora.</p>');
   }
 
@@ -296,7 +293,7 @@
         zona: lug.z, longitud: lug.lon
       });
     } catch (ex) {
-      err.textContent = 'No se pudo calcular esa fecha. Revisa los datos.';
+      err.textContent = 'El cálculo encontró un dato incompatible. Revisa fecha, hora y ciudad.';
       return;
     }
 
@@ -323,19 +320,31 @@
     // Acento del elemento, para que la pantalla entera tome su color
     document.documentElement.style.setProperty('--acento', id.paleta[2]);
 
+    var polaridadHero = ['Jia','Bing','Wu','Geng','Ren'].indexOf(carta.diaMaestro.pinyin) !== -1 ? 'Yang' : 'Yin';
+    $('#resultadoHero').innerHTML =
+      '<div class="resultadoIcono">' + iconoMini(t.tarjeta.nombre.toLowerCase()) + '</div>' +
+      '<p class="resultadoKicker">Tu elemento base</p>' +
+      '<h1 class="resultadoNombre">' + esc(t.tarjeta.nombre) + '</h1>' +
+      '<p class="resultadoElemento">' + esc(t.tarjeta.elemento) + ' · ' + polaridadHero + '</p>' +
+      '<p class="resultadoFrase">' + esc(t.tarjeta.frase) + '</p>' +
+      '<p class="resultadoDescripcion">' + esc(L.imagen) + '</p>';
+
+    $('#compartirTitulo').innerHTML = iconoMini('joya') + '<span>Tu tarjeta para compartir</span>';
+
     var html = '';
 
-    // 1 · quién eres
+    // 1 · cómo se expresa tu elemento
     html += '<div class="hoja">' +
-              '<h2 class="titIcon">' + iconoMini(t.tarjeta.nombre.toLowerCase()) + '<span>' + esc(L.titular) + '</span></h2>' +
-              '<p class="sub">' + esc(L.imagen) + '</p>' +
+              '<h2 class="titIcon">' + iconoMini('marea') + '<span>Cómo se mueve tu elemento</span></h2>' +
+              '<p class="sub">Tu elemento base marca el tono general de la carta. Aquí puedes ver cómo suele moverse esa energía cuando todo fluye y qué parte tiende a costarte un poco más.</p>' +
               '<p>' + esc(lec.elemento.movimiento) + '</p>' +
               '<p class="tension">' + esc(lec.elemento.tension) + '</p>' +
             '</div>';
 
     // 2 · los cuatro pilares, en columnas
-    var cortos = { 'De dónde vienes':'Origen', 'Cómo trabajas':'Trabajo',
-                   'Quién eres':'Tú', 'Hacia dónde vas':'Destino' };
+    var cortos = { 'Tu origen':'Tu origen', 'Tu trayectoria':'Tu trayectoria', 'Tú':'Tú', 'Tu futuro':'Tu futuro',
+                   'Raíces':'Tu origen', 'Trayectoria':'Tu trayectoria', 'Centro':'Tú', 'Proyección':'Tu futuro',
+                   'De dónde vienes':'Tu origen', 'Cómo trabajas':'Tu trayectoria', 'Quién eres':'Tú', 'Hacia dónde vas':'Tu futuro' };
     html += '<div class="hoja">' +
               '<h2 class="titIcon">' + iconoMini('origen') + '<span>Tus ' + lec.pilares.length + ' pilares</span></h2>' +
               '<p class="sub">' + esc(t.encuadre) + ' <b>Toca cada pilar para leerlo.</b></p>' +
@@ -363,9 +372,8 @@
     // 3 · interacciones internas
     if (lec.tensiones.length) {
       html += '<div class="hoja">' +
-                '<h2 class="titIcon">' + iconoMini('brasa') + '<span>Lo que se jala por dentro</span></h2>' +
-                '<p class="sub">Esto no le sale a todo el mundo. Son choques y alianzas ' +
-                'entre tus propios pilares.</p>';
+                '<h2 class="titIcon">' + iconoMini('brasa') + '<span>Cuando tus pilares se jalan entre sí</span></h2>' +
+                '<p class="sub">Tus pilares también hablan entre ellos. A veces se apoyan y otras se jalan hacia lados distintos; aquí puedes ver dónde ocurre cada cosa y qué parte de tu vida toca.</p>';
       lec.tensiones.forEach(function (x) {
         html += '<div class="inter">' +
                   '<p class="quienes">' + esc(x.detalle) + '</p>' +
@@ -378,9 +386,7 @@
     // 4 · los vacíos
     if (lec.vacios.length) {
       html += '<div class="hoja"><h2 class="titIcon">' + iconoMini('acero') + '<span>Tus vacíos</span></h2>' +
-              '<p class="sub">Hay diez tallos y doce ramas. Al emparejarlos siempre ' +
-              'sobran dos ramas sin tallo: esas son tus vacíos. Un pilar vacío marca ' +
-              'un territorio que tuviste que construir a mano.</p>';
+              '<p class="sub">En cada bloque del ciclo quedan dos ramas en vacío. Si una coincide con uno de tus pilares, esa zona suele sentirse menos dada de antemano y más construida con experiencia propia.</p>';
       lec.vacios.forEach(function (v) {
         html += '<div class="inter">' +
                   '<p class="quienes">' + esc(v.titulo) + '</p>' +
@@ -395,9 +401,8 @@
     var orden = ['madera','fuego','tierra','metal','agua'];
     var maxN = 1;
     orden.forEach(function (e) { maxN = Math.max(maxN, lec.balance.conteo[e] || 0); });
-    html += '<div class="hoja"><h2 class="titIcon">' + iconoMini('joya') + '<span>Tu balance</span></h2>' +
-            '<p class="sub">Cuánto de cada elemento traes en los ' +
-            (lec.pilares.length * 2) + ' caracteres de tu carta.</p><div class="barras">';
+    html += '<div class="hoja"><h2 class="titIcon">' + iconoMini('joya') + '<span>Distribución de tus 5 elementos</span></h2>' +
+            '<p class="sub">Aquí puedes ver qué elementos aparecen más y cuáles tienen menos presencia en tu carta. Piensa en esto como una fotografía rápida del reparto, útil para entender qué energías ocupan más espacio en el conjunto.</p><div class="barras">';
     orden.forEach(function (e) {
       var n = lec.balance.conteo[e] || 0;
       html += '<div class="barra' + (n === 0 ? ' cero' : '') + '">' +
@@ -407,38 +412,35 @@
     });
     html += '</div>';
     lec.balance.matices.forEach(function (m) { html += '<p>' + esc(m) + '</p>'; });
-    if (!lec.balance.matices.length) html += '<p>Tus cinco elementos están repartidos sin extremos.</p>';
+    if (!lec.balance.matices.length) html += '<p>Tus cinco elementos están bastante repartidos. Ninguno ocupa todo el espacio y el conjunto se siente más mezclado.</p>';
     html += '</div>';
 
     html += '<div class="hoja" style="text-align:center">' +
-              '<h2 class="titIcon cent">' + iconoMini('marea') + '<span>La energía de cada día</span></h2>' +
-              '<p class="sub">Tu carta no cambia, pero los días sí. Mira para qué sirve ' +
-              'hoy, y qué días chocan con tu signo.</p>' +
+              '<h2 class="titIcon cent">' + iconoMini('marea') + '<span>El ritmo de tus días</span></h2>' +
+              '<p class="sub">Los días también cambian de tono. El calendario mezcla dos ritmos tradicionales y te muestra qué cosas pueden fluir mejor y cuáles conviene llevar con más margen.</p>' +
               '<a class="btn" href="calendario.html" style="margin-top:6px;display:inline-block">Ver el calendario</a>' +
             '</div>';
 
     // 6 · avisos
     var aviso = '';
-    if (sinHora) aviso = 'Sin tu hora de nacimiento falta un pilar de los cuatro. Tu elemento es correcto, pero con la hora la carta se completa.';
-    else if (carta.avisoZona === 'repetida') aviso = 'Naciste durante el cambio de horario, en una hora que ocurrió dos veces esa noche. Tomamos la primera.';
-    else if (carta.avisoZona === 'hueco') aviso = 'Naciste en el salto del cambio de horario: esa hora de reloj no existió. Ajustamos al horario que entró.';
+    if (sinHora) aviso = 'Esta lectura usa el mediodía como referencia para completar el cálculo. Si algún día agregas tu hora de nacimiento, también aparecerá Tu futuro y la carta tendrá sus cuatro pilares.';
+    else if (carta.avisoZona === 'repetida') aviso = 'Tu hora de nacimiento cayó durante un cambio histórico de horario. Para mantener un criterio consistente, el cálculo toma la primera vez que apareció esa hora.';
+    else if (carta.avisoZona === 'hueco') aviso = 'Tu hora de nacimiento cayó justo dentro de un salto histórico de horario. El cálculo continúa con el horario que empezó a usarse después de ese cambio.';
     if (aviso) html += '<div class="hoja"><p class="pista">' + aviso + '</p></div>';
 
     html += '<div class="hoja" style="text-align:center">' +
-              '<h2 class="titIcon cent">' + iconoMini('destino') + '<span>Tus décadas</span></h2>' +
-              '<p class="sub">Todo lo de arriba es quién eres, y se queda igual toda ' +
-              'la vida. Tus décadas marcan por dónde vas pasando: cada diez años entras ' +
-              'a un pilar nuevo que le cambia el clima a tu carta.</p>' +
+              '<h2 class="titIcon cent">' + iconoMini('destino') + '<span>Tus ciclos de diez años</span></h2>' +
+              '<p class="sub">Además de tu carta de nacimiento, hay ciclos que van cambiando aproximadamente cada diez años. Cada tramo añade un clima distinto y ayuda a mirar por qué ciertas etapas se sienten tan diferentes entre sí.</p>' +
               (sexoElegido
-                ? '<button class="btn" id="verCarta" style="margin-top:6px">Ver mi línea del tiempo</button>'
-                : '<p class="pista">Para calcularlas hace falta el sexo registrado al nacer, ' +
-                  'porque el método clásico lo usa para saber si tus décadas avanzan o retroceden. ' +
-                  'Vuelve al formulario si quieres agregarlo.</p>') +
+                ? '<button class="btn" id="verCarta" style="margin-top:6px">Ver mis ciclos</button>'
+                : '<p class="pista">Si quieres ver estos ciclos, agrega el sexo registrado al nacer desde el formulario. Ese dato se usa únicamente para ordenar la secuencia.</p>') +
             '</div>';
 
     $('#lectura').innerHTML = html;
     $('#lectura').classList.add('escalona');   // las hojas entran una tras otra
+    activarApariciones($('#resultadoHero'));
     activarApariciones($('#lectura'));
+    activarApariciones($('#compartirMarco'));
 
     // Las columnas abren su lectura. Así no hay un scroll larguísimo de
     // texto plano: cada quien abre el pilar que le interesa.
@@ -490,11 +492,8 @@
   function lineaTiempoHTML(t, lec, dec, edad) {
     var esc = function (x) { return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;'); };
     var actual = decadaActual(dec, edad);
-    var h = '<div class="hoja"><h2 class="titIcon">' + iconoMini('destino') + '<span>Tu línea del tiempo</span></h2>' +
-            '<p class="sub">Tus décadas ' +
-            (dec.direccion === 'adelante' ? 'avanzan' : 'retroceden') +
-            ' en el ciclo y arrancaron a los ' + dec.edadInicio + '. ' +
-            'Hoy tienes ' + edad + '.</p><ul class="tl">';
+    var h = '<div class="hoja"><h2 class="titIcon">' + iconoMini('destino') + '<span>Tus ciclos de diez años</span></h2>' +
+            '<p class="sub">Tus ciclos empiezan alrededor de los ' + dec.edadInicio + ' años y cambian aproximadamente cada década. Tienes ' + edad + ' años, así que aquí puedes ver el tramo que te acompaña ahora y los que vienen después.</p><ul class="tl">';
 
     dec.lista.forEach(function (d, i) {
       var esAhora = i === actual;
@@ -518,18 +517,21 @@
 
     if (actual >= 0 && actual + 1 < dec.lista.length) {
       var sig = dec.lista[actual + 1];
-      h += '<div class="hoja"><h2>Lo que sigue</h2>' +
-           '<p class="sub">A los ' + sig.desde + ' cambias de década.</p>' +
+      h += '<div class="hoja"><h2>Lo que viene después</h2>' +
+           '<p class="sub">Alrededor de los ' + sig.desde + ' años empieza tu siguiente tramo de diez años.</p>' +
            '<p>' + esc(ANIMALES[sig.rama.pinyin].movimiento) + '</p>' +
            '<p class="tension">' + esc(ANIMALES[sig.rama.pinyin].tension) + '</p></div>';
     }
     return h;
   }
 
-  $('#bajar').addEventListener('click', function () {
+  function descargarTarjetaActual() {
     if (!ultimo) return;
     descargarSVG($('#tarjetaCaja svg'), 'tu-elemento-' + ultimo.t.tarjeta.nombre.toLowerCase());
-  });
+  }
+
+  $('#bajarTop').addEventListener('click', descargarTarjetaActual);
+  $('#bajarFinal').addEventListener('click', descargarTarjetaActual);
 
 
 })();

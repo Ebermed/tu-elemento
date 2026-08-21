@@ -57,8 +57,9 @@ function cartaSVG(t, lec, op) {
   // ── las cuatro columnas ──
   y += 92;
   var yCols = y;
-  var cortos = { 'De dónde vienes':'ORIGEN', 'Cómo trabajas':'TRABAJO',
-                 'Quién eres':'TÚ', 'Hacia dónde vas':'DESTINO' };
+  var cortos = { 'Tu origen':'TU ORIGEN', 'Tu trayectoria':'TU TRAYECTORIA', 'Tú':'TÚ', 'Tu futuro':'TU FUTURO',
+                 'Raíces':'TU ORIGEN', 'Trayectoria':'TU TRAYECTORIA', 'Centro':'TÚ', 'Proyección':'TU FUTURO',
+                 'De dónde vienes':'TU ORIGEN', 'Cómo trabajas':'TU TRAYECTORIA', 'Quién eres':'TÚ', 'Hacia dónde vas':'TU FUTURO' };
 
   partes.push('<rect x="' + margen + '" y="' + (yCols - 34) + '" width="' + util +
               '" height="290" rx="14" fill="#FFFDF8" opacity="0.62"/>');
@@ -85,7 +86,7 @@ function cartaSVG(t, lec, op) {
 
   // ── balance ──
   y += 34;
-  partes.push(txt(margen, y, 'BALANCE', { size: 18, ls: 4, op: 0.5, anchor: 'start' }));
+  partes.push(txt(margen, y, 'DISTRIBUCIÓN DE TUS 5 ELEMENTOS', { size: 18, ls: 4, op: 0.5, anchor: 'start' }));
   y += 26;
   var orden = ['madera', 'fuego', 'tierra', 'metal', 'agua'];
   var maxN = 1;
@@ -118,7 +119,7 @@ function cartaSVG(t, lec, op) {
     });
   }
 
-  bloque('QUIÉN ERES', [
+  bloque('TU ELEMENTO BASE', [
     { txt: lec.elemento.movimiento },
     { txt: lec.elemento.tension, serif: true }
   ]);
@@ -129,7 +130,7 @@ function cartaSVG(t, lec, op) {
       ls.push({ txt: x.detalle.toUpperCase(), op: 0.5 });
       ls.push({ txt: x.texto });
     });
-    bloque('LO QUE SE JALA POR DENTRO', ls);
+    bloque('CUANDO TUS PILARES SE JALAN', ls);
   }
 
   if (lec.vacios.length) {
@@ -139,11 +140,11 @@ function cartaSVG(t, lec, op) {
       vs.push({ txt: v.texto });
       vs.push({ txt: v.filo, serif: true });
     });
-    bloque('LOS VACÍOS', vs);
+    bloque('TUS VACÍOS', vs);
   }
 
   if (lec.balance.matices.length) {
-    bloque('TU BALANCE', lec.balance.matices.map(function (m) { return { txt: m }; }));
+    bloque('DISTRIBUCIÓN DE TUS 5 ELEMENTOS', lec.balance.matices.map(function (m) { return { txt: m }; }));
   }
 
   y += 66;

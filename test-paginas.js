@@ -83,6 +83,28 @@ function probar(pagina, modulos) {
 
   if (typeof ctx.activarApariciones !== 'function') fallos.push('base.js no exporta activarApariciones');
 
+  // Terminología editorial visible: las claves tradicionales quedan en JS,
+  // mientras las páginas usan nombres propios de producto.
+  const terminosLegado = ['Día Maestro','Da Yun','Kong Wang','San Sha','Ze Ri Xue','oficial del día'];
+  for (const t of terminosLegado) {
+    if (html.includes(t)) fallos.push(`término técnico expuesto en HTML: ${t}`);
+  }
+  if (pagina === 'calendario.html') {
+    if (!html.includes('Pulso de 28 días')) fallos.push('el calendario dejó de mostrar la capa de 28 días');
+    if (!html.includes('Ritmo de 12 pasos')) fallos.push('el calendario dejó de mostrar la capa de 12 ritmos');
+    const reglasTxt = fs.readFileSync('reglas.js','utf8').toLowerCase();
+    const actividadesFueraDeProducto = ['feng shui','muebles','colocar puerta','colocar agua','funeral','hospital','tratamiento médico','cirugía','remodelación'];
+    for (const t of actividadesFueraDeProducto) {
+      if (reglasTxt.includes(t)) fallos.push(`actividad ajena al calendario cotidiano: ${t}`);
+    }
+    const traducciones12 = new Set(['instalar','eliminar','completo','balance','estable','iniciado','destrucción','peligro','éxito','recibir','abierto','cerrado']);
+    const traducciones28 = new Set(['bienes','pérdida','externo','legado','disputas','ayuda','materia','materialismo','desastre','academia','daños','enfermedad','expansión','prosperidad','retos','bienestar','público','maldad','armonía','juez','renovación','construcción','fantasma','sauce','estrella','empate','ala','carruaje']);
+    const solapadas12 = (ctx.OFICIALES || []).map(x=>x.nombre.toLowerCase()).filter(x=>traducciones12.has(x));
+    const solapadas28 = (ctx.PULSOS_28 || []).map(x=>x.nombre.toLowerCase()).filter(x=>traducciones28.has(x));
+    if (solapadas12.length) fallos.push(`etiquetas de 12 ritmos solapadas: ${solapadas12.join(', ')}`);
+    if (solapadas28.length) fallos.push(`etiquetas de 28 pulsos solapadas: ${solapadas28.join(', ')}`);
+  }
+
   if (pagina === 'index.html') {
     const btn = doc._cache['#irForm'];
     if (!btn || !(btn._eventos.click || []).length) fallos.push('Descubre tu elemento quedó sin manejador de click');

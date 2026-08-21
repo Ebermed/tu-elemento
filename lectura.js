@@ -32,54 +32,54 @@ function _dep(nombre, ruta) {
 }
 
 var ANIMALES = {
-  Zi:   { nombre:'Rata',      estacion:'plena medianoche del invierno',
-          movimiento:'Detectas la oportunidad antes que nadie y te mueves sin avisar.',
-          tension:'Guardas de más: contactos, opciones, salidas. Nunca cierras una puerta del todo.',
-          frase:'Siempre tienes un plan B. Y un C.' },
-  Chou: { nombre:'Buey',      estacion:'el invierno que ya no se va',
-          movimiento:'Avanzas despacio y no retrocedes. Lo que empiezas, lo terminas años después.',
-          tension:'Aguantas situaciones mucho más allá del punto donde ya debías soltarlas.',
-          frase:'Vas midiendo cada paso antes de darlo.' },
-  Yin:  { nombre:'Tigre',     estacion:'el primer día en que se rompe el invierno',
-          movimiento:'Arrancas de golpe. Donde otros piden permiso, tú ya empezaste.',
-          tension:'Enciendes con una fuerza que después no sabes administrar.',
-          frase:'Empiezas incendios. Los apaga alguien más.' },
-  Mao:  { nombre:'Conejo',    estacion:'la primavera ya asentada',
-          movimiento:'Lees el ambiente al entrar y te acomodas sin fricción.',
-          tension:'Evitas el conflicto tan bien que las cosas se pudren sin que nadie las nombre.',
-          frase:'Nunca peleas. Por eso nada se resuelve.' },
-  Chen: { nombre:'Dragón',    estacion:'la primavera que se desborda',
-          movimiento:'Piensas en grande de forma natural. Lo pequeño te aburre rápido.',
-          tension:'Guardas cosas que no muestras, y a veces ni tú sabes qué hay ahí.',
-          frase:'Cargas una bodega que nadie ha visto.' },
-  Si:   { nombre:'Serpiente', estacion:'el verano que apenas calienta',
-          movimiento:'Observas, calculas y hablas al final. Sueles tener razón.',
-          tension:'Piensas tanto antes de moverte que a veces el momento ya pasó.',
-          frase:'Ya lo habías pensado. No lo dijiste.' },
-  Wu:   { nombre:'Caballo',   estacion:'el mediodía del verano',
-          movimiento:'Vas al frente, visible, sin pedir permiso. La gente te sigue.',
-          tension:'No sabes esperar. Lo que tarda te lo saltas, aunque valiera la pena.',
-          frase:'Llegas primero. A veces al lugar equivocado.' },
-  Wei:  { nombre:'Cabra',     estacion:'el verano que se va apagando',
-          movimiento:'Rodeas. Consigues lo que quieres sin haberlo pedido nunca directamente.',
-          tension:'Das tantas vueltas que la gente no sabe qué necesitas de ella.',
-          frase:'Nunca pides nada. Y esperas mucho.' },
-  Shen: { nombre:'Mono',      estacion:'el primer aire frío del otoño',
-          movimiento:'Encuentras el atajo. Le das la vuelta al problema en vez de atravesarlo.',
-          tension:'Te aburres apenas lo resuelves, y lo dejas justo antes de terminarlo.',
-          frase:'Resuelves rápido. Terminas casi nunca.' },
-  You:  { nombre:'Gallo',     estacion:'el otoño en su punto exacto',
-          movimiento:'Ves el detalle que descompone el conjunto, y no puedes no verlo.',
-          tension:'Corriges en voz alta cosas que nadie te pidió que corrigieras.',
-          frase:'Tenías razón. Nadie te lo agradeció.' },
-  Xu:   { nombre:'Perro',     estacion:'el otoño que ya es frío',
-          movimiento:'Decides de qué lado estás y ahí te quedas, aunque salga caro.',
-          tension:'Tu lealtad no distingue entre quien la merece y quien no.',
-          frase:'Te quedas. Aunque ya no debías.' },
-  Hai:  { nombre:'Cerdo',     estacion:'el invierno que empieza',
-          movimiento:'Das primero y preguntas después. La gente se abre contigo rápido.',
-          tension:'Confías por defecto, y eso ya te costó por lo menos una vez.',
-          frase:'Das de más. Otra vez.' },
+  Zi:   { nombre:'Rata', estacion:'invierno · agua yang',
+          movimiento:'Detectas oportunidades rápido y sueles guardar varias salidas antes de moverte. Te gusta saber que todavía quedan opciones.',
+          tension:'Tener tantas puertas abiertas puede hacer que elegir una cueste más de lo necesario.',
+          frase:'Siempre hay un plan B guardado por ahí. A veces hasta un C.' },
+  Chou: { nombre:'Buey', estacion:'final del invierno · tierra yin',
+          movimiento:'Avanzas despacio, pero lo que empiezas suele tener continuidad. Prefieres construir paso a paso y saber dónde estás pisando.',
+          tension:'Aguantas mucho. Eso ayuda a sostener procesos largos, aunque también puede alargar una etapa que ya pedía soltarse.',
+          frase:'Vas midiendo cada paso. Cuando arrancas, cuesta sacarte del camino.' },
+  Yin:  { nombre:'Tigre', estacion:'inicio de primavera · madera yang',
+          movimiento:'Arrancas con fuerza y te sale natural ser quien pone algo en movimiento cuando los demás siguen pensándolo.',
+          tension:'Tu impulso llega antes que la estructura. A veces empiezas a correr mientras el plan todavía se está amarrando los zapatos.',
+          frase:'Tú ya empezaste mientras los demás siguen preguntando quién da el primer paso.' },
+  Mao:  { nombre:'Conejo', estacion:'primavera · madera yin',
+          movimiento:'Lees el ambiente y sabes acomodar las piezas para que una conversación o un grupo funcione con menos fricción.',
+          tension:'Cuidar tanto la armonía puede hacer que una conversación importante se quede esperando demasiado tiempo.',
+          frase:'Sabes bajar el volumen de una habitación. Solo cuida que lo importante también llegue a decirse.' },
+  Chen: { nombre:'Dragón', estacion:'final de primavera · tierra yang',
+          movimiento:'Piensas en grande y sueles juntar piezas que parecían venir de lugares distintos. Te atraen las etapas de cambio y construcción.',
+          tension:'Cuando todo parece importante, decidir qué va primero puede volverse la parte más pesada.',
+          frase:'Tienes varias habitaciones abiertas al mismo tiempo. Conviene elegir cuál toca ordenar primero.' },
+  Si:   { nombre:'Serpiente', estacion:'inicio de verano · fuego yin',
+          movimiento:'Observas, calculas y prefieres moverte cuando el momento ya está bastante claro. Sueles notar cosas que otros pasan por alto.',
+          tension:'Pensarlo un poco más siempre parece razonable, hasta que el momento empieza a irse.',
+          frase:'Ya lo habías visto venir. Ahora toca decidir cuándo actuar.' },
+  Wu:   { nombre:'Caballo', estacion:'verano pleno · fuego yang',
+          movimiento:'Pones ritmo, haces visible lo que ocurre y te sale natural mover las cosas cuando el ambiente se queda quieto.',
+          tension:'La velocidad te ayuda a arrancar, aunque mantenerla demasiado tiempo puede dejar pendientes detrás.',
+          frase:'Llegas rápido y haces que todo se mueva contigo. También viene bien revisar qué quedó atrás.' },
+  Wei:  { nombre:'Cabra', estacion:'final de verano · tierra yin',
+          movimiento:'Cuidas el proceso, notas el contexto y sueles prestar atención a detalles que hacen que la experiencia se sienta mejor.',
+          tension:'Cuando intentas atender todas las variables, tu prioridad principal puede empezar a perder volumen.',
+          frase:'Cuidas muchas cosas a la vez. Tu propia prioridad también merece sitio en la mesa.' },
+  Shen: { nombre:'Mono', estacion:'inicio de otoño · metal yang',
+          movimiento:'Encuentras atajos, herramientas y maneras ingeniosas de resolver algo que otros estaban complicando.',
+          tension:'Resolver la parte interesante puede quitarle encanto al último tramo, justo donde toca cerrar y entregar.',
+          frase:'Encuentras la vuelta rápido. El último paso también cuenta.' },
+  You:  { nombre:'Gallo', estacion:'otoño pleno · metal yin',
+          movimiento:'Ves el detalle que descompone el conjunto y tienes facilidad para ordenar, corregir y elevar el estándar.',
+          tension:'Tu ojo sigue encontrando cosas que mejorar incluso cuando el resultado ya está bastante bien.',
+          frase:'Ves la costura que nadie más vio. También conviene saber cuándo dejarla en paz.' },
+  Xu:   { nombre:'Perro', estacion:'final de otoño · tierra yang',
+          movimiento:'Cuando decides que algo o alguien importa, lo sostienes con mucha lealtad y sentido de compromiso.',
+          tension:'Esa lealtad puede mantenerte unido a estructuras que ya dieron todo lo que podían dar.',
+          frase:'Te quedas cuando importa. Solo revisa de vez en cuando si todavía estás sosteniendo lo mismo.' },
+  Hai:  { nombre:'Cerdo', estacion:'inicio de invierno · agua yin',
+          movimiento:'Das espacio, haces que la gente se sienta recibida y sueles abrir conversación con bastante facilidad.',
+          tension:'Dar tanto de entrada puede dejarte con menos energía o margen del que imaginabas.',
+          frase:'Abres la puerta rápido. Acuérdate de guardar un cuarto para ti.' },
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -90,18 +90,18 @@ var ANIMALES = {
 // signo del mes" y recibir una lectura de trabajo.
 
 var PILARES = {
-  anio: { titulo:'De dónde vienes', etapa:'infancia y primeros años',
-          ambito:'tu familia de origen, tus padres, lo que traías puesto antes de elegir nada',
-          intro:'El pilar del año es el que todo el mundo conoce, porque es el animal que te tocó. Pero no habla de ti: habla del mundo donde apareciste.' },
-  mes:  { titulo:'Cómo trabajas', etapa:'juventud y vida adulta temprana',
-          ambito:'tu carrera, tu ambiente, la gente con la que compites y colaboras',
-          intro:'El pilar del mes es el más importante de los cuatro para los maestros clásicos, y el que menos gente conoce. Marca la estación en que naciste y con ella la fuerza de todo lo demás.' },
-  dia:  { titulo:'Quién eres', etapa:'la vida adulta plena',
-          ambito:'tú mismo en el tallo, y tu pareja en la rama',
-          intro:'Aquí vive tu elemento. El tallo eres tú; la rama es el lugar donde se para tu pareja.' },
-  hora: { titulo:'Hacia dónde vas', etapa:'la segunda mitad de la vida',
-          ambito:'tus hijos, lo que dejas, la parte tuya que solo ves en privado',
-          intro:'El pilar de la hora es el más íntimo y el que casi nadie puede calcular, porque casi nadie sabe a qué hora nació.' },
+  anio: { titulo:'Tu origen', etapa:'el mundo que te recibió',
+          ambito:'familia extensa, amistades tempranas y contexto social',
+          intro:'Tu origen habla del mundo que te recibió: familia extensa, amistades tempranas y el ambiente donde aprendiste por primera vez cómo moverte entre los demás.' },
+  mes:  { titulo:'Tu trayectoria', etapa:'cómo aprendiste a avanzar',
+          ambito:'formación, carrera, logros y entorno de trabajo',
+          intro:'Tu trayectoria mira la parte de tu carta ligada a estudios, trabajo, responsabilidades y logros. Cuenta mucho sobre la manera en que aprendiste a desenvolverte fuera de casa.' },
+  dia:  { titulo:'Tú', etapa:'tu centro y tus vínculos cercanos',
+          ambito:'elemento base, pareja, vínculos íntimos y vida emocional',
+          intro:'Este pilar te pone a ti en el centro. Aquí aparece el tallo que define tu elemento base, junto con una capa ligada a pareja, intimidad y vida emocional.' },
+  hora: { titulo:'Tu futuro', etapa:'lo que vas construyendo',
+          ambito:'proyectos, hijos, vida interior, recursos a largo plazo y legado',
+          intro:'Tu futuro mira lo que desarrollas con el tiempo: proyectos, hijos, vida interior, recursos de largo plazo y aquello que quieres dejar creciendo después de ti.' },
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -110,46 +110,43 @@ var PILARES = {
 // Aquí está la especificidad real. No le pasa a todos.
 
 var CHOQUES = {
-  'anio-mes':  'Tu origen y tu trabajo empujan en direcciones opuestas. Lo que aprendiste en casa no te sirvió para el mundo donde acabaste.',
-  'anio-dia':  'Chocas con el lugar del que vienes. Construir quién eres te costó separarte de tu familia, y algo de eso sigue abierto.',
-  'anio-hora': 'Lo que heredaste y lo que quieres dejar no se parecen. Estás rompiendo una cadena a propósito.',
-  'mes-dia':   'Tu trabajo y tu vida privada se estorban. Cuando uno va bien, el otro paga la cuenta.',
-  'mes-hora':  'Lo que haces para vivir apunta a otro lado que lo que quieres al final. Ya lo sabes.',
-  'dia-hora':  'Tú y lo que estás construyendo van a distinto ritmo. Hay una prisa tuya que no le sirve a lo que viene.',
+  'anio-mes':  'Tu origen y tu trayectoria a veces te piden cosas distintas. Puede sentirse como haber aprendido un código en casa y necesitar otro para estudiar, trabajar o abrirte camino.',
+  'anio-dia':  'Tu origen y tú quedan frente a frente. Este roce suele hablar de aprender a distinguir qué viene de tu entorno y qué sí elegiste para ti.',
+  'anio-hora': 'Tu origen y tu futuro jalan hacia lugares distintos. Parte de lo que heredaste puede pedir una cosa mientras lo que quieres construir te pide otra.',
+  'mes-dia':   'Tu trayectoria y tú piden atención al mismo tiempo. El reto suele estar en repartir energía entre desempeño, relaciones y vida personal.',
+  'mes-hora':  'Tu trayectoria y tu futuro llevan ritmos distintos. Vale la pena mirar cuánto de lo que haces hoy alimenta de verdad lo que quieres construir después.',
+  'dia-hora':  'Tú y tu futuro pueden pedir tiempos distintos. Tus necesidades personales y tus proyectos crecen mejor cuando cada uno recibe su propio espacio.',
 };
 
 var COMBINACIONES = {
-  'anio-mes':  'Tu origen te preparó para el mundo donde acabaste. Lo que viste en casa te sirvió.',
-  'anio-dia':  'Estás en paz con el lugar del que vienes. No te tuviste que romper para ser tú.',
-  'anio-hora': 'Estás continuando algo que empezó antes de ti, y te sale natural.',
-  'mes-dia':   'Trabajas en algo que se parece a lo que eres. Suena obvio y es rarísimo.',
-  'mes-hora':  'Lo que haces hoy va en la dirección de lo que quieres al final.',
-  'dia-hora':  'Tú y lo que construyes se llevan bien. Avanzas sin pelearte contigo.',
+  'anio-mes':  'Tu origen y tu trayectoria se apoyan entre sí. Cosas que aprendiste temprano pueden convertirse en recursos muy útiles para estudiar, trabajar y asumir responsabilidades.',
+  'anio-dia':  'Tu origen y tú encuentran puntos de continuidad. Parte de lo que recibiste al crecer puede sentirse bastante integrada con quien eres hoy.',
+  'anio-hora': 'Tu origen y tu futuro se conectan. Algo de lo heredado encuentra una salida natural dentro de lo que quieres construir y dejar.',
+  'mes-dia':   'Tu trayectoria y tú se entienden bien. Lo que haces y la forma en que piensas pueden encontrar una salida bastante natural entre sí.',
+  'mes-hora':  'Tu trayectoria y tu futuro se apoyan. Lo que haces hoy puede convertirse con facilidad en material para proyectos de más largo plazo.',
+  'dia-hora':  'Tú y tu futuro encuentran continuidad. Tus proyectos tienden a sentirse más propios cuando nacen de algo que de verdad te importa.',
 };
 
 // ─────────────────────────────────────────────────────────────
-// LOS VACÍOS  (空亡 Kong Wang)
+// VACÍOS · ramas que quedan sin pareja en cada bloque de diez
 // ─────────────────────────────────────────────────────────────
-// Nombre propio: "los vacíos". Ni el término chino ni ninguna
-// traducción de nadie más.
-//
-// Un pilar vacío marca un territorio que no viene dado. Lo que otros
-// heredan, aquí se construye a mano. Ese encuadre es el correcto y
-// además es el que no asusta.
+// La interfaz conserva la etiqueta "vacío" porque el usuario la reconoce y la entiende dentro de esta lectura.
+// El motor conserva la mecánica matemática de las dos ramas que quedan
+// fuera en cada bloque de diez combinaciones del ciclo de 60.
 
 var VACIOS = {
   anio: {
-    titulo:'Tu origen viene vacío',
-    texto:'El lugar del que vienes te dejó sin piso firme. El apoyo que otros dan por sentado a ti nunca te llegó solo, y lo que tienes de raíz te lo construiste tú.',
-    filo:'Sueles sentirte de ningún lado, incluso en tu propia casa.' },
+    titulo:'Vacío en tu origen',
+    texto:'Aquí el vacío pone atención en pertenencia, familia extensa y entorno social. Muchas de esas referencias se van construyendo con experiencia propia, en vez de sentirse dadas desde el principio.',
+    filo:'Una buena pregunta para esta zona: ¿qué personas y lugares sí se sienten como casa para ti hoy?' },
   mes: {
-    titulo:'Tu camino viene vacío',
-    texto:'Las carreras con escalones claros te expulsan o te aburren. Llevas años improvisando un camino que nadie te enseñó.',
-    filo:'Te cuesta explicar a qué te dedicas en una sola frase.' },
+    titulo:'Vacío en tu trayectoria',
+    texto:'Aquí el vacío toca estudios, trabajo, responsabilidades y logros. Puede acompañar caminos donde el criterio profesional se arma más sobre la marcha, probando y ajustando.',
+    filo:'Una buena pregunta para esta zona: ¿qué criterio quieres que guíe tu siguiente paso?' },
   hora: {
-    titulo:'Tu destino viene vacío',
-    texto:'Lo que viene después no está escrito, ni siquiera en borrador. Otros a tu edad ya saben en qué van a terminar; tú no, y eso te inquieta más de lo que admites.',
-    filo:'Planeas todo menos el final.' },
+    titulo:'Vacío en tu futuro',
+    texto:'Aquí el vacío cae sobre proyectos, hijos, vida interior y lo que quieres construir a largo plazo. Esa parte del mapa suele tomar forma a medida que eliges qué merece seguir creciendo.',
+    filo:'Una buena pregunta para esta zona: ¿qué proyecto merece una forma más concreta durante esta etapa?' },
 };
 
 /** ¿Qué pilares de esta carta caen en vacío? */
@@ -172,18 +169,18 @@ function vaciosDe(carta, claves) {
 // ─────────────────────────────────────────────────────────────
 
 var ABUNDA = {
-  madera:'Traes mucha madera: empiezas más cosas de las que terminas.',
-  fuego: 'Traes mucho fuego: se te nota todo en la cara antes de que hables.',
-  tierra:'Traes mucha tierra: aguantas situaciones más tiempo del necesario.',
-  metal: 'Traes mucho metal: tienes una regla interna para casi todo.',
-  agua:  'Traes mucha agua: piensas tres pasos adelante y a veces te quedas ahí.',
+  madera:'La madera aparece con fuerza. Hay bastante impulso para empezar, crecer y abrir rutas; elegir cuáles sí merecen continuidad evita que todo quiera crecer al mismo tiempo.',
+  fuego: 'El fuego tiene mucha presencia. Expresar, entusiasmar y hacer visible lo que te importa suele salir con facilidad; guardar ratos de descanso ayuda a que esa energía dure.',
+  tierra:'La tierra pesa bastante en tu carta. Sostener, organizar y dar continuidad puede salirte natural; dejar espacio para cambiar de opinión mantiene esa estabilidad viva.',
+  metal: 'El metal aparece con fuerza. Límites, criterio y puntos de cierre suelen verse claros; una segunda mirada puede sumar matices antes de decidir.',
+  agua:  'El agua tiene mucha presencia. Observas, conectas y detectas posibilidades rápido; elegir una corriente principal evita que tanta información te jale para lados distintos.',
 };
 var FALTA = {
-  madera:'No traes nada de madera: te cuesta arrancar sin que alguien te empuje.',
-  fuego: 'No traes nada de fuego: guardas el entusiasmo hasta que ya no se ve.',
-  tierra:'No traes nada de tierra: te mueves rápido pero sin suelo fijo.',
-  metal: 'No traes nada de metal: te cuesta cerrar y decir que no.',
-  agua:  'No traes nada de agua: actúas antes de terminar de pensarlo.',
+  madera:'La madera aparece poco. Darle nombre al siguiente paso, aunque sea pequeño, puede ayudarte a que una idea tenga por dónde empezar a crecer.',
+  fuego: 'El fuego aparece poco. Mostrar lo que te entusiasma, celebrar avances y dejar que otras personas vean tu trabajo puede abrir una parte más reservada.',
+  tierra:'La tierra aparece poco. Una rutina simple, una fecha en el calendario o un punto fijo de apoyo pueden darle continuidad a lo que ya comenzaste.',
+  metal: 'El metal aparece poco. Poner criterios claros y decidir dónde termina cada cosa puede hacer más ligeras varias decisiones.',
+  agua:  'El agua aparece poco. Darte un momento para observar, comparar y dejar que una idea repose puede aportar perspectiva antes del siguiente movimiento.',
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -235,12 +232,12 @@ function lecturaCompleta(carta, sinHora) {
       if (rb === CH(ra)) {
         tensiones.push({ tipo:'choque', par: par, entre: [a, b],
           texto: CHOQUES[par],
-          detalle: ANIMALES[carta.pilares[a].rama.pinyin].nombre + ' contra ' +
+          detalle: 'Roce · ' + ANIMALES[carta.pilares[a].rama.pinyin].nombre + ' y ' +
                    ANIMALES[carta.pilares[b].rama.pinyin].nombre });
       } else if (rb === CB(ra)) {
         tensiones.push({ tipo:'combinacion', par: par, entre: [a, b],
           texto: COMBINACIONES[par],
-          detalle: ANIMALES[carta.pilares[a].rama.pinyin].nombre + ' con ' +
+          detalle: 'Enlace · ' + ANIMALES[carta.pilares[a].rama.pinyin].nombre + ' y ' +
                    ANIMALES[carta.pilares[b].rama.pinyin].nombre });
       }
     }
@@ -284,12 +281,12 @@ function lecturaCompleta(carta, sinHora) {
 function porElemento(carta) {
   var IDS = _dep('IDENTIDADES','./traduccion');
   var id = IDS[carta.diaMaestro.pinyin];
-  return { tipo:'elemento', titulo:'Eres ' + id.nombre, cuerpo:[id.movimiento, id.tension], frase:id.frase };
+  return { tipo:'elemento', titulo:'Tu elemento base: ' + id.nombre, cuerpo:[id.movimiento, id.tension], frase:id.frase };
 }
 function porAnimal(carta, cualPilar) {
   var p = carta.pilares[cualPilar || 'anio'];
   var an = ANIMALES[p.rama.pinyin];
-  return { tipo:'animal', titulo:'Tu ' + PILARES[cualPilar || 'anio'].titulo.toLowerCase() + ': ' + an.nombre,
+  return { tipo:'animal', titulo:PILARES[cualPilar || 'anio'].titulo + ': ' + an.nombre,
            cuerpo:[an.movimiento, an.tension], frase:an.frase };
 }
 

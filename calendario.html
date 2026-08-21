@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Calendario chino — ¿para qué sirve hoy?</title>
-<meta name="description" content="Cada día del calendario chino tiene un carácter. Mira para qué sirve hoy, qué conviene empezar y qué conviene dejar para después. Gratis.">
+<title>Calendario — ¿cómo viene el día?</title>
+<meta name="description" content="Mira cómo viene cada día, qué actividades encuentran más apoyo y dónde conviene dejar un poco más de margen.">
 <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
@@ -16,9 +16,8 @@
   <!-- ── HOY ────────────────────────────────────────────── -->
   <section class="pantalla viva" id="p-dias">
     <p class="marca">Tu Elemento</p>
-    <h1 style="font-size:clamp(25px,5vw,34px); margin-bottom:8px">¿Para qué sirve hoy?</h1>
-    <p class="bajada" style="margin-bottom:24px">En el calendario chino cada día tiene un
-      carácter. Unos sirven para empezar, otros para cerrar, otros para no forzar nada.</p>
+    <h1 style="font-size:clamp(25px,5vw,34px); margin-bottom:8px">¿Cómo viene el día?</h1>
+    <p class="bajada" style="margin-bottom:24px">Cada fecha mezcla dos ritmos del calendario solar chino. Juntos ayudan a ver qué tipo de actividades fluyen mejor ese día y cuáles agradecen un poco más de margen. Si ya calculaste tu carta, también sumamos la relación con Tu origen.</p>
 
     <div class="cambiaVista">
       <button id="vDia" aria-pressed="true">Día</button>
@@ -46,12 +45,10 @@
     </div>
 
     <details style="margin-top:30px">
-      <summary>¿De dónde salen estos días?</summary>
-      <p>La técnica se llama Ze Ri Xue (擇日學), selección de fechas, y lleva siglos
-      usándose para elegir cuándo empezar algo importante. Cada día se clasifica según
-      la relación entre su signo y el del mes y el año.</p>
-      <p>Aquí se calcula con la posición del Sol, sin adivinar nada. El código es
-      abierto y puedes revisarlo.</p>
+      <summary>¿De dónde sale esta lectura?</summary>
+      <p>Usamos dos ciclos tradicionales del calendario chino. Uno recorre 12 ritmos según el mes y el día; el otro avanza de forma continua a través de 28 posiciones.</p>
+      <p>Después miramos cómo se relaciona ese día con el mes y el año. Si guardaste tu carta, también entra Tu origen. Los nombres que ves en pantalla son traducciones editoriales propias de Tu Elemento para que la lectura sea más fácil de usar.</p>
+      <p>La barra reúne todas esas señales en una sola referencia rápida. Debajo puedes leer cada ritmo por separado y decidir qué parte te sirve para el día que tienes delante.</p>
     </details>
   </section>
 
@@ -119,29 +116,30 @@
         '<p class="mes">' + MESES[f.getMonth()] + ' de ' + f.getFullYear() + '</p>' +
         '<p class="pil">' + iconoMini(p.tallo.elemento) + esc(p.rama.animal) + ' de ' + esc(p.tallo.elemento) + '</p>' +
       '</div>' +
-      '<p class="tipoDia">Día para ' + esc(d.oficial.nombre.toLowerCase()) + '</p>' +
+      '<p class="tipoDia">' + esc(vientoDelDia(d.puntaje)) + '</p>' +
       '<div class="medidor"><i style="width:' + d.puntaje + '%"></i></div>' +
-      '<p class="leyenda">' + esc(vientoDelDia(d.puntaje)) + '</p>' +
-      '<p style="margin-top:16px">' + esc(d.oficial.caracter) + '</p>' +
+      '<p class="leyenda">Una lectura rápida de cómo se mezclan los dos ritmos</p>' +
+      '<div class="capasTiempo escalona">' +
+        '<article class="capaTiempo"><span>Ritmo de 12 pasos</span><strong>' + esc(d.ritmo12.nombre) + '</strong><p>' + esc(d.ritmo12.caracter) + '</p></article>' +
+        '<article class="capaTiempo"><span>Pulso de 28 días</span><strong>' + esc(d.pulso28.nombre) + '</strong><p>' + esc(d.pulso28.caracter) + '</p></article>' +
+      '</div>' +
       '<div class="listas escalona">' +
-        '<div class="si"><h3>Va a favor</h3><ul>' +
+        '<div class="si"><h3>Puede fluir mejor</h3><ul>' +
           d.recomendadoPara.slice(0,5).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') +
         '</ul></div>' +
-        '<div class="no"><h3>Va en contra</h3><ul>' +
-          d.evitarHoy.slice(0,5).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') +
+        '<div class="no"><h3>Mejor con más margen</h3><ul>' +
+          d.dejarParaLuego.slice(0,5).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') +
         '</ul></div>' +
       '</div>';
 
     if (d.avisos.length) {
-      h += '<div class="roce"><b>Hoy hay roce.</b> ' +
+      h += '<div class="roce"><b>Un par de cosas para llevar con calma.</b> ' +
            d.avisos.map(function (a) { return esc(a.motivo) + (a.nota ? ': ' + esc(a.nota) : ''); }).join('. ') +
            '.</div>';
     }
     h += mia
-      ? '<p class="pista" style="margin-top:18px">Calculado para tu signo: ' +
-        esc(mia.pilares.anio.rama.animal) + '.</p>'
-      : '<p class="pista" style="margin-top:18px">Si calculas tu carta, este calendario ' +
-        'también te dice qué días chocan con tu signo, y lo recuerda para la próxima.</p>';
+      ? '<p class="pista" style="margin-top:18px">Esta lectura también está cruzada con Tu origen: ' + esc(mia.pilares.anio.rama.animal) + '.</p>'
+      : '<p class="pista" style="margin-top:18px">Cuando calcules tu carta, el calendario también podrá comparar cada fecha con Tu origen y guardar esa referencia en este navegador.</p>';
     h += '</div>';
 
     var caja = $('#diaCaja');

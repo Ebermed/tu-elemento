@@ -70,6 +70,12 @@ check('mes You + día Yin', R.oficialDelDia(9, 2).pinyin, 'Zhi');
 check('Jian cae en día = rama del mes', R.oficialDelDia(9, 9).pinyin, 'Jian');
 check('mes Yin + día Yin', R.oficialDelDia(2, 2).pinyin, 'Jian');
 
+console.log('\n═══ CICLO CONTINUO DE 28 POSICIONES ═══');
+check('22 sep 2022 → inicio publicado', R.pulso28({anio:2022,mes:9,dia:22}).id, 'Jiao');
+check('10 sep 2022 → posición 17', R.pulso28({anio:2022,mes:9,dia:10}).id, 'Wei17');
+check('20 oct 2022 → vuelve al inicio', R.pulso28({anio:2022,mes:10,dia:20}).id, 'Jiao');
+check('17 sep 2026 → inicio publicado', R.pulso28({anio:2026,mes:9,dia:17}).id, 'Jiao');
+
 console.log('\n═══ SAN SHA ═══');
 const ss2022 = R.sanSha(2); // año Tigre
 check('año Tigre → robo',      M.RAMAS[ss2022.robo].animal, 'cerdo');
