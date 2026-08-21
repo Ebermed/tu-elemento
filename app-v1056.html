@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tu Elemento — ¿de qué estás hecho?</title>
+<meta name="description" content="Descubre tu elemento base y guarda varias cartas en este navegador.">
+<link rel="stylesheet" href="estilo.css?v=10.5.6">
+<style id="v1056-polish">
+.perfilIcono .iconito {
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  margin:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.perfilIcono .iconito svg {
+  width:27px!important;
+  height:27px!important;
+  max-width:27px!important;
+  max-height:27px!important;
+  stroke-width:2.15!important;
+  opacity:.88;
+}
+</style>
+</head>
+<body>
+<div id="fondo" aria-hidden="true"></div>
+<main>
+
+  <section class="pantalla viva" id="p-portada">
+    <p class="marca">Tu Elemento</p>
+    <h1 id="portadaTitulo">¿De qué estás hecho?</h1>
+    <div id="introPrimera">
+      <p class="bajada">Tu fecha de nacimiento se reparte en cuatro pilares. Cada uno mira una parte distinta de tu historia: Tu origen, Tu trayectoria, Tu centro y Tu futuro.</p>
+      <p class="bajada">En el centro aparece tu elemento base. Aquí lo convertimos en una imagen fácil de recordar —Roble, Hiedra, Sol, Brasa, Montaña y cinco más— y desde ahí abrimos el resto de tu carta.</p>
+      <button class="btn" type="button" id="irForm">Descubre tu elemento</button>
+      <div class="diez" aria-label="Los diez elementos">
+        <span>Roble</span><span>Hiedra</span><span>Sol</span><span>Brasa</span><span>Montaña</span><span>Huerto</span><span>Acero</span><span>Joya</span><span>Marea</span><span>Rocío</span>
+      </div>
+      <details>
+        <summary>¿Y esto qué es exactamente?</summary>
+        <p>BaZi organiza año, mes, día y hora con el calendario solar chino. De ahí salen los cuatro pilares que usamos para construir esta lectura.</p>
+        <p>El cálculo conserva la estructura tradicional por dentro. Lo que lees en pantalla usa nombres y explicaciones propias de Tu Elemento para que la carta sea fácil de consultar.</p>
+      </details>
+    </div>
+
+    <section class="bibliotecaCartas" id="bibliotecaCartas" hidden>
+      <div class="bibliotecaCab">
+        <div>
+          <p class="miniKicker">Tus cartas</p>
+          <h2>Aquí están tus cartas</h2>
+          <p class="sub">Elige una para abrir su lectura o entra a su calendario.</p>
+        </div>
+        <button class="btn fantasma miniBtn" type="button" data-nueva-carta>+ Nueva carta</button>
+      </div>
+      <div class="listaPerfiles" id="listaPerfiles"></div>
+    </section>
+
+    <p id="portadaCalendario" style="margin-top:22px"><a class="btn fantasma" href="calendario.html">Ver el calendario de hoy</a></p>
+  </section>
+
+  <section class="pantalla" id="p-form">
+    <p class="marca">Tu Elemento</p>
+    <h1 id="tituloForm" style="font-size:clamp(27px,5.5vw,36px)">¿Cuándo naciste?</h1>
+    <p class="bajada">Todas tus cartas quedarán guardadas en este navegador para que puedas volver a ellas y usarlas en el calendario.</p>
+
+    <form id="forma" novalidate>
+      <div class="campo">
+        <label>¿Para quién es esta carta?</label>
+        <div class="paraQuien" role="group" aria-label="Persona de esta carta">
+          <button type="button" class="paraQuienBtn activo" id="paraMi" aria-pressed="true">Para mí</button>
+          <button type="button" class="paraQuienBtn" id="paraOtra" aria-pressed="false">Para alguien más</button>
+        </div>
+        <div class="nombrePersona" id="nombrePersona" hidden>
+          <label for="nombreCarta">¿Cómo le llamamos?</label>
+          <input type="text" id="nombreCarta" placeholder="Nombre o apodo" maxlength="40" autocomplete="off">
+          <p class="pista" style="margin:7px 0 0">Este nombre sirve para distinguir sus cartas dentro de este navegador.</p>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="dia">Fecha de nacimiento</label>
+        <div class="trio">
+          <input type="number" id="dia" placeholder="Día" min="1" max="31" inputmode="numeric">
+          <select id="mes"><option value="">Mes</option></select>
+          <input type="number" id="anio" placeholder="Año" min="1900" max="2030" inputmode="numeric">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="hora">Hora <span class="pista">— opcional, afina el resultado</span></label>
+        <div class="duo">
+          <input type="number" id="hora" placeholder="Hora (0-23)" min="0" max="23" inputmode="numeric">
+          <input type="number" id="minuto" placeholder="Minutos" min="0" max="59" inputmode="numeric">
+        </div>
+        <p class="pista" style="margin:7px 0 0">La hora completa Tu futuro, el pilar ligado a proyectos, vida interior y lo que vas construyendo con el tiempo.</p>
+      </div>
+
+      <div class="campo">
+        <label for="sexo">Sexo registrado al nacer <span class="pista">— opcional</span></label>
+        <select id="sexo">
+          <option value="">Prefiero omitirlo</option>
+          <option value="m">Mujer</option>
+          <option value="h">Hombre</option>
+        </select>
+        <p class="pista" style="margin:7px 0 0">Este dato entra únicamente en tus ciclos de diez años.</p>
+      </div>
+
+      <div class="campo">
+        <label for="buscaLugar">Lugar de nacimiento</label>
+        <div style="position:relative">
+          <input type="text" id="buscaLugar" placeholder="Escribe tu ciudad" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias">
+          <ul id="sugerencias" role="listbox"></ul>
+        </div>
+        <p class="pista" id="pistaLugar" style="margin:7px 0 0"></p>
+        <p class="pista" style="margin:6px 0 0">Elige tu ciudad o una cercana. La app toma en cuenta el horario histórico y hace una pequeña corrección por la posición del Sol.</p>
+      </div>
+
+      <p class="error" id="err" role="alert"></p>
+      <div class="acciones">
+        <button type="submit" class="btn" id="calcular">Ver mi elemento</button>
+        <button type="button" class="btn fantasma" id="volverPortada">Atrás</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="pantalla" id="p-resultado">
+    <button class="cartaVolver" id="volverCartas" type="button" aria-label="Volver a tus cartas">‹</button>
+    <p class="marca">Tu Elemento</p>
+    <p class="resultadoContexto" id="resultadoContexto" hidden></p>
+    <div id="resultadoHero" class="resultadoHero"></div>
+    <div class="acciones resultadoAcciones"><button class="btn" type="button" id="bajarTop">Descargar tarjeta</button></div>
+    <button class="seguirCarta" id="seguirCarta" type="button" aria-label="Seguir leyendo tu carta">
+      <span class="seguirTexto">Tu carta sigue</span><small>4 pilares · balance · calendario · ciclos</small><span class="seguirFlecha" aria-hidden="true">↓</span>
+    </button>
+    <div class="lectura" id="lectura"></div>
+    <section class="compartirMarco" id="compartirMarco">
+      <h2 class="titIcon cent" id="compartirTitulo">Tu tarjeta para compartir</h2>
+      <p class="sub compartirIntro">Esta es la versión breve de tu carta, pensada para guardar o compartir. El resto de la lectura queda aquí contigo.</p>
+      <div id="tarjetaCaja"></div>
+      <div class="acciones compartirAcciones">
+        <button class="btn" type="button" id="bajarFinal">Descargar tarjeta</button>
+        <button class="btn fantasma" type="button" data-nueva-carta>Calcular otra carta</button>
+      </div>
+    </section>
+  </section>
+
+  <section class="pantalla" id="p-carta">
+    <p class="marca">Tu Elemento</p>
+    <div id="cartaCaja"></div>
+    <div class="acciones" style="justify-content:center; margin-top:24px; flex-wrap:wrap">
+      <button class="btn fantasma" type="button" id="volverResultado">Volver a mi carta</button>
+    </div>
+  </section>
+</main>
+
+<p class="pie">Hecho con ♥ por Ebermedia · <a href="calendario.html">calendario del día</a></p>
+
+<script src="acuarela.js?v=10.5.6"></script>
+<script src="lugares.js?v=10.5.6"></script>
+<script src="zonas.js?v=10.5.6"></script>
+<script src="motor.js?v=10.5.6"></script>
+<script src="traduccion.js?v=10.5.6"></script>
+<script src="tarjeta.js?v=10.5.6"></script>
+<script src="lectura.js?v=10.5.6"></script>
+<script src="decadas.js?v=10.5.6"></script>
+<script src="base.js?v=10.5.6"></script>
+<script src="app-v105.js?v=10.5.6"></script>
+<script src="app-v105-submit-fix.js?v=10.5.6"></script>
+<script src="pilares-estaticos-v1056.js?v=10.5.6"></script>
+</body>
+</html>
