@@ -1,0 +1,59 @@
+name: Run V11 clean builder
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '_trigger_v11_builder_main.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v11-clean-reset
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Execute builder embedded in V11 branch
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/build-v11-clean.yml').read_text(encoding='utf-8')
+          marker = "python3 - <<'PY'\n"
+          start = text.index(marker) + len(marker)
+          end = text.index("\n          PY", start)
+          code = text[start:end]
+          code = '\n'.join(line[10:] if line.startswith('          ') else line for line in code.splitlines())
+          exec(compile(code, 'v11-builder.py', 'exec'), {})
+          PY
+      - name: Validate clean runtime
+        shell: bash
+        run: |
+          set -e
+          for f in v11/*.js; do node --check "$f"; done
+          node test.js
+          node test-decadas.js
+          if grep -R -n -E 'v10|v105|LLAVE_ANTERIOR|_migrarNacimientoAnterior|guardarNacimiento|leerNacimiento|olvidarNacimiento|cartaGuardada|app-v105|pilares-selector|pilares-estaticos|submit-fix' v11; then
+            echo 'Legacy reference found in V11'; exit 1
+          fi
+          grep -q "tuelemento.v11.perfiles" v11/base.js
+          grep -q "11-clean-20260821" v11/base.js
+          grep -q "function enlazarPilares" v11/app.js
+          if grep -q "activarApariciones($('#lectura'))" v11/app.js; then exit 1; fi
+          echo 'V11 clean validation passed'
+      - name: Commit clean V11 to branch
+        shell: bash
+        run: |
+          git config user.name "Tu Elemento V11 Builder"
+          git config user.email "actions@users.noreply.github.com"
+          git add v11
+          git diff --cached --quiet && exit 0
+          git commit -m "Build clean V11 runtime"
+          git push origin HEAD:v11-clean-reset
