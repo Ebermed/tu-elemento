@@ -21,6 +21,7 @@ jobs:
           cd v11
           node test.js
           node test-decadas.js
+          node test-mensual.js
       - name: V11 architecture contract
         run: |
           node - <<'NODE'
