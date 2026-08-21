@@ -5,170 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tu Elemento — ¿de qué estás hecho?</title>
 <meta name="description" content="Hace mil años, en China se leía el momento exacto de un nacimiento para saber de qué estaba hecha una persona. Esa lectura se llama BaZi. La tuya, gratis, en treinta segundos.">
-<style>
-  :root {
-    --tinta:#2E2A26; --tinta-suave:#6B6259; --papel:#FBF7F0;
-    --serif:Georgia,'Iowan Old Style','Times New Roman',serif;
-    --sans:ui-sans-serif,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
-  }
-  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html,body { margin:0; padding:0; }
-  body { background:var(--papel); color:var(--tinta); font-family:var(--sans);
-         font-size:17px; line-height:1.65; overflow-x:hidden; }
-  #fondo { position:fixed; inset:0; z-index:0; transition:opacity .8s ease; }
-  #fondo svg { width:100%; height:100%; display:block; }
-  main { position:relative; z-index:1; min-height:100vh;
-         display:flex; align-items:center; justify-content:center; padding:40px 24px; }
-  .pantalla { display:none; width:100%; max-width:560px; text-align:center;
-              animation:entrar .55s cubic-bezier(.2,.7,.3,1) both; }
-  .pantalla.viva { display:block; }
-  @keyframes entrar { from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
-  @media (prefers-reduced-motion:reduce){ .pantalla{animation:none} #fondo{transition:none} }
+<link rel="stylesheet" href="estilo.css">
 
-  .marca { font-family:var(--sans); font-size:13px; letter-spacing:5px;
-           text-transform:uppercase; color:var(--tinta-suave); margin:0 0 40px; }
-  h1 { font-family:var(--serif); font-weight:400; font-size:clamp(34px,7vw,50px);
-       line-height:1.15; letter-spacing:-.5px; margin:0 0 22px; }
-  .bajada { font-size:18px; color:var(--tinta-suave); margin:0 auto 36px; max-width:430px; }
-  .bajada strong { color:var(--tinta); font-weight:500; }
-
-  .btn { font-family:var(--sans); font-size:17px; font-weight:500; color:var(--papel);
-         background:var(--tinta); border:0; border-radius:100px; padding:16px 38px;
-         cursor:pointer; transition:transform .15s, opacity .15s; }
-  .btn:hover { transform:translateY(-2px); }
-  .btn:active { transform:translateY(0); }
-  .btn:disabled { opacity:.35; cursor:default; transform:none; }
-  .btn.fantasma { background:transparent; color:var(--tinta-suave);
-                  border:1px solid rgba(0,0,0,.18); font-size:15px; padding:12px 26px; }
-
-  .diez { display:flex; flex-wrap:wrap; gap:7px 10px; justify-content:center;
-          margin:44px auto 0; max-width:420px; }
-  .diez span { font-family:var(--serif); font-size:16px; font-style:italic;
-               color:var(--tinta-suave); opacity:.75; }
-  .diez span::after { content:'·'; margin-left:10px; opacity:.4; }
-  .diez span:last-child::after { content:''; }
-
-  details { margin-top:34px; text-align:left; max-width:430px; margin-inline:auto; }
-  summary { cursor:pointer; font-size:15px; color:var(--tinta-suave); text-align:center; }
-  details p { font-size:15px; color:var(--tinta-suave); margin:14px 0 0; }
-
-  form { text-align:left; }
-  .campo { margin-bottom:22px; }
-  label { display:block; font-size:14px; font-weight:500; margin-bottom:7px; }
-  .pista { font-weight:400; color:var(--tinta-suave); font-size:13px; }
-  select, input { width:100%; font-family:var(--sans); font-size:16px; padding:12px 14px;
-                  border:1px solid rgba(0,0,0,.16); border-radius:10px;
-                  background:rgba(255,255,255,.62); color:var(--tinta); }
-  select:focus, input:focus { outline:2px solid rgba(0,0,0,.35); outline-offset:1px; }
-  .trio { display:grid; grid-template-columns:1fr 1.4fr 1fr; gap:9px; }
-  .duo { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
-  #sugerencias { list-style:none; margin:4px 0 0; padding:5px; position:absolute;
-                 left:0; right:0; z-index:20; background:#FFFDF9; border-radius:11px;
-                 box-shadow:0 6px 24px rgba(0,0,0,.14); max-height:250px; overflow-y:auto;
-                 display:none; }
-  #sugerencias.abierto { display:block; }
-  #sugerencias li { padding:10px 12px; border-radius:7px; cursor:pointer; font-size:15px; }
-  #sugerencias li[aria-selected="true"], #sugerencias li:hover { background:rgba(0,0,0,.06); }
-  #sugerencias li .pais { color:var(--tinta-suave); font-size:13px; }
-  .elegido { font-size:14px; color:var(--tinta-suave); margin:8px 0 0; }
-  .elegido b { font-weight:500; color:var(--tinta); }
-  .error { color:#A33; font-size:14px; margin:8px 0 0; min-height:20px; }
-  .acciones { display:flex; gap:10px; align-items:center; margin-top:8px; }
-
-  #tarjetaCaja svg { width:100%; max-width:352px; height:auto; border-radius:14px;
-                     box-shadow:0 6px 34px rgba(0,0,0,.16); }
-
-  /* Todo el contenido va sobre papel sólido. El texto plano sobre acuarela
-     era ilegible y además no invitaba a leer nada. */
-  .hoja { background:rgba(255,253,249,.93); border-radius:16px;
-          box-shadow:0 2px 18px rgba(0,0,0,.07); padding:22px 24px;
-          margin:16px auto 0; max-width:520px; text-align:left; }
-  .hoja h2 { font-family:var(--serif); font-weight:400; font-size:23px;
-             margin:0 0 4px; letter-spacing:-.3px; }
-  .hoja .sub { font-size:14px; color:var(--tinta-suave); margin:0 0 16px; }
-  .hoja p { margin:0 0 11px; }
-  .hoja p:last-child { margin-bottom:0; }
-  .tension { font-family:var(--serif); font-style:italic; }
-
-  /* LOS CUATRO PILARES COMO CUATRO COLUMNAS.
-     Se llaman pilares porque la carta clásica se dibuja así: en columnas
-     verticales. Renderizarlos como lista era perder la estructura. */
-  .columnas { display:grid; grid-template-columns:repeat(var(--n,4),1fr);
-              gap:7px; margin:6px 0 0; }
-  /* Cada pilar es un botón que SE VE botón. Antes eran columnas
-     transparentes con un ▾ gris: nadie adivinaba que se podían tocar,
-     y en celular no hay hover que lo insinúe. */
-  .col { border:1px solid rgba(0,0,0,.13); border-radius:11px;
-         background:rgba(255,255,255,.55); font:inherit; color:inherit;
-         cursor:pointer; padding:12px 4px 10px; text-align:center;
-         transition:background .18s, border-color .18s, transform .12s; }
-  .col:hover { background:#fff; border-color:rgba(0,0,0,.26); }
-  .col:active { transform:scale(.97); }
-  .col:focus-visible { outline:2px solid var(--tinta); outline-offset:2px; }
-  .col[aria-expanded="true"] { background:#fff; border-color:var(--acento,#777);
-                               border-width:2px; padding:11px 3px 9px; }
-  .col .rot { display:block; font-size:10px; letter-spacing:1.5px;
-              text-transform:uppercase; color:var(--tinta-suave); margin-bottom:6px; }
-  .col .an { display:block; font-family:var(--serif); font-size:20px; line-height:1.15; }
-  .col .el { display:block; font-family:var(--serif); font-style:italic;
-             font-size:13px; color:var(--tinta-suave); margin-top:1px; }
-  /* La etiqueta dice con palabras lo que un icono nunca dice bien */
-  .col .vac { display:inline-block; margin-top:5px; font-size:9.5px; letter-spacing:1.3px;
-              text-transform:uppercase; padding:2px 7px; border-radius:100px;
-              background:rgba(0,0,0,.09); color:var(--tinta-suave); }
-  .col .mas { display:inline-block; margin-top:9px; font-size:11px; letter-spacing:.6px;
-              padding:3px 10px; border-radius:100px; background:var(--acento,#777);
-              color:#fff; opacity:.88; }
-  .col[aria-expanded="true"] .mas { background:transparent; color:var(--tinta-suave);
-                                    box-shadow:inset 0 0 0 1px rgba(0,0,0,.2); }
-
-  .panel { display:none; border-top:1px solid rgba(0,0,0,.10);
-           padding:16px 2px 2px; margin-top:14px; }
-  .panel.abierto { display:block; animation:entrar .3s both; }
-  .panel .quien { font-size:13px; letter-spacing:1.4px; text-transform:uppercase;
-                  color:var(--tinta-suave); margin:0 0 6px; }
-
-  /* Interacciones: lo específico, lo que no le sale a todos */
-  .inter { border-left:3px solid var(--acento,#999); padding:2px 0 2px 14px; margin:0 0 16px; }
-  .inter:last-child { margin-bottom:0; }
-  .inter .quienes { font-family:var(--serif); font-size:18px; margin:0 0 4px; }
-
-  /* Balance como barras, no como frases */
-  .barras { display:grid; grid-template-columns:repeat(5,1fr); gap:9px;
-            align-items:end; height:74px; margin:2px 0 14px; }
-  .barra { display:flex; flex-direction:column; justify-content:flex-end; height:100%; }
-  .barra i { display:block; border-radius:4px 4px 0 0; background:var(--acento,#999); }
-  .barra b { font-size:10.5px; font-weight:400; letter-spacing:1.2px; text-transform:uppercase;
-             color:var(--tinta-suave); text-align:center; margin-top:6px; }
-  .barra.cero i { opacity:.2; }
-  .barra.cero b { opacity:.45; }
-
-  /* LÍNEA DEL TIEMPO. Vertical, no horizontal: en celular una tira de
-     nueve décadas de lado obliga a hacer scroll lateral, que nadie hace. */
-  .tl { list-style:none; margin:0; padding:0; text-align:left; }
-  .tl li { display:grid; grid-template-columns:66px 1fr; gap:14px;
-           padding:14px 0; border-top:1px solid rgba(0,0,0,.09); }
-  .tl li:first-child { border-top:0; }
-  .tl .edad { font-family:var(--serif); font-size:20px; line-height:1.1; padding-top:2px; }
-  .tl .edad small { display:block; font-family:var(--sans); font-size:11px;
-                    color:var(--tinta-suave); letter-spacing:.4px; }
-  .tl .cuerpo p { margin:0 0 6px; }
-  .tl .cuerpo p:last-child { margin-bottom:0; }
-  .tl .cab { font-family:var(--serif); font-size:19px; }
-  .tl .cab em { font-style:italic; color:var(--tinta-suave); font-size:15px; }
-  .tl .ahora { background:rgba(255,255,255,.72); border-radius:12px;
-               padding:16px 14px; border-top:0; box-shadow:inset 0 0 0 2px var(--acento,#999); }
-  .tl .sello { display:inline-block; font-size:10px; letter-spacing:1.6px;
-               text-transform:uppercase; background:var(--acento,#777); color:#fff;
-               padding:3px 9px; border-radius:100px; margin-bottom:7px; }
-  .tl .futuro { opacity:.62; }
-  .tl .vac { font-size:10px; letter-spacing:1.2px; text-transform:uppercase;
-             background:rgba(0,0,0,.08); padding:2px 7px; border-radius:100px;
-             color:var(--tinta-suave); margin-left:6px; }
-  .pie { position:relative; z-index:1; text-align:center; padding:26px;
-         font-size:13px; color:var(--tinta-suave); }
-  .pie a { color:inherit; }
-</style>
 </head>
 <body>
 
@@ -195,6 +33,10 @@
       <span>Roble</span><span>Hiedra</span><span>Sol</span><span>Brasa</span><span>Montaña</span><span>Huerto</span><span>Acero</span><span>Joya</span><span>Marea</span><span>Rocío</span>
     </div>
 
+    <p style="margin-top:26px">
+      <a class="btn fantasma" href="calendario.html">Ver la energía de hoy</a>
+    </p>
+
     <details>
       <summary>¿Y esto qué es exactamente?</summary>
       <p>Se llama BaZi. Es el sistema completo del que sale el animal que ya conoces,
@@ -210,8 +52,8 @@
   <section class="pantalla" id="p-form">
     <p class="marca">Tu Elemento</p>
     <h1 style="font-size:clamp(27px,5.5vw,36px)">¿Cuándo llegaste?</h1>
-    <p class="bajada">Nada de esto se guarda ni se envía. El cálculo entero ocurre
-      en tu teléfono.</p>
+    <p class="bajada">El cálculo entero ocurre en tu teléfono. Tus datos se quedan
+      guardados aquí mismo para no volver a pedírtelos, y no salen a ningún lado.</p>
 
     <form id="forma" novalidate>
       <div class="campo">
@@ -286,7 +128,7 @@
 
 </main>
 
-<p class="pie">Hecho con ♥ por Ebermedia · <a href="#" id="verCodigo">código abierto</a></p>
+<p class="pie">Hecho con ♥ por Ebermedia · <a href="calendario.html">calendario del día</a></p>
 
 <script src="acuarela.js"></script>
 <script src="lugares.js"></script>
@@ -296,25 +138,23 @@
 <script src="tarjeta.js"></script>
 <script src="lectura.js"></script>
 <script src="decadas.js"></script>
+<script src="base.js"></script>
 <script>
 (function () {
   'use strict';
 
-  // Si falta un archivo, decir CUÁL en vez de soltar un ReferenceError críptico.
-  var REQUIERE = {
+  if (faltantes({
     'acuarela.js':   'fondoAcuarela',
-    'zonas.js':      'utcDesdeLocal',
     'lugares.js':    'LUGARES',
+    'zonas.js':      'utcDesdeLocal',
     'motor.js':      'cuatroPilares',
     'traduccion.js': 'traducir',
     'tarjeta.js':    'tarjetaSVG',
     'lectura.js':    'lecturaCompleta',
-    'decadas.js':    'decadas'
-  };
-  var faltan = [];
-  for (var arch in REQUIERE) {
-    if (typeof globalThis[REQUIERE[arch]] === 'undefined') faltan.push(arch);
-  }
+    'decadas.js':    'decadas',
+    'base.js':       'pintarFondo'
+  })) return;
+
   if (faltan.length) {
     document.querySelector('main').innerHTML =
       '<div style="max-width:520px;text-align:left">' +
@@ -326,29 +166,14 @@
     return;
   }
 
-  var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
-               'agosto','septiembre','octubre','noviembre','diciembre'];
 
   // LUGARES viene de zonas.js: cada uno con su zona IANA, que resuelve el
   // horario de verano histórico. México lo suprimió en 2022, pero quien nació
   // en verano antes de esa fecha necesita el offset de su época.
 
-  var $ = function (s) { return document.querySelector(s); };
-  var fondo = $('#fondo');
 
-  function pintarFondo(paleta, semilla, opac) {
-    fondo.innerHTML = fondoAcuarela(paleta, 1200, 1600, {
-      semilla: semilla, opacidad: opac == null ? 1.9 : opac
-    });
-  }
   pintarFondo(PALETA_NEUTRA, 88);
 
-  function ir(id) {
-    var vivas = document.querySelectorAll('.pantalla.viva');
-    for (var i = 0; i < vivas.length; i++) vivas[i].classList.remove('viva');
-    $('#' + id).classList.add('viva');
-    window.scrollTo(0, 0);
-  }
 
   MESES.forEach(function (m, i) {
     var o = document.createElement('option');
@@ -570,6 +395,13 @@
     if (!lec.balance.matices.length) html += '<p>Tus cinco elementos están repartidos sin extremos.</p>';
     html += '</div>';
 
+    html += '<div class="hoja" style="text-align:center">' +
+              '<h2>La energía de cada día</h2>' +
+              '<p class="sub">Tu carta no cambia, pero los días sí. Mira para qué sirve ' +
+              'hoy, y qué días chocan con tu signo.</p>' +
+              '<a class="btn" href="calendario.html" style="margin-top:6px;display:inline-block">Ver el calendario</a>' +
+            '</div>';
+
     // 6 · avisos
     var aviso = '';
     if (sinHora) aviso = 'Sin tu hora de nacimiento falta un pilar de los cuatro. Tu elemento es correcto, pero con la hora la carta se completa.';
@@ -614,6 +446,12 @@
     });
 
     ultimo.lec = lec;
+
+    // Se guarda EN ESTE NAVEGADOR para que el calendario sepa tu signo
+    // sin volver a preguntarte. Nunca sale de aquí: no hay servidor.
+    guardarNacimiento({ anio:anio, mes:mes, dia:dia, hora:hora, minuto:minuto,
+                        sinHora:sinHora, zona:lug.z, lon:lug.lon, ciudad:lug.c });
+
 
     var btnCarta = $('#verCarta');
     if (btnCarta) btnCarta.addEventListener('click', function () {
@@ -667,33 +505,6 @@
            '<p class="tension">' + esc(ANIMALES[sig.rama.pinyin].tension) + '</p></div>';
     }
     return h;
-  }
-
-  /* Descarga un <svg> del DOM como PNG. El tamaño sale del propio SVG,
-     porque la carta completa crece según cuánto contenido tenga. */
-  function descargarSVG(svg, nombre) {
-    if (!svg) return;
-    var w = parseInt(svg.getAttribute('width'), 10) || 1080;
-    var h = parseInt(svg.getAttribute('height'), 10) || 1350;
-    var s = new XMLSerializer().serializeToString(svg);
-    var url = URL.createObjectURL(new Blob([s], { type: 'image/svg+xml;charset=utf-8' }));
-    var img = new Image();
-    img.onload = function () {
-      var c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      var ctx = c.getContext('2d');
-      ctx.fillStyle = '#FBF7F0'; ctx.fillRect(0, 0, w, h);
-      ctx.drawImage(img, 0, 0, w, h);
-      URL.revokeObjectURL(url);
-      c.toBlob(function (b) {
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(b);
-        a.download = nombre + '.png';
-        a.click();
-      });
-    };
-    img.onerror = function () { URL.revokeObjectURL(url); };
-    img.src = url;
   }
 
   $('#bajar').addEventListener('click', function () {

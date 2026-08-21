@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendario chino — ¿para qué sirve hoy?</title>
+<meta name="description" content="Cada día del calendario chino tiene un carácter. Mira para qué sirve hoy, qué conviene empezar y qué conviene dejar para después. Gratis.">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<div id="fondo" aria-hidden="true"></div>
+
+<main>
+
+  <!-- ── HOY ────────────────────────────────────────────── -->
+  <section class="pantalla viva" id="p-dias">
+    <p class="marca">Tu Elemento</p>
+    <h1 style="font-size:clamp(25px,5vw,34px); margin-bottom:8px">¿Para qué sirve hoy?</h1>
+    <p class="bajada" style="margin-bottom:24px">En el calendario chino cada día tiene un
+      carácter. Unos sirven para empezar, otros para cerrar, otros para no forzar nada.</p>
+
+    <div class="nav">
+      <button id="diaAnt" aria-label="Día anterior">‹</button>
+      <button class="hoy" id="diaHoy">Hoy</button>
+      <button id="diaSig" aria-label="Día siguiente">›</button>
+    </div>
+
+    <div id="diaCaja"></div>
+
+    <div class="acciones" style="justify-content:center; margin-top:26px; flex-wrap:wrap">
+      <a class="btn" href="index.html">Calcular mi carta</a>
+      <button class="btn fantasma" id="olvidar" hidden>Olvidar mis datos</button>
+    </div>
+
+    <details style="margin-top:30px">
+      <summary>¿De dónde salen estos días?</summary>
+      <p>La técnica se llama Ze Ri Xue (擇日學), selección de fechas, y lleva siglos
+      usándose para elegir cuándo empezar algo importante. Cada día se clasifica según
+      la relación entre su signo y el del mes y el año.</p>
+      <p>Aquí se calcula con la posición del Sol, sin adivinar nada. El código es
+      abierto y puedes revisarlo.</p>
+    </details>
+  </section>
+
+</main>
+
+<p class="pie">Hecho con ♥ por Ebermedia · <a href="index.html">calcula tu carta</a></p>
+
+<script src="acuarela.js"></script>
+<script src="lugares.js"></script>
+<script src="zonas.js"></script>
+<script src="motor.js"></script>
+<script src="traduccion.js"></script>
+<script src="reglas.js"></script>
+<script src="base.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  if (faltantes({
+    'acuarela.js':   'fondoAcuarela',
+    'zonas.js':      'utcDesdeLocal',
+    'motor.js':      'cuatroPilares',
+    'traduccion.js': 'IDENTIDADES',
+    'reglas.js':     'evaluarDia',
+    'base.js':       'pintarFondo'
+  })) return;
+
+  var diaVisto = null;
+  // Si ya calculó su carta antes, el calendario la recuerda y personaliza.
+  var mia = cartaGuardada();
+
+  if (mia) $('#olvidar').hidden = false;
+  $('#olvidar').addEventListener('click', function () {
+    olvidarNacimiento(); mia = null;
+    this.hidden = true;
+    pintarDia(diaVisto || new Date(), 0);
+  });
+
+  function pintarDia(f, dir) {
+    var esc = function (x) { return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;'); };
+    var natal = mia ? { ramaAnio: RAMAS.indexOf(mia.pilares.anio.rama) } : null;
+    var d = evaluarDia({ anio:f.getFullYear(), mes:f.getMonth()+1, dia:f.getDate() }, natal);
+    var p = d.pilares.dia;
+
+    // El color lo pone el elemento del día, o el tuyo si ya lo conocemos.
+    var base = mia ? IDENTIDADES[mia.diaMaestro.pinyin] : IDENTIDADES[p.tallo.pinyin];
+    document.documentElement.style.setProperty('--acento', base.paleta[2]);
+    pintarFondo(base.paleta, f.getDate()*31 + f.getMonth(), 1.15);
+
+    var h = '<div class="vidrio">' +
+      '<div class="diaCab">' +
+        '<p class="dow">' + DOW[f.getDay()] + '</p>' +
+        '<p class="num">' + f.getDate() + '</p>' +
+        '<p class="mes">' + MESES[f.getMonth()] + ' de ' + f.getFullYear() + '</p>' +
+        '<p class="pil">' + esc(p.rama.animal) + ' de ' + esc(p.tallo.elemento) + '</p>' +
+      '</div>' +
+      '<div class="medidor"><i style="width:' + d.puntaje + '%"></i></div>' +
+      '<p class="leyenda">' + esc(d.oficial.nombre) + ' · ' + d.puntaje + ' de 100</p>' +
+      '<p style="margin-top:16px">' + esc(d.oficial.caracter) + '</p>' +
+      '<div class="listas">' +
+        '<div class="si"><h3>Va a favor</h3><ul>' +
+          d.recomendadoPara.slice(0,5).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') +
+        '</ul></div>' +
+        '<div class="no"><h3>Va en contra</h3><ul>' +
+          d.evitarHoy.slice(0,5).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') +
+        '</ul></div>' +
+      '</div>';
+
+    if (d.avisos.length) {
+      h += '<div class="roce"><b>Hoy hay roce.</b> ' +
+           d.avisos.map(function (a) { return esc(a.motivo) + (a.nota ? ': ' + esc(a.nota) : ''); }).join('. ') +
+           '.</div>';
+    }
+    h += mia
+      ? '<p class="pista" style="margin-top:18px">Calculado para tu signo: ' +
+        esc(mia.pilares.anio.rama.animal) + '.</p>'
+      : '<p class="pista" style="margin-top:18px">Si calculas tu carta, este calendario ' +
+        'también te dice qué días chocan con tu signo, y lo recuerda para la próxima.</p>';
+    h += '</div>';
+
+    var caja = $('#diaCaja');
+    caja.style.setProperty('--dir', (dir || 0) >= 0 ? '16px' : '-16px');
+    caja.innerHTML = h;
+    caja.style.animation = 'none'; void caja.offsetWidth; caja.style.animation = '';
+    diaVisto = f;
+  }
+
+  function moverDia(n) {
+    var f = new Date(diaVisto.getTime());
+    f.setDate(f.getDate() + n);
+    pintarDia(f, n);
+  }
+
+  $('#diaAnt').addEventListener('click', function () { moverDia(-1); });
+  $('#diaSig').addEventListener('click', function () { moverDia(1); });
+  $('#diaHoy').addEventListener('click', function () { pintarDia(new Date(), 0); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') moverDia(-1);
+    if (e.key === 'ArrowRight') moverDia(1);
+  });
+  (function () {
+    var x0 = null, z = $('#p-dias');
+    z.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, {passive:true});
+    z.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 55) moverDia(dx < 0 ? 1 : -1);
+      x0 = null;
+    }, {passive:true});
+  })();
+
+  pintarDia(new Date(), 0);
+})();
+</script>
+</body>
+</html>
