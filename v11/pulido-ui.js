@@ -6,17 +6,22 @@ function $(s,r){return (r||document).querySelector(s);}
 function esc(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 var css=document.createElement('style');
-css.id='te-pulido-102-css';
+css.id='te-pulido-103-css';
 css.textContent=[
   '#lectura .pilarEstaticoLectura>p:nth-of-type(2){margin-bottom:13px!important}',
   '#lectura .pilarEstaticoLectura>p:nth-of-type(n+3){font-size:15px!important;line-height:1.58!important;color:rgba(107,98,89,.82)!important}',
   '#lectura .pilarEstaticoLectura>p.tension:nth-of-type(n+3){font-size:15px!important;color:rgba(91,82,74,.76)!important}',
   '@media(max-width:540px){#lectura .pilarEstaticoLectura>p:nth-of-type(n+3){font-size:14.5px!important;line-height:1.57!important}}',
+
+  /* La continuidad depende solo de que la carta esté activa. */
   '#seguirCarta{display:none!important}',
-  '#seguirCarta.teContinuidadVisible{display:grid!important;position:fixed!important;z-index:110!important;left:50%!important;bottom:calc(env(safe-area-inset-bottom,0px) + 18px)!important;transform:translateX(-50%)!important;width:min(360px,calc(100vw - 32px))!important;margin:0!important;padding:11px 12px 11px 17px!important;border:1px solid rgba(255,255,255,.88)!important;border-radius:999px!important;background:linear-gradient(155deg,rgba(255,255,255,.84),rgba(255,255,255,.54))!important;box-shadow:0 16px 42px rgba(58,43,34,.16),inset 0 1px 0 rgba(255,255,255,.98)!important;-webkit-backdrop-filter:blur(20px) saturate(155%)!important;backdrop-filter:blur(20px) saturate(155%)!important}',
-  '#seguirCarta.teContinuidadVisible .seguirTexto{font-size:16px!important;font-weight:600!important;font-style:normal!important}',
-  '#seguirCarta.teContinuidadVisible small{font-size:9px!important;letter-spacing:.82px!important}',
-  '#seguirCarta.teContinuidadVisible .seguirFlecha{width:35px!important;height:35px!important;font-size:21px!important}',
+  '#p-resultado.viva #seguirCarta{display:grid!important;position:fixed!important;z-index:140!important;left:50%!important;bottom:max(22px,env(safe-area-inset-bottom,0px))!important;transform:translateX(-50%)!important;width:min(382px,calc(100vw - 28px))!important;margin:0!important;padding:12px 12px 12px 18px!important;border:1px solid rgba(255,255,255,.92)!important;border-radius:999px!important;background:linear-gradient(155deg,rgba(255,255,255,.91),rgba(255,255,255,.64))!important;box-shadow:0 18px 48px rgba(58,43,34,.20),inset 0 1px 0 rgba(255,255,255,1)!important;-webkit-backdrop-filter:blur(22px) saturate(165%)!important;backdrop-filter:blur(22px) saturate(165%)!important;opacity:1!important;pointer-events:auto!important;transition:opacity .22s ease,transform .22s ease!important}',
+  '#p-resultado.viva #seguirCarta.teContinuidadOculta{opacity:0!important;pointer-events:none!important;transform:translate(-50%,12px)!important}',
+  '#p-resultado.viva #seguirCarta .seguirTexto{font-size:16px!important;font-weight:680!important;font-style:normal!important;letter-spacing:-.1px!important}',
+  '#p-resultado.viva #seguirCarta small{font-size:9px!important;letter-spacing:.72px!important;color:var(--tinta-suave)!important}',
+  '#p-resultado.viva #seguirCarta .seguirFlecha{width:38px!important;height:38px!important;font-size:22px!important;background:rgba(255,255,255,.72)!important;border:1px solid rgba(255,255,255,.92)!important;box-shadow:0 4px 13px rgba(58,43,34,.08)!important}',
+  '@media(max-width:430px){#p-resultado.viva #seguirCarta{width:calc(100vw - 24px)!important;bottom:max(14px,env(safe-area-inset-bottom,0px))!important;padding:11px 11px 11px 16px!important}#p-resultado.viva #seguirCarta .seguirTexto{font-size:15.5px!important}}',
+
   '#lectura .teBloqueMes{text-align:center}',
   '#lectura .teBloqueMes .btn{display:inline-block;margin-top:6px;text-decoration:none}',
   '.calAcciones.teAccionesOrdenadas{display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important;width:min(100%,520px)!important;margin:24px auto 0!important;padding:11px!important;border:1px solid rgba(255,255,255,.78)!important;border-radius:24px!important;background:linear-gradient(155deg,rgba(255,255,255,.48),rgba(255,255,255,.26))!important;box-shadow:0 14px 38px rgba(58,43,34,.085),inset 0 1px 0 rgba(255,255,255,.9)!important;-webkit-backdrop-filter:blur(18px) saturate(145%)!important;backdrop-filter:blur(18px) saturate(145%)!important}',
@@ -68,10 +73,9 @@ function actualizarContinuidad(){
   scrollPendiente=false;
   var btn=$('#seguirCarta'),res=$('#p-resultado');
   if(!btn||!res)return;
-  var viva=res.classList.contains('viva');
-  btn.classList.toggle('teContinuidadVisible',viva&&window.scrollY<330);
+  btn.classList.toggle('teContinuidadOculta',window.scrollY>180);
   var t=$('.seguirTexto',btn),s=$('small',btn);
-  if(t)t.textContent='Sigue leyendo tu carta';
+  if(t)t.textContent='Hay mucho más en tu carta';
   if(s)s.textContent='4 pilares · balance · tu mes · calendario · ciclos';
 }
 function pedirContinuidad(){
@@ -107,6 +111,10 @@ setTimeout(refrescar,250);
 var lectura=$('#lectura');
 if(lectura&&typeof MutationObserver!=='undefined'){
   new MutationObserver(function(){ajustarCarta();pedirContinuidad();}).observe(lectura,{childList:true,subtree:false});
+}
+var resultado=$('#p-resultado');
+if(resultado&&typeof MutationObserver!=='undefined'){
+  new MutationObserver(pedirContinuidad).observe(resultado,{attributes:true,attributeFilter:['class']});
 }
 var perfil=$('#perfilCal');
 if(perfil)perfil.addEventListener('change',function(){setTimeout(ajustarCalendario,0);});
