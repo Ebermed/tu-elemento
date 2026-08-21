@@ -1,6 +1,6 @@
 /* TU ELEMENTO — Buscar una fecha · Artx 1.1 */
 
-.cambiaVista.teTresVistas{grid-template-columns:repeat(3,1fr)!important;max-width:520px!important}
+.cambiaVista.teTresVistas{display:grid!important;grid-template-columns:repeat(3,1fr)!important;max-width:330px!important;width:min(100%,330px)!important}
 .cambiaVista.teTresVistas button{min-width:0!important}
 
 #buscarCaja{max-width:760px;margin:0 auto;text-align:left}
