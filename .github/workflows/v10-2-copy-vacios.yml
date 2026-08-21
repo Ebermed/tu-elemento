@@ -1,0 +1,231 @@
+name: V10.2 copy and dynamic voids
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '_v10_2_trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Apply V10.2
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          # ── Nomenclatura de pilares ─────────────────────────────
+          p = Path('lectura.js')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace("dia:  { titulo:'Tú', etapa:'tu centro y tus vínculos cercanos',", "dia:  { titulo:'Tu centro', etapa:'tu centro y tus vínculos cercanos',")
+          s = s.replace("intro:'Este pilar te pone a ti en el centro. Aquí aparece el tallo que define tu elemento base, junto con una capa ligada a pareja, intimidad y vida emocional.'", "intro:'Tu centro reúne la parte más personal de la carta. Aquí aparece el tallo que define tu elemento base, junto con una capa ligada a pareja, intimidad y vida emocional.'")
+          s = s.replace("'anio-dia':  'Tu origen y tú quedan frente a frente.", "'anio-dia':  'Tu origen y tu centro quedan frente a frente.")
+          s = s.replace("'mes-dia':   'Tu trayectoria y tú piden atención al mismo tiempo.", "'mes-dia':   'Tu trayectoria y tu centro piden atención al mismo tiempo.")
+          s = s.replace("'dia-hora':  'Tú y tu futuro pueden pedir tiempos distintos.", "'dia-hora':  'Tu centro y tu futuro pueden pedir tiempos distintos.")
+          s = s.replace("'anio-dia':  'Tu origen y tú encuentran puntos de continuidad.", "'anio-dia':  'Tu origen y tu centro encuentran puntos de continuidad.")
+          s = s.replace("'mes-dia':   'Tu trayectoria y tú se entienden bien.", "'mes-dia':   'Tu trayectoria y tu centro se entienden bien.")
+          s = s.replace("'dia-hora':  'Tú y tu futuro encuentran continuidad.", "'dia-hora':  'Tu centro y tu futuro encuentran continuidad.")
+
+          # ── Vacíos dinámicos: pilar + elemento del tallo ────────
+          nuevo = r'''var VACIOS = {
+            anio: {
+              titulo:'Vacío en Tu origen',
+              texto:'Este vacío cae en Tu origen: pertenencia, familia extensa, círculo social y la forma en que encuentras lugar dentro de un entorno. Esta zona suele construirse mucho a través de experiencia propia.' },
+            mes: {
+              titulo:'Vacío en Tu trayectoria',
+              texto:'Este vacío cae en Tu trayectoria: estudios, trabajo, carrera, logros, responsabilidades y la manera en que aprendiste a abrirte camino. Aquí el criterio profesional suele crecer a través de prueba, ajuste y experiencia.' },
+            hora: {
+              titulo:'Vacío en Tu futuro',
+              texto:'Este vacío cae en Tu futuro: proyectos, hijos, vida interior, recursos de largo plazo y legado. Esta zona toma forma a medida que eliges qué quieres sostener, desarrollar y dejar creciendo con el tiempo.' },
+          };
+
+          var VACIO_ELEMENTO = {
+            madera: {
+              texto:'Al aparecer con Madera, el aprendizaje se concentra en crecimiento y autosuficiencia. Esta parte de tu vida pide desarrollar soporte propio, seguir aprendiendo y permitir que el crecimiento nazca también de decisiones tuyas.',
+              filo:'Pregunta para esta zona: ¿qué parte de tu crecimiento depende hoy de una decisión propia?' },
+            fuego: {
+              texto:'Con Fuego, el tema central es la claridad. Esta zona gana fuerza cuando puedes ver lo que ocurre, elegir dirección y convertir lo aprendido en una luz útil para ti y para otras personas.',
+              filo:'Pregunta para esta zona: ¿qué necesitas ver con más claridad antes de elegir rumbo?' },
+            tierra: {
+              texto:'Con Tierra, el aprendizaje pasa por arraigo, pertenencia y capacidad de soltar. La estabilidad se vuelve más firme cuando distingues qué merece quedarse contigo y qué ya cumplió su etapa.',
+              filo:'Pregunta para esta zona: ¿qué puedes soltar para recuperar espacio y dirección?' },
+            metal: {
+              texto:'Con Metal, el foco está en voz, comunicación, criterio, lealtad y justicia. Esta zona crece cuando expresas lo que sabes con palabras claras y conviertes tu criterio en algo que también pueda servir afuera.',
+              filo:'Pregunta para esta zona: ¿qué sabes que ya merece decirse con claridad?' },
+            agua: {
+              texto:'Con Agua, el aprendizaje se concentra en claridad mental, decisiones y capacidad de concretarlas. Pensar, elegir y después convertir esa elección en movimiento ayuda a que esta zona encuentre cauce.',
+              filo:'Pregunta para esta zona: ¿qué decisión ya está lista para convertirse en un paso concreto?' },
+          };'''
+          s = re.sub(r"var VACIOS = \{[\s\S]*?\n\};\n\n/\*\* ¿Qué pilares de esta carta caen en vacío\? \*/", nuevo + "\n\n/** ¿Qué pilares de esta carta caen en vacío? */", s, count=1)
+
+          funcion = r'''function vaciosDe(carta, claves) {
+            var RM = _dep('RAMAS','./motor');
+            var out = [];
+            claves.forEach(function (k) {
+              if (k === 'dia') return;
+              var p = carta.pilares[k];
+              var r = RM.indexOf(p.rama);
+              if (carta.vacio.ramas.indexOf(r) !== -1 && VACIOS[k]) {
+                var elemento = p.tallo.elemento;
+                var matiz = VACIO_ELEMENTO[elemento] || { texto:'', filo:'' };
+                out.push({
+                  pilar:k,
+                  titulo:VACIOS[k].titulo,
+                  texto:VACIOS[k].texto + ' ' + matiz.texto,
+                  filo:matiz.filo,
+                  rama:p.rama.animal,
+                  elemento:elemento,
+                  elementoEtiqueta:elemento.charAt(0).toUpperCase() + elemento.slice(1)
+                });
+              }
+            });
+            return out;
+          }'''
+          s = re.sub(r"function vaciosDe\(carta, claves\) \{[\s\S]*?\n\}", funcion, s, count=1)
+          p.write_text(s, encoding='utf-8')
+
+          # ── App principal ───────────────────────────────────────
+          p = Path('app-source-v10.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('tu origen, tu trayectoria, tú y lo que vas construyendo hacia el futuro.', 'tu origen, tu trayectoria, tu centro y lo que vas construyendo hacia el futuro.')
+          s = s.replace("var cortos = { 'Tu origen':'Tu origen', 'Tu trayectoria':'Tu trayectoria', 'Tú':'Tú', 'Tu futuro':'Tu futuro',", "var cortos = { 'Tu origen':'Tu origen', 'Tu trayectoria':'Tu trayectoria', 'Tu centro':'Tu centro', 'Tú':'Tu centro', 'Tu futuro':'Tu futuro',")
+          s = s.replace("'Raíces':'Tu origen', 'Trayectoria':'Tu trayectoria', 'Centro':'Tú', 'Proyección':'Tu futuro',", "'Raíces':'Tu origen', 'Trayectoria':'Tu trayectoria', 'Centro':'Tu centro', 'Proyección':'Tu futuro',")
+          s = s.replace("'De dónde vienes':'Tu origen', 'Cómo trabajas':'Tu trayectoria', 'Quién eres':'Tú', 'Hacia dónde vas':'Tu futuro'", "'De dónde vienes':'Tu origen', 'Cómo trabajas':'Tu trayectoria', 'Quién eres':'Tu centro', 'Hacia dónde vas':'Tu futuro'")
+          s = s.replace("'<p class=\"sub\">En cada bloque del ciclo quedan dos ramas en vacío. Si una coincide con uno de tus pilares, esa zona suele sentirse menos dada de antemano y más construida con experiencia propia.</p>';", "'<p class=\"sub\">El pilar del día marca qué ramas quedan en vacío. Cuando una de esas ramas aparece en otro pilar, la lectura cambia según dos cosas: la zona de vida donde cae y el elemento del tallo que la acompaña.</p>';" )
+          s = s.replace("'<p class=\"quienes\">' + esc(v.titulo) + '</p>' +\n                  '<p>' + esc(v.texto) + '</p>' +", "'<p class=\"quienes\">' + esc(v.titulo) + '</p>' +\n                  '<p class=\"vacioMeta\">Vacío de ' + esc(v.elementoEtiqueta) + ' · ' + esc(v.rama) + '</p>' +\n                  '<p>' + esc(v.texto) + '</p>' +")
+          p.write_text(s, encoding='utf-8')
+
+          # ── Tarjeta compartible ────────────────────────────────
+          p = Path('tarjeta.js')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace("var cortos = { 'Tu origen':'Tu origen', 'Tu trayectoria':'Tu trayectoria', 'Tú':'Tú', 'Tu futuro':'Tu futuro',", "var cortos = { 'Tu origen':'Tu origen', 'Tu trayectoria':'Tu trayectoria', 'Tu centro':'Tu centro', 'Tú':'Tu centro', 'Tu futuro':'Tu futuro',")
+          s = s.replace("'Raíces':'Tu origen', 'Trayectoria':'Tu trayectoria', 'Centro':'Tú', 'Proyección':'Tu futuro'", "'Raíces':'Tu origen', 'Trayectoria':'Tu trayectoria', 'Centro':'Tu centro', 'Proyección':'Tu futuro'")
+          s = s.replace("'Quién eres':'Tú'", "'Quién eres':'Tu centro'")
+          p.write_text(s, encoding='utf-8')
+
+          # ── Carta completa descargable ─────────────────────────
+          p = Path('carta.js')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace("var cortos = { 'Tu origen':'TU ORIGEN', 'Tu trayectoria':'TU TRAYECTORIA', 'Tú':'TÚ', 'Tu futuro':'TU FUTURO',", "var cortos = { 'Tu origen':'TU ORIGEN', 'Tu trayectoria':'TU TRAYECTORIA', 'Tu centro':'TU CENTRO', 'Tú':'TU CENTRO', 'Tu futuro':'TU FUTURO',")
+          s = s.replace("'Raíces':'TU ORIGEN', 'Trayectoria':'TU TRAYECTORIA', 'Centro':'TÚ', 'Proyección':'TU FUTURO'", "'Raíces':'TU ORIGEN', 'Trayectoria':'TU TRAYECTORIA', 'Centro':'TU CENTRO', 'Proyección':'TU FUTURO'")
+          s = s.replace("'Quién eres':'TÚ'", "'Quién eres':'TU CENTRO'")
+          p.write_text(s, encoding='utf-8')
+
+          # ── Calendario: hero limpio + explicación abajo ────────
+          p = Path('calendario-source-v10.html')
+          s = p.read_text(encoding='utf-8')
+          intro = 'Cada fecha mezcla dos ritmos del calendario solar chino. Juntos ayudan a ver qué tipo de actividades fluyen mejor ese día y cuáles agradecen un poco más de margen. Con una carta guardada, la lectura también se cruza con su origen.'
+          s = s.replace('    <h1 style="font-size:clamp(25px,5vw,34px); margin-bottom:8px">¿Cómo viene el día?</h1>\n    <p class="bajada" style="margin-bottom:20px">' + intro + '</p>\n', '    <h1 style="font-size:clamp(25px,5vw,34px); margin-bottom:20px">¿Cómo viene el día?</h1>\n')
+          s = s.replace('      <summary>¿De dónde sale esta lectura?</summary>\n      <p>Usamos dos ciclos tradicionales del calendario chino.', '      <summary>¿De dónde sale esta lectura?</summary>\n      <p>' + intro + '</p>\n      <p>Usamos dos ciclos tradicionales del calendario chino.')
+          p.write_text(s, encoding='utf-8')
+
+          # ── Estilos discretos para perfil + detalle de vacío ───
+          p = Path('estilo.css')
+          s = p.read_text(encoding='utf-8')
+          marker = '/* ═══ V10.2 · centro, selector discreto y vacío dinámico ═══ */'
+          if marker not in s:
+            s += r'''
+
+/* ═══ V10.2 · centro, selector discreto y vacío dinámico ═══ */
+.calPerfilBox {
+  width:min(88%,360px)!important;
+  margin:0 auto 16px!important;
+  padding:9px 11px!important;
+  border-radius:18px!important;
+  box-shadow:0 8px 24px rgba(58,43,34,.045),inset 0 1px 0 rgba(255,255,255,.82)!important;
+}
+.calPerfilBox label {
+  margin:0 0 4px!important;
+  font-size:9px!important;
+  letter-spacing:1.65px!important;
+}
+.calPerfilSelect select {
+  min-height:40px!important;
+  padding:0 38px 0 12px!important;
+  border-radius:14px!important;
+  font-size:14px!important;
+  font-weight:620!important;
+}
+.calPerfilSelect:after {
+  right:13px!important;
+  font-size:17px!important;
+}
+.calPerfilBox .pista {
+  margin:5px 2px 0!important;
+  font-size:11px!important;
+  line-height:1.35!important;
+  opacity:.78;
+}
+.calSinPerfil {
+  width:min(88%,360px)!important;
+  margin:0 auto 16px!important;
+  padding:9px 12px!important;
+  border-radius:16px!important;
+  font-size:12px!important;
+  line-height:1.4!important;
+  text-align:center;
+}
+.vacioMeta {
+  margin:2px 0 9px!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+  font-weight:760!important;
+  letter-spacing:1.7px!important;
+  text-transform:uppercase;
+  color:var(--acento,var(--tinta-suave));
+  opacity:.72;
+}
+'''
+          p.write_text(s, encoding='utf-8')
+
+          # Romper caché de source/CSS/JS en los loaders actuales.
+          for nombre in ('index.html','calendario.html'):
+            p = Path(nombre)
+            s = p.read_text(encoding='utf-8').replace("var VERSION='10.1.1';", "var VERSION='10.2.0';")
+            p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Validate V10.2
+        shell: bash
+        run: |
+          node --check lectura.js
+          node --check tarjeta.js
+          node --check carta.js
+          node test.js
+          node test-decadas.js
+          node - <<'JS'
+          const M=require('./motor');
+          const L=require('./lectura');
+          let found=null;
+          for(let m=1;m<=12 && !found;m++) for(let d=1;d<=28 && !found;d++){
+            const c=M.cuatroPilares({anio:1996,mes:m,dia:d,hora:12,offsetTZ:0});
+            const l=L.lecturaCompleta(c,false);
+            if(l.vacios && l.vacios.length) found=l.vacios[0];
+          }
+          if(!found || !found.elemento || !found.elementoEtiqueta || !/Pregunta para esta zona/.test(found.filo)) {
+            throw new Error('La lectura dinámica de vacíos quedó incompleta');
+          }
+          if(!['Tu origen','Tu trayectoria','Tu centro','Tu futuro'].includes('Tu centro')) throw new Error('nomenclatura');
+          console.log('Vacío dinámico OK:', found.titulo, found.elementoEtiqueta);
+          JS
+
+      - name: Commit V10.2
+        shell: bash
+        run: |
+          git config user.name "Tu Elemento Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add lectura.js app-source-v10.html calendario-source-v10.html tarjeta.js carta.js estilo.css index.html calendario.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Refine center label, calendar hierarchy and dynamic voids"
+          git push
