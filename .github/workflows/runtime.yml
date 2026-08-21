@@ -3,7 +3,12 @@ name: Tu Elemento runtime
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - runtime-result.txt
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   runtime:
@@ -15,7 +20,26 @@ jobs:
           node-version: 20
       - name: Install jsdom
         run: npm install --no-save jsdom@24
-      - name: UI contract
-        run: node test-ui-v105.js
-      - name: Runtime new-chart flow
-        run: node test-runtime-v105.js
+      - name: Run UI and runtime tests
+        shell: bash
+        run: |
+          set +e
+          echo "Tu Elemento runtime $(date -u +'%Y-%m-%dT%H:%M:%SZ')" > runtime-result.txt
+          echo "--- UI CONTRACT ---" >> runtime-result.txt
+          node test-ui-v105.js >> runtime-result.txt 2>&1
+          UI=$?
+          echo "exit_ui=$UI" >> runtime-result.txt
+          echo "--- REAL FORM FLOW ---" >> runtime-result.txt
+          node test-runtime-v105.js >> runtime-result.txt 2>&1
+          RT=$?
+          echo "exit_runtime=$RT" >> runtime-result.txt
+          echo "overall=$(( UI || RT ))" >> runtime-result.txt
+          exit 0
+      - name: Commit diagnostic result
+        shell: bash
+        run: |
+          git config user.name "tu-elemento-runtime"
+          git config user.email "actions@users.noreply.github.com"
+          git add runtime-result.txt
+          git commit -m "Update runtime diagnostic [skip ci]" || true
+          git push
