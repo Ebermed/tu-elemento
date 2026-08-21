@@ -14,15 +14,15 @@
 
   var POR_PILAR = {
     anio: {
-      titulo:'Vacío en Tu origen',
+      nombre:'Tu origen',
       texto:'Este vacío cae en Tu origen: pertenencia, familia extensa, círculo social y la forma en que encuentras lugar dentro de un entorno. Esta zona suele construirse mucho a través de experiencia propia.'
     },
     mes: {
-      titulo:'Vacío en Tu trayectoria',
+      nombre:'Tu trayectoria',
       texto:'Este vacío cae en Tu trayectoria: estudios, trabajo, carrera, logros, responsabilidades y la manera en que aprendiste a abrirte camino. Aquí el criterio profesional suele crecer a través de prueba, ajuste y experiencia.'
     },
     hora: {
-      titulo:'Vacío en Tu futuro',
+      nombre:'Tu futuro',
       texto:'Este vacío cae en Tu futuro: proyectos, hijos, vida interior, recursos de largo plazo y legado. Esta zona toma forma a medida que eliges qué quieres sostener, desarrollar y dejar creciendo con el tiempo.'
     }
   };
@@ -68,15 +68,16 @@
       if (!carta.vacio || carta.vacio.ramas.indexOf(rama) === -1) return;
 
       var elemento = p.tallo.elemento;
+      var elementoEtiqueta = mayusInicial(elemento);
       var matiz = POR_ELEMENTO[elemento] || { texto:'', pregunta:'' };
       out.push({
         pilar:k,
-        titulo:base.titulo,
+        titulo:'Vacío de ' + elementoEtiqueta + ' en ' + base.nombre,
         texto:base.texto + ' ' + matiz.texto,
         filo:matiz.pregunta,
         rama:p.rama.animal,
         elemento:elemento,
-        elementoEtiqueta:mayusInicial(elemento)
+        elementoEtiqueta:elementoEtiqueta
       });
     });
     return out;
