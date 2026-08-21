@@ -26,6 +26,18 @@
     </p>
     <button class="btn" id="irForm">Descubre tu elemento</button>
 
+    <section class="bibliotecaCartas" id="bibliotecaCartas" hidden>
+      <div class="bibliotecaCab">
+        <div>
+          <p class="miniKicker">En este navegador</p>
+          <h2>Tus cartas</h2>
+          <p class="sub">Abre cualquiera en un toque o suma otra persona cuando quieras.</p>
+        </div>
+        <button class="btn fantasma miniBtn" type="button" data-nueva-carta>+ Nueva carta</button>
+      </div>
+      <div class="listaPerfiles" id="listaPerfiles"></div>
+    </section>
+
     <div class="diez" aria-label="Los diez elementos">
       <span>Roble</span><span>Hiedra</span><span>Sol</span><span>Brasa</span><span>Montaña</span><span>Huerto</span><span>Acero</span><span>Joya</span><span>Marea</span><span>Rocío</span>
     </div>
@@ -44,10 +56,22 @@
   <!-- ── FORMULARIO ─────────────────────────────────────── -->
   <section class="pantalla" id="p-form">
     <p class="marca">Tu Elemento</p>
-    <h1 style="font-size:clamp(27px,5.5vw,36px)">¿Cuándo naciste?</h1>
-    <p class="bajada">Todo el cálculo ocurre en tu teléfono. Tu fecha y lugar se guardan en este navegador para recuperar la carta y hacer que el calendario también pueda leerte a ti.</p>
+    <h1 id="tituloForm" style="font-size:clamp(27px,5.5vw,36px)">¿Cuándo naciste?</h1>
+    <p class="bajada" id="introForm">Todo el cálculo ocurre en tu teléfono. Esta carta quedará guardada en este navegador para que puedas volver a ella y usarla en el calendario.</p>
 
     <form id="forma" novalidate>
+      <div class="campo">
+        <label>¿Para quién es esta carta?</label>
+        <div class="paraQuien" role="group" aria-label="Persona de esta carta">
+          <button type="button" class="paraQuienBtn activo" id="paraMi" aria-pressed="true">Para mí</button>
+          <button type="button" class="paraQuienBtn" id="paraOtra" aria-pressed="false">Para alguien más</button>
+        </div>
+        <div class="nombrePersona" id="nombrePersona" hidden>
+          <label for="nombreCarta">¿Cómo le llamamos?</label>
+          <input type="text" id="nombreCarta" placeholder="Nombre o apodo" maxlength="40" autocomplete="off">
+          <p class="pista" style="margin:7px 0 0">Este nombre sirve únicamente para distinguir sus cartas dentro de este navegador.</p>
+        </div>
+      </div>
       <div class="campo">
         <label for="dia">Fecha de nacimiento</label>
         <div class="trio">
@@ -99,11 +123,18 @@
   <!-- ── RESULTADO ──────────────────────────────────────── -->
   <section class="pantalla" id="p-resultado">
     <p class="marca">Tu Elemento</p>
+    <p class="resultadoContexto" id="resultadoContexto" hidden></p>
 
     <div id="resultadoHero" class="resultadoHero"></div>
     <div class="acciones resultadoAcciones">
       <button class="btn" id="bajarTop">Descargar tarjeta</button>
     </div>
+
+    <button class="seguirCarta" id="seguirCarta" type="button" aria-label="Seguir leyendo tu carta">
+      <span class="seguirTexto">Tu carta sigue</span>
+      <small>4 pilares · balance · calendario · ciclos</small>
+      <span class="seguirFlecha" aria-hidden="true">↓</span>
+    </button>
 
     <div class="lectura" id="lectura"></div>
 
@@ -113,7 +144,7 @@
       <div id="tarjetaCaja"></div>
       <div class="acciones compartirAcciones">
         <button class="btn" id="bajarFinal">Descargar tarjeta</button>
-        <button class="btn fantasma" data-ir="p-form">Otra fecha</button>
+        <button class="btn fantasma" data-nueva-carta>Calcular otra carta</button>
       </div>
     </section>
   </section>
@@ -228,13 +259,27 @@
       'correrse una hora.</p>');
   }
 
-  $('#irForm').addEventListener('click', function () { ir('p-form'); });
+  $('#irForm').addEventListener('click', function () { nuevaCarta(); });
   document.addEventListener('click', function (e) {
-    var d = e.target.getAttribute && e.target.getAttribute('data-ir');
-    if (d) ir(d);
+    var t = e.target && e.target.closest ? e.target.closest('[data-ir],[data-nueva-carta],[data-perfil-ver],[data-perfil-olvidar]') : e.target;
+    if (!t || !t.getAttribute) return;
+    var d = t.getAttribute('data-ir');
+    if (d) { ir(d); return; }
+    if (t.hasAttribute && t.hasAttribute('data-nueva-carta')) { nuevaCarta(); return; }
+    var ver = t.getAttribute('data-perfil-ver');
+    if (ver) { abrirPerfilGuardado(ver); return; }
+    var olvidar = t.getAttribute('data-perfil-olvidar');
+    if (olvidar) {
+      var p = leerPerfil(olvidar);
+      var seguir = true;
+      if (typeof globalThis.confirm === 'function') seguir = globalThis.confirm('¿Olvidar ' + etiquetaPerfil(p) + '? Sus datos saldrán de este navegador.');
+      if (seguir) { olvidarPerfil(olvidar); pintarPerfilesGuardados(); }
+    }
   });
 
   var ultimo = null;
+  var tipoCarta = 'yo';
+  var perfilEditandoId = null;
 
   function iconoMini(tipo) {
     var path = {
@@ -256,10 +301,113 @@
     return '<span class="iconito" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="' + (path[tipo] || path.tú) + '"/></svg></span>';
   }
 
+  function escPerfil(x) {
+    return String(x == null ? '' : x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function ponerTipoCarta(tipo) {
+    tipoCarta = tipo === 'otra' ? 'otra' : 'yo';
+    var otra = tipoCarta === 'otra';
+    $('#paraMi').classList.toggle('activo', !otra);
+    $('#paraOtra').classList.toggle('activo', otra);
+    $('#paraMi').setAttribute('aria-pressed', otra ? 'false' : 'true');
+    $('#paraOtra').setAttribute('aria-pressed', otra ? 'true' : 'false');
+    $('#nombrePersona').hidden = !otra;
+    $('#tituloForm').textContent = otra ? '¿Cuándo nació?' : '¿Cuándo naciste?';
+    $('#calcular').textContent = otra ? 'Ver su elemento' : 'Ver mi elemento';
+  }
+
+  function limpiarFormulario() {
+    perfilEditandoId = null;
+    ponerTipoCarta('yo');
+    $('#nombreCarta').value = '';
+    $('#dia').value = ''; $('#mes').value = ''; $('#anio').value = '';
+    $('#hora').value = ''; $('#minuto').value = ''; $('#sexo').value = '';
+    caja.value = ''; lugarElegido = null; sugerencias = []; resaltado = -1;
+    $('#pistaLugar').textContent = ''; $('#pistaLugar').className = 'pista';
+    $('#err').textContent = '';
+  }
+
+  function nuevaCarta() {
+    limpiarFormulario();
+    ir('p-form');
+  }
+
+  function polaridadDe(carta) {
+    return ['Jia','Bing','Wu','Geng','Ren'].indexOf(carta.diaMaestro.pinyin) !== -1 ? 'Yang' : 'Yin';
+  }
+
+  function resumenPerfil(p) {
+    try {
+      var c = cartaDesdePerfil(p);
+      if (!c) return null;
+      var t = traducir(c);
+      return { carta:c, t:t, polaridad:polaridadDe(c) };
+    } catch (e) { return null; }
+  }
+
+  function pintarPerfilesGuardados() {
+    var ps = listarPerfiles();
+    var wrap = $('#bibliotecaCartas'), listaP = $('#listaPerfiles');
+    if (!ps.length) { wrap.hidden = true; listaP.innerHTML = ''; return; }
+    wrap.hidden = false;
+    var h = '';
+    ps.forEach(function (p) {
+      var r = resumenPerfil(p);
+      if (!r) return;
+      var n = p.tipo === 'yo' ? 'Tu carta' : p.nombre;
+      var nacimiento = p.nacimiento;
+      h += '<article class="perfilCard">' +
+        '<div class="perfilIcono">' + iconoMini(r.t.tarjeta.nombre.toLowerCase()) + '</div>' +
+        '<div class="perfilInfo"><span class="perfilNombre">' + escPerfil(n) + '</span>' +
+        '<strong>' + escPerfil(r.t.tarjeta.nombre) + '</strong>' +
+        '<small>' + escPerfil(r.t.tarjeta.elemento) + ' · ' + r.polaridad +
+          (nacimiento.ciudad ? ' · ' + escPerfil(nacimiento.ciudad) : '') + '</small></div>' +
+        '<div class="perfilAcciones">' +
+          '<button type="button" class="perfilAccion principal" data-perfil-ver="' + p.id + '">Ver carta</button>' +
+          '<a class="perfilAccion" href="calendario.html?perfil=' + encodeURIComponent(p.id) + '">Calendario</a>' +
+          '<button type="button" class="perfilOlvidar" data-perfil-olvidar="' + p.id + '">Olvidar esta carta</button>' +
+        '</div></article>';
+    });
+    listaP.innerHTML = h;
+    activarApariciones(wrap);
+  }
+
+  function cargarPerfilEnFormulario(p) {
+    if (!p) return false;
+    var d = p.nacimiento;
+    perfilEditandoId = p.id;
+    ponerTipoCarta(p.tipo);
+    $('#nombreCarta').value = p.tipo === 'otra' ? p.nombre : '';
+    $('#dia').value = d.dia; $('#mes').value = d.mes; $('#anio').value = d.anio;
+    $('#hora').value = d.sinHora ? '' : d.hora;
+    $('#minuto').value = d.sinHora ? '' : d.minuto;
+    $('#sexo').value = d.sexo || '';
+    lugarElegido = { c:d.ciudad || 'Lugar guardado', p:'', z:d.zona, lon:d.lon };
+    caja.value = d.ciudad || 'Lugar guardado';
+    $('#pistaLugar').innerHTML = 'Usaremos la hora solar de <b>' + escPerfil(d.ciudad || 'tu lugar guardado') + '</b>.';
+    $('#pistaLugar').className = 'elegido';
+    return true;
+  }
+
+  function abrirPerfilGuardado(id) {
+    var p = leerPerfil(id);
+    if (!cargarPerfilEnFormulario(p)) return;
+    var f = $('#forma');
+    if (f.requestSubmit) f.requestSubmit();
+    else if (typeof globalThis.Event === 'function') f.dispatchEvent(new globalThis.Event('submit', { bubbles:true, cancelable:true }));
+  }
+
+  $('#paraMi').addEventListener('click', function () { ponerTipoCarta('yo'); });
+  $('#paraOtra').addEventListener('click', function () { ponerTipoCarta('otra'); });
+
   $('#forma').addEventListener('submit', function (e) {
     e.preventDefault();
     var err = $('#err');
     err.textContent = '';
+
+    var nombrePerfil = tipoCarta === 'yo' ? 'Tu carta' : $('#nombreCarta').value.trim();
+    if (tipoCarta === 'otra' && !nombrePerfil) { err.textContent = 'Pon un nombre o apodo para guardar esta carta.'; $('#nombreCarta').focus(); return; }
 
     var dia = parseInt($('#dia').value, 10);
     var mes = parseInt($('#mes').value, 10);
@@ -298,8 +446,14 @@
     }
 
     var t = traducir(carta);
+    var nacimientoGuardado = { anio:anio, mes:mes, dia:dia, hora:hora, minuto:minuto,
+      sinHora:sinHora, zona:lug.z, lon:lug.lon, ciudad:lug.c, sexo:sexoElegido };
+    var perfilGuardado = guardarPerfil({ id:perfilEditandoId, tipo:tipoCarta, nombre:nombrePerfil, nacimiento:nacimientoGuardado });
+    if (perfilGuardado) perfilEditandoId = perfilGuardado.id;
+
     ultimo = { t: t, sinHora: sinHora, semilla: dia * 31 + mes, sexo: sexoElegido,
                carta: carta, nacAnio: anio, nacMes: mes, nacDia: dia,
+               perfil:perfilGuardado, perfilId:perfilGuardado ? perfilGuardado.id : null,
                nacimiento: dia + ' de ' + MESES[mes - 1] + ' de ' + anio +
                  (sinHora ? '' : ' · ' + String(hora).padStart(2,'0') + ':' + String(minuto).padStart(2,'0')) +
                  ' · ' + lug.c };
@@ -320,10 +474,13 @@
     // Acento del elemento, para que la pantalla entera tome su color
     document.documentElement.style.setProperty('--acento', id.paleta[2]);
 
-    var polaridadHero = ['Jia','Bing','Wu','Geng','Ren'].indexOf(carta.diaMaestro.pinyin) !== -1 ? 'Yang' : 'Yin';
+    var polaridadHero = polaridadDe(carta);
+    var contexto = $('#resultadoContexto');
+    if (tipoCarta === 'otra') { contexto.hidden = false; contexto.textContent = 'Carta de ' + nombrePerfil; }
+    else contexto.hidden = true;
     $('#resultadoHero').innerHTML =
       '<div class="resultadoIcono">' + iconoMini(t.tarjeta.nombre.toLowerCase()) + '</div>' +
-      '<p class="resultadoKicker">Tu elemento base</p>' +
+      '<p class="resultadoKicker">' + (tipoCarta === 'otra' ? 'Elemento base de ' + esc(nombrePerfil) : 'Tu elemento base') + '</p>' +
       '<h1 class="resultadoNombre">' + esc(t.tarjeta.nombre) + '</h1>' +
       '<p class="resultadoElemento">' + esc(t.tarjeta.elemento) + ' · ' + polaridadHero + '</p>' +
       '<p class="resultadoFrase">' + esc(t.tarjeta.frase) + '</p>' +
@@ -418,7 +575,7 @@
     html += '<div class="hoja" style="text-align:center">' +
               '<h2 class="titIcon cent">' + iconoMini('marea') + '<span>El ritmo de tus días</span></h2>' +
               '<p class="sub">Los días también cambian de tono. El calendario mezcla dos ritmos tradicionales y te muestra qué cosas pueden fluir mejor y cuáles conviene llevar con más margen.</p>' +
-              '<a class="btn" href="calendario.html" style="margin-top:6px;display:inline-block">Ver el calendario</a>' +
+              '<a class="btn" id="abrirCalendario" href="calendario.html" style="margin-top:6px;display:inline-block">Ver el calendario</a>' +
             '</div>';
 
     // 6 · avisos
@@ -432,7 +589,7 @@
               '<h2 class="titIcon cent">' + iconoMini('destino') + '<span>Tus ciclos de diez años</span></h2>' +
               '<p class="sub">Además de tu carta de nacimiento, hay ciclos que van cambiando aproximadamente cada diez años. Cada tramo añade un clima distinto y ayuda a mirar por qué ciertas etapas se sienten tan diferentes entre sí.</p>' +
               (sexoElegido
-                ? '<button class="btn" id="verCarta" style="margin-top:6px">Ver mis ciclos</button>'
+                ? '<button class="btn" id="verCarta" style="margin-top:6px">' + (tipoCarta === 'otra' ? 'Ver sus ciclos' : 'Ver mis ciclos') + '</button>'
                 : '<p class="pista">Si quieres ver estos ciclos, agrega el sexo registrado al nacer desde el formulario. Ese dato se usa únicamente para ordenar la secuencia.</p>') +
             '</div>';
 
@@ -466,11 +623,9 @@
 
     ultimo.lec = lec;
 
-    // Se guarda EN ESTE NAVEGADOR para que el calendario sepa tu signo
-    // sin volver a preguntarte. Nunca sale de aquí: no hay servidor.
-    guardarNacimiento({ anio:anio, mes:mes, dia:dia, hora:hora, minuto:minuto,
-                        sinHora:sinHora, zona:lug.z, lon:lug.lon, ciudad:lug.c });
-
+    pintarPerfilesGuardados();
+    var linkCal = $('#abrirCalendario');
+    if (linkCal && ultimo.perfilId) linkCal.href = 'calendario.html?perfil=' + encodeURIComponent(ultimo.perfilId);
 
     var btnCarta = $('#verCarta');
     if (btnCarta) btnCarta.addEventListener('click', function () {
@@ -533,6 +688,19 @@
   $('#bajarTop').addEventListener('click', descargarTarjetaActual);
   $('#bajarFinal').addEventListener('click', descargarTarjetaActual);
 
+  $('#seguirCarta').addEventListener('click', function () {
+    var lectura = $('#lectura');
+    if (lectura && lectura.scrollIntoView) lectura.scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+
+  pintarPerfilesGuardados();
+  var perfilSolicitado = null;
+  try {
+    var q = (globalThis.location && globalThis.location.search) ? globalThis.location.search : '';
+    var m = q.match(/[?&]perfil=([^&]+)/);
+    if (m) perfilSolicitado = decodeURIComponent(m[1]);
+  } catch (e) {}
+  if (perfilSolicitado && leerPerfil(perfilSolicitado)) abrirPerfilGuardado(perfilSolicitado);
 
 })();
 </script>

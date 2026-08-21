@@ -130,48 +130,207 @@ function descargarSVG(svg, nombre) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// MEMORIA LOCAL
+// CARTAS GUARDADAS EN ESTE NAVEGADOR
 // ─────────────────────────────────────────────────────────────
-// Guarda los datos de nacimiento EN EL NAVEGADOR, nunca en un servidor:
-// no hay servidor. Sirve para que el calendario sepa tu signo sin que
-// tengas que capturar tu fecha otra vez, y para que al volver mañana
-// siga sabiéndolo. Se borra con el botón de olvidar.
+// V10 guarda varias cartas. Cada perfil conserva únicamente los datos
+// necesarios para reconstruir el cálculo cuando la persona vuelve.
 
-var LLAVE = 'tuelemento.nacimiento.v1';
+var LLAVE_PERFILES = 'tuelemento.perfiles.v2';
+var LLAVE_ANTERIOR = 'tuelemento.nacimiento.v1';
 
-function guardarNacimiento(datos) {
-  try { localStorage.setItem(LLAVE, JSON.stringify(datos)); return true; }
-  catch (e) { return false; }   // modo privado, cuota llena, etc.
+function _estadoVacio() {
+  return { version:2, perfiles:[], principalId:null, calendarioId:null };
 }
 
-function leerNacimiento() {
+function _idPerfil() {
+  return 'p_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
+}
+
+function _nacimientoValido(d) {
+  return !!(d && d.anio && d.mes && d.dia && d.zona && isFinite(Number(d.lon)));
+}
+
+function _limpiarNacimiento(d) {
+  return {
+    anio:Number(d.anio), mes:Number(d.mes), dia:Number(d.dia),
+    hora:Number(d.hora == null ? 12 : d.hora), minuto:Number(d.minuto || 0),
+    sinHora:!!d.sinHora, zona:String(d.zona || ''), lon:Number(d.lon),
+    ciudad:String(d.ciudad || ''), sexo:String(d.sexo || '')
+  };
+}
+
+function _guardarEstado(estado) {
+  try { localStorage.setItem(LLAVE_PERFILES, JSON.stringify(estado)); return true; }
+  catch (e) { return false; }
+}
+
+function _migrarNacimientoAnterior() {
   try {
-    var s = localStorage.getItem(LLAVE);
-    if (!s) return null;
-    var d = JSON.parse(s);
-    return (d && d.anio && d.mes && d.dia) ? d : null;
+    var bruto = localStorage.getItem(LLAVE_ANTERIOR);
+    if (!bruto) return null;
+    var d = JSON.parse(bruto);
+    if (!_nacimientoValido(d)) return null;
+    var id = _idPerfil();
+    var ahora = Date.now();
+    var perfil = {
+      id:id, tipo:'yo', nombre:'Tu carta',
+      nacimiento:_limpiarNacimiento(d), creado:ahora, actualizado:ahora
+    };
+    var estado = { version:2, perfiles:[perfil], principalId:id, calendarioId:id };
+    if (_guardarEstado(estado)) localStorage.removeItem(LLAVE_ANTERIOR);
+    return estado;
   } catch (e) { return null; }
 }
 
-function olvidarNacimiento() {
-  try { localStorage.removeItem(LLAVE); } catch (e) {}
+function estadoPerfiles() {
+  try {
+    var bruto = localStorage.getItem(LLAVE_PERFILES);
+    if (!bruto) return _migrarNacimientoAnterior() || _estadoVacio();
+    var e = JSON.parse(bruto);
+    if (!e || !Array.isArray(e.perfiles)) return _estadoVacio();
+    e.version = 2;
+    e.principalId = e.principalId || null;
+    e.calendarioId = e.calendarioId || null;
+    e.perfiles = e.perfiles.filter(function (p) {
+      return p && p.id && _nacimientoValido(p.nacimiento);
+    });
+    return e;
+  } catch (e) { return _estadoVacio(); }
 }
 
-/** Reconstruye la carta a partir de lo guardado. */
-function cartaGuardada() {
-  var d = leerNacimiento();
-  if (!d) return null;
+function listarPerfiles() {
+  return estadoPerfiles().perfiles.slice();
+}
+
+function leerPerfil(id) {
+  var ps = listarPerfiles();
+  for (var i=0; i<ps.length; i++) if (ps[i].id === id) return ps[i];
+  return null;
+}
+
+function etiquetaPerfil(perfil) {
+  if (!perfil) return 'Carta';
+  return perfil.tipo === 'yo' ? 'Tu carta' : (perfil.nombre || 'Otra carta');
+}
+
+function guardarPerfil(datos) {
+  datos = datos || {};
+  if (!_nacimientoValido(datos.nacimiento)) return null;
+  var e = estadoPerfiles();
+  var ahora = Date.now();
+  var principalAnterior = e.principalId;
+  var tipo = datos.tipo === 'otra' ? 'otra' : 'yo';
+  var nombre = tipo === 'yo' ? 'Tu carta' : String(datos.nombre || 'Otra carta').trim();
+  var existente = null;
+
+  if (datos.id) {
+    for (var i=0; i<e.perfiles.length; i++) {
+      if (e.perfiles[i].id === datos.id) { existente = e.perfiles[i]; break; }
+    }
+  }
+  if (!existente && tipo === 'yo') {
+    for (var j=0; j<e.perfiles.length; j++) {
+      if (e.perfiles[j].tipo === 'yo') { existente = e.perfiles[j]; break; }
+    }
+  }
+
+  var perfil = existente || { id:_idPerfil(), creado:ahora };
+  perfil.tipo = tipo;
+  perfil.nombre = nombre;
+  perfil.nacimiento = _limpiarNacimiento(datos.nacimiento);
+  perfil.actualizado = ahora;
+
+  if (!existente) e.perfiles.push(perfil);
+  if (tipo === 'yo') {
+    e.principalId = perfil.id;
+    if (!principalAnterior) e.calendarioId = perfil.id;
+  }
+  if (!e.calendarioId || !leerPerfilEnEstado(e, e.calendarioId)) {
+    e.calendarioId = e.principalId || perfil.id;
+  }
+  return _guardarEstado(e) ? perfil : null;
+}
+
+function leerPerfilEnEstado(e, id) {
+  for (var i=0; i<e.perfiles.length; i++) if (e.perfiles[i].id === id) return e.perfiles[i];
+  return null;
+}
+
+function perfilPrincipal() {
+  var e = estadoPerfiles();
+  var p = leerPerfilEnEstado(e, e.principalId);
+  if (p) return p;
+  for (var i=0; i<e.perfiles.length; i++) if (e.perfiles[i].tipo === 'yo') return e.perfiles[i];
+  return null;
+}
+
+function perfilCalendario() {
+  var e = estadoPerfiles();
+  return leerPerfilEnEstado(e, e.calendarioId) || perfilPrincipal() || e.perfiles[0] || null;
+}
+
+function seleccionarPerfilCalendario(id) {
+  var e = estadoPerfiles();
+  var p = leerPerfilEnEstado(e, id);
+  e.calendarioId = p ? p.id : null;
+  _guardarEstado(e);
+  return p;
+}
+
+function olvidarPerfil(id) {
+  var e = estadoPerfiles();
+  var restantes = [];
+  for (var i=0; i<e.perfiles.length; i++) if (e.perfiles[i].id !== id) restantes.push(e.perfiles[i]);
+  e.perfiles = restantes;
+  if (e.principalId === id) {
+    e.principalId = null;
+    for (var j=0; j<restantes.length; j++) {
+      if (restantes[j].tipo === 'yo') { e.principalId = restantes[j].id; break; }
+    }
+  }
+  if (e.calendarioId === id || !leerPerfilEnEstado(e, e.calendarioId)) {
+    e.calendarioId = e.principalId || (restantes[0] ? restantes[0].id : null);
+  }
+  _guardarEstado(e);
+  return restantes.length;
+}
+
+function cartaDesdePerfil(perfil) {
+  if (!perfil || !_nacimientoValido(perfil.nacimiento)) return null;
+  var d = perfil.nacimiento;
   try {
     return cuatroPilares({
-      anio: d.anio, mes: d.mes, dia: d.dia,
-      hora: d.sinHora ? 12 : d.hora, minuto: d.sinHora ? 0 : d.minuto,
-      zona: d.zona, longitud: d.lon
+      anio:d.anio, mes:d.mes, dia:d.dia,
+      hora:d.sinHora ? 12 : d.hora, minuto:d.sinHora ? 0 : d.minuto,
+      zona:d.zona, longitud:d.lon
     });
   } catch (e) { return null; }
 }
 
+// Compatibilidad con V9 y enlaces internos que todavía usan la API anterior.
+function guardarNacimiento(datos) {
+  var p = guardarPerfil({ tipo:'yo', nombre:'Tu carta', nacimiento:datos });
+  return !!p;
+}
+
+function leerNacimiento() {
+  var p = perfilPrincipal();
+  return p ? p.nacimiento : null;
+}
+
+function olvidarNacimiento() {
+  var p = perfilPrincipal();
+  if (p) olvidarPerfil(p.id);
+}
+
+function cartaGuardada() {
+  return cartaDesdePerfil(perfilCalendario());
+}
+
 (function (raiz) {
   var api = { MESES, DOW, $, activarApariciones, aplicarPaletaUI, pintarFondo, ir, faltantes, descargarSVG,
+              estadoPerfiles, listarPerfiles, leerPerfil, etiquetaPerfil, guardarPerfil, perfilPrincipal,
+              perfilCalendario, seleccionarPerfilCalendario, olvidarPerfil, cartaDesdePerfil,
               guardarNacimiento, leerNacimiento, olvidarNacimiento, cartaGuardada };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else for (var k in api) raiz[k] = api[k];

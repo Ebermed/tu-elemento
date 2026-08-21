@@ -17,7 +17,18 @@
   <section class="pantalla viva" id="p-dias">
     <p class="marca">Tu Elemento</p>
     <h1 style="font-size:clamp(25px,5vw,34px); margin-bottom:8px">¿Cómo viene el día?</h1>
-    <p class="bajada" style="margin-bottom:24px">Cada fecha mezcla dos ritmos del calendario solar chino. Juntos ayudan a ver qué tipo de actividades fluyen mejor ese día y cuáles agradecen un poco más de margen. Si ya calculaste tu carta, también sumamos la relación con Tu origen.</p>
+    <p class="bajada" style="margin-bottom:20px">Cada fecha mezcla dos ritmos del calendario solar chino. Juntos ayudan a ver qué tipo de actividades fluyen mejor ese día y cuáles agradecen un poco más de margen. Con una carta guardada, la lectura también se cruza con su origen.</p>
+
+    <section class="calPerfilBox" id="calPerfilBox" hidden>
+      <label for="perfilCal">Calendario para</label>
+      <div class="calPerfilSelect">
+        <select id="perfilCal" aria-label="Carta usada por el calendario"></select>
+      </div>
+      <p class="pista" id="perfilCalMeta"></p>
+    </section>
+    <div class="calSinPerfil" id="calSinPerfil" hidden>
+      <p><strong>Lectura general.</strong> Guarda una carta y este calendario también podrá cruzar cada día con esa persona.</p>
+    </div>
 
     <div class="cambiaVista">
       <button id="vDia" aria-pressed="true">Día</button>
@@ -39,9 +50,10 @@
     <div id="diaCaja"></div>
     <div id="mesCaja" hidden></div>
 
-    <div class="acciones" style="justify-content:center; margin-top:26px; flex-wrap:wrap">
-      <a class="btn" href="index.html">Calcular mi carta</a>
-      <button class="btn fantasma" id="olvidar" hidden>Olvidar mis datos</button>
+    <div class="acciones calAcciones" style="justify-content:center; margin-top:26px; flex-wrap:wrap">
+      <a class="btn" id="verCartaPerfil" href="index.html" hidden>Ver esta carta</a>
+      <a class="btn fantasma" href="index.html">Calcular otra carta</a>
+      <button class="btn fantasma olvidarCarta" id="olvidar" hidden>Olvidar esta carta</button>
     </div>
 
     <details style="margin-top:30px">
@@ -88,14 +100,79 @@
     };
     return '<span class="iconito" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="' + (path[tipo] || path.tierra) + '"/></svg></span>';
   }
-  // Si ya calculó su carta antes, el calendario la recuerda y personaliza.
-  var mia = cartaGuardada();
+  var perfilActivo = null;
+  var mia = null;
 
-  if (mia) $('#olvidar').hidden = false;
+  function escPerfil(x) {
+    return String(x == null ? '' : x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function resumenPerfilCal(p) {
+    var c = cartaDesdePerfil(p);
+    if (!c) return null;
+    var t = traducir(c);
+    return { carta:c, t:t };
+  }
+
+  function pintarSelectorPerfiles() {
+    var ps = listarPerfiles();
+    var box = $('#calPerfilBox'), vacio = $('#calSinPerfil'), sel = $('#perfilCal');
+    box.hidden = ps.length === 0;
+    vacio.hidden = ps.length > 0;
+    var h = '';
+    ps.forEach(function (p) {
+      var r = resumenPerfilCal(p);
+      if (!r) return;
+      var nombre = p.tipo === 'yo' ? 'Tu carta' : p.nombre;
+      h += '<option value="' + p.id + '">' + escPerfil(nombre) + ' · ' + escPerfil(r.t.tarjeta.nombre) + '</option>';
+    });
+    sel.innerHTML = h;
+    if (perfilActivo) sel.value = perfilActivo.id;
+
+    $('#olvidar').hidden = !perfilActivo;
+    $('#verCartaPerfil').hidden = !perfilActivo;
+    if (perfilActivo) {
+      var r2 = resumenPerfilCal(perfilActivo);
+      var origen = r2 && r2.carta ? r2.carta.pilares.anio.rama.animal : '';
+      $('#perfilCalMeta').textContent = (perfilActivo.tipo === 'yo' ? 'Tu origen' : 'Origen de ' + perfilActivo.nombre) + ': ' + origen + '. Puedes cambiar de carta cuando quieras.';
+      $('#verCartaPerfil').href = 'index.html?perfil=' + encodeURIComponent(perfilActivo.id);
+    } else {
+      $('#perfilCalMeta').textContent = '';
+    }
+  }
+
+  function usarPerfil(id, guardarEleccion) {
+    var p = id ? leerPerfil(id) : perfilCalendario();
+    if (p && guardarEleccion) seleccionarPerfilCalendario(p.id);
+    perfilActivo = p || null;
+    mia = cartaDesdePerfil(perfilActivo);
+    pintarSelectorPerfiles();
+  }
+
+  var perfilSolicitado = null;
+  try {
+    var q = (globalThis.location && globalThis.location.search) ? globalThis.location.search : '';
+    var m = q.match(/[?&]perfil=([^&]+)/);
+    if (m) perfilSolicitado = decodeURIComponent(m[1]);
+  } catch (e) {}
+  if (perfilSolicitado && leerPerfil(perfilSolicitado)) seleccionarPerfilCalendario(perfilSolicitado);
+  usarPerfil(null, false);
+
+  $('#perfilCal').addEventListener('change', function () {
+    usarPerfil(this.value, true);
+    if (enMes && mesVisto) pintarMes(mesVisto, 0);
+    else pintarDia(diaVisto || new Date(), 0);
+  });
+
   $('#olvidar').addEventListener('click', function () {
-    olvidarNacimiento(); mia = null;
-    this.hidden = true;
-    pintarDia(diaVisto || new Date(), 0);
+    if (!perfilActivo) return;
+    var seguir = true;
+    if (typeof globalThis.confirm === 'function') seguir = globalThis.confirm('¿Olvidar ' + etiquetaPerfil(perfilActivo) + '? Sus datos saldrán de este navegador.');
+    if (!seguir) return;
+    olvidarPerfil(perfilActivo.id);
+    usarPerfil(null, false);
+    if (enMes && mesVisto) pintarMes(mesVisto, 0);
+    else pintarDia(diaVisto || new Date(), 0);
   });
 
   function pintarDia(f, dir) {
@@ -138,8 +215,10 @@
            '.</div>';
     }
     h += mia
-      ? '<p class="pista" style="margin-top:18px">Esta lectura también está cruzada con Tu origen: ' + esc(mia.pilares.anio.rama.animal) + '.</p>'
-      : '<p class="pista" style="margin-top:18px">Cuando calcules tu carta, el calendario también podrá comparar cada fecha con Tu origen y guardar esa referencia en este navegador.</p>';
+      ? '<p class="pista" style="margin-top:18px">' + (perfilActivo && perfilActivo.tipo === 'otra'
+          ? 'Esta lectura está personalizada para ' + esc(perfilActivo.nombre) + ' y también cruza el día con su origen: '
+          : 'Esta lectura también cruza el día con Tu origen: ') + esc(mia.pilares.anio.rama.animal) + '.</p>'
+      : '<p class="pista" style="margin-top:18px">Con una carta guardada, el calendario también puede cruzar cada fecha con el origen de esa persona.</p>';
     h += '</div>';
 
     var caja = $('#diaCaja');
