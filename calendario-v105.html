@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendario — Tu Elemento</title>
+<meta name="description" content="Mira cómo viene cada día y consulta el calendario para cualquiera de tus cartas guardadas.">
+<link rel="stylesheet" href="estilo.css?v=10.5.0">
+</head>
+<body>
+<div id="fondo" aria-hidden="true"></div>
+<main>
+  <section class="pantalla viva" id="p-dias">
+    <p class="marca">Tu Elemento</p>
+    <h1 style="font-size:clamp(25px,5vw,34px); margin-bottom:20px">¿Cómo viene el día?</h1>
+
+    <section class="calPerfilBox teCompacto" id="calPerfilBox" hidden>
+      <label for="perfilCal">Calendario para</label>
+      <div class="calPerfilSelect"><select id="perfilCal" aria-label="Carta usada por el calendario"></select></div>
+      <p class="pista" id="perfilCalMeta"></p>
+    </section>
+    <div class="calSinPerfil" id="calSinPerfil" hidden>
+      <p><strong>Lectura general.</strong> Guarda una carta para personalizar también el calendario.</p>
+    </div>
+
+    <div class="cambiaVista">
+      <button type="button" id="vDia" aria-pressed="true">Día</button>
+      <button type="button" id="vMes" aria-pressed="false">Mes</button>
+    </div>
+
+    <div class="nav" id="navDia">
+      <button type="button" id="diaAnt" aria-label="Día anterior">‹</button>
+      <button type="button" class="hoy" id="diaHoy">Hoy</button>
+      <button type="button" id="diaSig" aria-label="Día siguiente">›</button>
+    </div>
+
+    <div class="mesNav" id="navMes" hidden>
+      <button type="button" id="mesAnt" aria-label="Mes anterior">‹</button>
+      <span class="titulo" id="mesTitulo"></span>
+      <button type="button" id="mesSig" aria-label="Mes siguiente">›</button>
+    </div>
+
+    <div id="diaCaja"></div>
+    <div id="mesCaja" hidden></div>
+
+    <div class="acciones calAcciones" style="justify-content:center; margin-top:26px; flex-wrap:wrap">
+      <a class="btn" id="verCartaPerfil" href="index.html" hidden>Ver esta carta</a>
+      <a class="btn fantasma" href="index.html?nueva=1">Calcular otra carta</a>
+      <button type="button" class="btn fantasma olvidarCarta" id="olvidar" hidden>Olvidar esta carta</button>
+    </div>
+
+    <details style="margin-top:30px">
+      <summary>¿De dónde sale esta lectura?</summary>
+      <p>Cada fecha mezcla dos ritmos del calendario solar chino. Juntos ayudan a ver qué tipo de actividades fluyen mejor ese día y cuáles agradecen un poco más de margen. Con una carta guardada, la lectura también se cruza con su origen.</p>
+      <p>Uno de los ciclos recorre 12 ritmos según el mes y el día; el otro avanza de forma continua a través de 28 posiciones.</p>
+      <p>Después miramos cómo se relaciona ese día con el mes y el año. Cuando eliges una carta guardada, también entra Tu origen.</p>
+      <p>La barra reúne esas señales en una referencia rápida. Debajo puedes leer cada ritmo por separado.</p>
+    </details>
+  </section>
+</main>
+<p class="pie">Hecho con ♥ por Ebermedia · <a href="index.html">tus cartas</a></p>
+
+<script src="acuarela.js?v=10.5.0"></script>
+<script src="lugares.js?v=10.5.0"></script>
+<script src="zonas.js?v=10.5.0"></script>
+<script src="motor.js?v=10.5.0"></script>
+<script src="traduccion.js?v=10.5.0"></script>
+<script src="reglas.js?v=10.5.0"></script>
+<script src="base.js?v=10.5.0"></script>
+<script src="calendario-v105.js?v=10.5.0"></script>
+</body>
+</html>
