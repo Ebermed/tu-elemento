@@ -25,6 +25,28 @@
   opacity:.88;
 }
 </style>
+<style id="v106-stability">
+/* Safari/iOS: al cambiar la altura de un pilar evitamos recomponer capas con filtros. */
+.modo-carta-ligero .revela-prep,
+.modo-carta-ligero .revela-prep.revela-viva {
+  opacity:1!important;
+  transform:none!important;
+  filter:none!important;
+  transition:none!important;
+}
+#lectura .col {
+  filter:none!important;
+  will-change:auto!important;
+}
+#lectura .panel {
+  transform:none!important;
+  filter:none!important;
+}
+#lectura .panel.abierto {
+  animation:v106Panel .14s ease-out both!important;
+}
+@keyframes v106Panel { from{opacity:.25} to{opacity:1} }
+</style>
 </head>
 <body>
 <div id="fondo" aria-hidden="true"></div>
@@ -168,7 +190,9 @@
 <script src="lectura.js?v=10.5.2"></script>
 <script src="decadas.js?v=10.5.2"></script>
 <script src="base.js?v=10.5.2"></script>
+<script src="app-v106-performance.js?v=10.6.0"></script>
 <script src="app-v105.js?v=10.5.2"></script>
 <script src="app-v105-submit-fix.js?v=10.5.2"></script>
+<script src="app-v106-pilares.js?v=10.6.0"></script>
 </body>
 </html>
