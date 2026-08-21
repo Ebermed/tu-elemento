@@ -155,16 +155,6 @@
     'base.js':       'pintarFondo'
   })) return;
 
-  if (faltan.length) {
-    document.querySelector('main').innerHTML =
-      '<div style="max-width:520px;text-align:left">' +
-      '<h1 style="font-size:28px">Faltan archivos</h1>' +
-      '<p>Estos deben estar en la misma carpeta que <code>index.html</code>:</p>' +
-      '<ul>' + faltan.map(function (f) { return '<li><code>' + f + '</code></li>'; }).join('') + '</ul>' +
-      '<p class="pista">Si los bajaste de uno en uno, revisa que no falte ninguno ' +
-      'y que los nombres estén idénticos.</p></div>';
-    return;
-  }
 
 
   // LUGARES viene de zonas.js: cada uno con su zona IANA, que resuelve el

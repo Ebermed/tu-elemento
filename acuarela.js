@@ -37,26 +37,38 @@ function manchaPath(cx, cy, r, irregular, aplanar, r1) {
   return d + 'Z';
 }
 
-/** Los tres filtros de sangrado. Insertar dentro de <defs>. */
-function filtrosAcuarela(semilla = 42) {
+/**
+ * Los tres filtros de sangrado. Insertar dentro de <defs>.
+ *
+ * RENDIMIENTO: feTurbulence calcula ruido Perlin píxel por píxel, en CPU
+ * en la mayoría de navegadores. Sobre un lienzo grande y con muchas
+ * octavas se vuelve lento de verdad. Por eso el fondo se dibuja chico y
+ * se estira por CSS: como todo va desenfocado, se ve idéntico y el
+ * trabajo de filtrado baja con el cuadrado de la escala.
+ *
+ * @param {number} [k]  factor de escala del lienzo (1 = tamaño completo)
+ */
+function filtrosAcuarela(semilla = 42, k) {
+  k = k || 1;
+  var esc = function (v) { return +(v * k).toFixed(2); };
   return `
     <filter id="ac0" x="-30%" y="-30%" width="160%" height="160%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="4" seed="${semilla}" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="55" xChannelSelector="R" yChannelSelector="G"/>
-      <feGaussianBlur stdDeviation="26"/>
+      <feTurbulence type="fractalNoise" baseFrequency="' + (0.011 / k).toFixed(4) + '" numOctaves="4" seed="${semilla}" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="' + esc(55) + '" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="' + esc(26) + '"/>
     </filter>
     <filter id="ac1" x="-30%" y="-30%" width="160%" height="160%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="5" seed="${semilla + 7}" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="42" xChannelSelector="R" yChannelSelector="G"/>
-      <feGaussianBlur stdDeviation="34"/>
+      <feTurbulence type="fractalNoise" baseFrequency="' + (0.013 / k).toFixed(4) + '" numOctaves="5" seed="${semilla + 7}" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="' + esc(42) + '" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="' + esc(34) + '"/>
     </filter>
     <filter id="ac2" x="-30%" y="-30%" width="160%" height="160%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="3" seed="${semilla + 19}" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="70" xChannelSelector="R" yChannelSelector="G"/>
-      <feGaussianBlur stdDeviation="20"/>
+      <feTurbulence type="fractalNoise" baseFrequency="' + (0.006 / k).toFixed(4) + '" numOctaves="3" seed="${semilla + 19}" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="' + esc(70) + '" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="' + esc(20) + '"/>
     </filter>
     <filter id="grano">
-      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" seed="3"/>
+      <feTurbulence type="fractalNoise" baseFrequency="' + (0.85 / k).toFixed(3) + '" numOctaves="2" seed="3"/>
       <feColorMatrix type="saturate" values="0"/>
     </filter>`;
 }
@@ -93,8 +105,12 @@ function capasAcuarela(paleta, w, h, op = {}) {
 /** Fondo completo listo para usar como <svg> de fondo. */
 function fondoAcuarela(paleta, w, h, op = {}) {
   const { semilla = 42, papel = '#FBF7F0', densidad = 1, opacidad = 1 } = op;
+  // Se dibuja a un tercio y el CSS lo estira. Nueve veces menos píxeles
+  // que filtrar, y como todo está desenfocado no se nota la diferencia.
+  const k = op.escala || (1 / 3);
+  w = Math.round(w * k); h = Math.round(h * k);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
-  <defs>${filtrosAcuarela(semilla)}
+  <defs>${filtrosAcuarela(semilla, k)}
     <clipPath id="cp${semilla}"><rect width="${w}" height="${h}"/></clipPath>
   </defs>
   <g clip-path="url(#cp${semilla})">
