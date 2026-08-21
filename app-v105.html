@@ -6,6 +6,25 @@
 <title>Tu Elemento — ¿de qué estás hecho?</title>
 <meta name="description" content="Descubre tu elemento base y guarda varias cartas en este navegador.">
 <link rel="stylesheet" href="estilo.css?v=10.5.2">
+<style id="v1054-polish">
+/* El círculo del mosaico conserva su tamaño; únicamente gana presencia el símbolo interior. */
+.perfilIcono .iconito {
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  margin:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.perfilIcono .iconito svg {
+  width:27px!important;
+  height:27px!important;
+  max-width:27px!important;
+  max-height:27px!important;
+  stroke-width:2.15!important;
+  opacity:.88;
+}
+</style>
 </head>
 <body>
 <div id="fondo" aria-hidden="true"></div>
@@ -46,7 +65,7 @@
   <section class="pantalla" id="p-form">
     <p class="marca">Tu Elemento</p>
     <h1 id="tituloForm" style="font-size:clamp(27px,5.5vw,36px)">¿Cuándo naciste?</h1>
-    <p class="bajada">Esta carta quedará guardada en este navegador para que puedas volver a ella y usarla en el calendario.</p>
+    <p class="bajada">Todas tus cartas quedarán guardadas en este navegador para que puedas volver a ellas y usarlas en el calendario.</p>
 
     <form id="forma" novalidate>
       <div class="campo">
