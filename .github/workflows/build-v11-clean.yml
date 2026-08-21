@@ -1,0 +1,296 @@
+name: Build clean V11
+
+on:
+  push:
+    branches: [v11-clean-reset]
+    paths:
+      - '_trigger_v11_clean.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v11-clean-reset
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build V11 clean tree
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, shutil
+
+          out = Path('v11')
+          if out.exists(): shutil.rmtree(out)
+          out.mkdir()
+
+          copies = {
+            'acuarela.js':'acuarela.js',
+            'lugares.js':'lugares.js',
+            'zonas.js':'zonas.js',
+            'motor.js':'motor.js',
+            'traduccion.js':'traduccion.js',
+            'tarjeta.js':'tarjeta.js',
+            'lectura.js':'lectura.js',
+            'decadas.js':'decadas.js',
+          }
+          for src,dst in copies.items(): shutil.copyfile(src,out/dst)
+
+          # ---------- base.js: almacenamiento V11, cero migraciones ----------
+          base = Path('base.js').read_text(encoding='utf-8')
+          if '/* ═══ V10.4' in base:
+            base = base.split('/* ═══ V10.4',1)[0].rstrip() + '\n'
+
+          base = base.replace("var LLAVE_PERFILES = 'tuelemento.perfiles.v2';\nvar LLAVE_ANTERIOR = 'tuelemento.nacimiento.v1';",
+          """var TE_SCHEMA_KEY = 'tuelemento.schema';
+var TE_SCHEMA_VALUE = '11-clean-20260821';
+var LLAVE_PERFILES = 'tuelemento.v11.perfiles';
+
+(function resetV11() {
+  try {
+    if (localStorage.getItem(TE_SCHEMA_KEY) === TE_SCHEMA_VALUE) return;
+    var borrar = [];
+    for (var i=0; i<localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && (k.indexOf('tuelemento.') === 0 || k.indexOf('tuElemento.') === 0 || k.indexOf('te.') === 0)) borrar.push(k);
+    }
+    for (var j=0; j<borrar.length; j++) localStorage.removeItem(borrar[j]);
+    localStorage.setItem(TE_SCHEMA_KEY, TE_SCHEMA_VALUE);
+  } catch (e) {}
+})();""")
+
+          def remove_function(src, name):
+            marker = 'function ' + name + '('
+            start = src.find(marker)
+            if start < 0: return src
+            brace = src.find('{', start)
+            if brace < 0: return src
+            depth=0; i=brace; quote=None; esc=False; line=False; block=False
+            while i < len(src):
+              c=src[i]; n=src[i+1] if i+1<len(src) else ''
+              if line:
+                if c=='\n': line=False
+              elif block:
+                if c=='*' and n=='/': block=False; i+=1
+              elif quote:
+                if esc: esc=False
+                elif c=='\\': esc=True
+                elif c==quote: quote=None
+              else:
+                if c in "'\"`": quote=c
+                elif c=='/' and n=='/': line=True; i+=1
+                elif c=='/' and n=='*': block=True; i+=1
+                elif c=='{': depth+=1
+                elif c=='}':
+                  depth-=1
+                  if depth==0:
+                    end=i+1
+                    while end < len(src) and src[end] in ' \t\r\n': end+=1
+                    return src[:start] + src[end:]
+              i+=1
+            raise RuntimeError('Unclosed function '+name)
+
+          for fn in ['_migrarNacimientoAnterior','guardarNacimiento','leerNacimiento','olvidarNacimiento','cartaGuardada']:
+            base = remove_function(base,fn)
+          base = base.replace("return { version:2, perfiles:[], principalId:null, calendarioId:null };","return { version:11, perfiles:[], principalId:null, calendarioId:null };")
+          base = base.replace("if (!bruto) return _migrarNacimientoAnterior() || _estadoVacio();","if (!bruto) return _estadoVacio();")
+          base = base.replace('e.version = 2;','e.version = 11;')
+          base = base.replace(',\n              guardarNacimiento, leerNacimiento, olvidarNacimiento, cartaGuardada','')
+          (out/'base.js').write_text(base,encoding='utf-8')
+
+          # ---------- lectura personalizada como módulo real ----------
+          personalizada = r'''(function (raiz) {
+  'use strict';
+  var original = raiz.lecturaCompleta;
+  if (typeof original !== 'function') return;
+  var ZONA = {
+    anio:{nombre:'Tu origen',cuerpo:'Este vacío aparece en Tu origen, la parte de tu carta relacionada con familia, pertenencia, amistades tempranas y el lugar que ocupas dentro de un grupo. Puede sentirse como tardar un poco más en descubrir qué costumbres, personas o ambientes realmente sientes tuyos.'},
+    mes:{nombre:'Tu trayectoria',cuerpo:'Este vacío aparece en Tu trayectoria, la parte relacionada con estudios, trabajo, responsabilidades y logros. Puede sentirse como tener que construir tu propio criterio profesional a base de probar, ajustar y encontrar una manera de avanzar que sí te haga sentido.'},
+    hora:{nombre:'Tu futuro',cuerpo:'Este vacío aparece en Tu futuro, la parte relacionada con proyectos, hijos, vida interior y lo que quieres dejar construido con el tiempo. Puede sentirse como ir definiendo esa zona más adelante, a medida que descubres qué proyectos merecen de verdad tu energía.'}
+  };
+  var ELEMENTO = {
+    madera:{cuerpo:'Como aquí aparece Madera, el aprendizaje está en crecer con soporte propio: aprender, desarrollar recursos y tomar decisiones que también nazcan de ti.',accion:'Trabájalo así: elige una habilidad o proyecto cuyo siguiente paso dependa principalmente de ti.'},
+    fuego:{cuerpo:'Como aquí aparece Fuego, el aprendizaje está en ganar claridad: reconocer qué quieres, hacerlo visible y confiar más en tu propia lectura de la situación.',accion:'Trabájalo así: ponle nombre a lo que quieres antes de buscar aprobación afuera.'},
+    tierra:{cuerpo:'Como aquí aparece Tierra, el aprendizaje está en construir estabilidad y también en saber soltar. Tener raíces firmes pesa menos cuando distingues qué merece quedarse contigo y qué ya cumplió su etapa.',accion:'Trabájalo así: identifica una carga que ya puedes dejar y un punto de apoyo que sí quieres conservar.'},
+    metal:{cuerpo:'Como aquí aparece Metal, el aprendizaje está en poner en palabras tu criterio: decir lo que piensas, marcar límites y convertir lo que sabes en una posición clara.',accion:'Trabájalo así: expresa una decisión importante de forma simple y concreta.'},
+    agua:{cuerpo:'Como aquí aparece Agua, el aprendizaje está en ordenar ideas, decidir y llevar esa decisión a algo concreto. Pensar sirve más cuando termina encontrando un cauce.',accion:'Trabájalo así: convierte una decisión pendiente en un siguiente paso con fecha.'}
+  };
+  raiz.lecturaCompleta = function (carta, sinHora) {
+    var lec = original(carta, sinHora);
+    if (!lec) return lec;
+    (lec.pilares || []).forEach(function (p) {
+      if (p.clave === 'dia') {
+        p.titulo = 'Tu centro';
+        p.etapa = 'tu centro y tus vínculos cercanos';
+        p.intro = 'Tu centro reúne la parte más personal de la carta. Aquí aparece el tallo que define tu elemento base, junto con una capa ligada a pareja, intimidad y vida emocional.';
+      }
+    });
+    (lec.tensiones || []).forEach(function (x) {
+      if (x.texto) x.texto = x.texto.replace(/Tu origen y tú/g,'Tu origen y tu centro').replace(/Tu trayectoria y tú/g,'Tu trayectoria y tu centro').replace(/Tú y tu futuro/g,'Tu centro y tu futuro');
+    });
+    lec.vacios = (lec.vacios || []).map(function (v) {
+      var zona = ZONA[v.pilar] || {nombre:v.titulo,cuerpo:v.texto};
+      var pilar = carta && carta.pilares ? carta.pilares[v.pilar] : null;
+      var elemento = pilar && pilar.tallo ? pilar.tallo.elemento : '';
+      var matiz = ELEMENTO[elemento] || {cuerpo:'',accion:v.filo || ''};
+      var etiqueta = elemento ? elemento.charAt(0).toUpperCase()+elemento.slice(1) : '';
+      return {pilar:v.pilar,titulo:(etiqueta?'Vacío de '+etiqueta+' en ':'Vacío en ')+zona.nombre,texto:zona.cuerpo+(matiz.cuerpo?' '+matiz.cuerpo:''),filo:matiz.accion,rama:v.rama,elemento:elemento,elementoEtiqueta:etiqueta};
+    });
+    return lec;
+  };
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+'''
+          (out/'lectura-personalizada.js').write_text(personalizada,encoding='utf-8')
+
+          # ---------- app.js: una sola ruta y selector integrado ----------
+          app = Path('app-v105.js').read_text(encoding='utf-8')
+          app = app.replace("    activarApariciones($('#lectura'));\n",'')
+          app = app.replace("    $('#lectura').classList.add('escalona');\n",'')
+          app = app.replace("  $('#calcular').addEventListener('click', generarDesdeFormulario);\n",'')
+          if "$('#forma').addEventListener('submit'" not in app:
+            app = app.replace("  $('#paraOtra').addEventListener('click', function () { ponerTipoCarta('otra'); });\n",
+                              "  $('#paraOtra').addEventListener('click', function () { ponerTipoCarta('otra'); });\n  $('#forma').addEventListener('submit', function (e) { e.preventDefault(); generarDesdeFormulario(); });\n")
+
+          def replace_function(src, name, replacement):
+            marker = 'function ' + name + '('
+            start = src.find(marker)
+            if start < 0: raise RuntimeError('Missing '+name)
+            brace = src.find('{',start); depth=0; i=brace; quote=None; esc=False; line=False; block=False
+            while i < len(src):
+              c=src[i]; n=src[i+1] if i+1<len(src) else ''
+              if line:
+                if c=='\n': line=False
+              elif block:
+                if c=='*' and n=='/': block=False; i+=1
+              elif quote:
+                if esc: esc=False
+                elif c=='\\': esc=True
+                elif c==quote: quote=None
+              else:
+                if c in "'\"`": quote=c
+                elif c=='/' and n=='/': line=True; i+=1
+                elif c=='/' and n=='*': block=True; i+=1
+                elif c=='{': depth+=1
+                elif c=='}':
+                  depth-=1
+                  if depth==0: return src[:start]+replacement+src[i+1:]
+              i+=1
+            raise RuntimeError('Unclosed '+name)
+
+          selector = r'''function enlazarPilares() {
+    var lectura = $('#lectura');
+    if (!lectura) return;
+    var cols = Array.prototype.slice.call(lectura.querySelectorAll('.columnas .col'));
+    var paneles = Array.prototype.slice.call(lectura.querySelectorAll('.panel'));
+    if (!cols.length || paneles.length < cols.length) return;
+    var contenidos = paneles.slice(0, cols.length).map(function (p) { return p.innerHTML; });
+    paneles.slice(0, cols.length).forEach(function (p) { p.remove(); });
+    var fila = cols[0].parentElement;
+    var panel = document.createElement('div');
+    panel.className = 'panel abierto pilarUnico';
+    panel.setAttribute('role','region');
+    fila.insertAdjacentElement('afterend', panel);
+
+    function activar(indice) {
+      cols.forEach(function (b, i) {
+        var activo = i === indice;
+        b.setAttribute('aria-expanded', activo ? 'true' : 'false');
+        var mas = b.querySelector('.mas');
+        if (mas) mas.textContent = activo ? 'cerrar' : 'leer';
+      });
+      panel.innerHTML = contenidos[indice];
+    }
+    cols.forEach(function (b, i) {
+      b.addEventListener('click', function (e) { e.preventDefault(); activar(i); });
+    });
+    activar(0);
+  }'''
+          app = replace_function(app,'enlazarPilares',selector)
+          (out/'app.js').write_text(app,encoding='utf-8')
+
+          # ---------- CSS ----------
+          css = Path('estilo.css').read_text(encoding='utf-8')
+          css += r'''
+
+/* V11 · lectura estable */
+#lectura .hoja,#lectura .inter,#lectura .col,#lectura .panel,#lectura .vidrio{
+  -webkit-backdrop-filter:none!important; backdrop-filter:none!important;
+  filter:none!important; transform:none!important; will-change:auto!important;
+}
+#lectura .revela-prep,#lectura .revela-viva{opacity:1!important;filter:none!important;transform:none!important;transition:none!important}
+#lectura .panel.abierto,#lectura .pilarUnico{animation:none!important;transition:none!important}
+.perfilIcono .iconito{width:42px!important;height:42px!important;min-width:42px!important;margin:0!important;background:transparent!important;box-shadow:none!important}
+.perfilIcono .iconito svg{width:27px!important;height:27px!important;max-width:27px!important;max-height:27px!important;stroke-width:2.15!important;opacity:.88}
+'''
+          (out/'app.css').write_text(css,encoding='utf-8')
+
+          # ---------- index.html ----------
+          html = Path('app-v1056.html').read_text(encoding='utf-8')
+          html = re.sub(r'<link rel="stylesheet" href="[^"]+">','<link rel="stylesheet" href="app.css">',html,count=1)
+          html = re.sub(r'<script src="acuarela\.js[^"]*"></script>[\s\S]*?</body>', '''<script src="acuarela.js"></script>
+<script src="lugares.js"></script>
+<script src="zonas.js"></script>
+<script src="motor.js"></script>
+<script src="traduccion.js"></script>
+<script src="tarjeta.js"></script>
+<script src="lectura.js"></script>
+<script src="lectura-personalizada.js"></script>
+<script src="decadas.js"></script>
+<script src="base.js"></script>
+<script src="app.js"></script>
+</body>''', html, count=1)
+          html = html.replace('<head>','<head>\n<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">',1)
+          (out/'index.html').write_text(html,encoding='utf-8')
+
+          # ---------- calendario limpio ----------
+          cal_html = Path('calendario-v105.html').read_text(encoding='utf-8')
+          cal_html = re.sub(r'<link rel="stylesheet" href="[^"]+">','<link rel="stylesheet" href="app.css">',cal_html,count=1)
+          cal_html = re.sub(r'<script src="acuarela\.js[^"]*"></script>[\s\S]*?</body>', '''<script src="acuarela.js"></script>
+<script src="zonas.js"></script>
+<script src="motor.js"></script>
+<script src="traduccion.js"></script>
+<script src="lectura.js"></script>
+<script src="lectura-personalizada.js"></script>
+<script src="base.js"></script>
+<script src="calendario.js"></script>
+</body>''', cal_html, count=1)
+          cal_html = cal_html.replace('<head>','<head>\n<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">',1)
+          (out/'calendario.html').write_text(cal_html,encoding='utf-8')
+          cal = Path('calendario-v105.js').read_text(encoding='utf-8') + '\n' + Path('calendario-v105-copyfix.js').read_text(encoding='utf-8')
+          (out/'calendario.js').write_text(cal,encoding='utf-8')
+
+          (out/'README.txt').write_text('Tu Elemento V11 clean reset. Sin migraciones ni capas de compatibilidad.\n',encoding='utf-8')
+          PY
+
+      - name: Validate V11
+        shell: bash
+        run: |
+          set -e
+          for f in v11/*.js; do node --check "$f"; done
+          node test.js
+          node test-decadas.js
+          if grep -R -n -E 'v10|v105|LLAVE_ANTERIOR|_migrarNacimientoAnterior|guardarNacimiento|leerNacimiento|olvidarNacimiento|cartaGuardada|app-v105|pilares-selector|pilares-estaticos|submit-fix' v11; then
+            echo 'Legacy reference found in V11'; exit 1
+          fi
+          grep -q "tuelemento.v11.perfiles" v11/base.js
+          grep -q "11-clean-20260821" v11/base.js
+          grep -q "function enlazarPilares" v11/app.js
+          if grep -q "activarApariciones($('#lectura'))" v11/app.js; then exit 1; fi
+          echo 'V11 clean validation passed'
+
+      - name: Commit V11
+        shell: bash
+        run: |
+          git config user.name "Tu Elemento V11 Builder"
+          git config user.email "actions@users.noreply.github.com"
+          git add v11
+          git diff --cached --quiet && exit 0
+          git commit -m "Build clean V11 runtime"
+          git push origin v11-clean-reset
