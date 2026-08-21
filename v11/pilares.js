@@ -87,7 +87,7 @@ function animalIcon(animal){
   return '<span class="pilarAnimalIcon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round">'+cuerpo+'</svg></span>';
 }
 
-/* ── Pilares desplegados ────────────────────────────────────── */
+/* ── Pilares desplegados + pulido de jerarquía ─────────────── */
 var estilos=document.createElement('style');
 estilos.id='v112-pilares-css';
 estilos.textContent=[
@@ -102,9 +102,16 @@ estilos.textContent=[
   '#lectura .pilarEstaticoMeta em{font-family:var(--serif);font-size:16px;color:var(--tinta-suave)}',
   '#lectura .pilarVacioV112{display:inline-flex;align-items:center;width:max-content;margin-top:5px;padding:3px 8px;border-radius:999px;background:rgba(46,42,38,.07);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--tinta-suave)}',
   '#lectura .pilarEstaticoLectura{padding-top:13px;border-top:1px solid rgba(46,42,38,.10)}',
-  '#lectura .pilarEstaticoLectura .quien{margin-top:0}',
+  '#lectura .pilarEstaticoLectura .quien{margin:0 0 10px!important;font-family:var(--sans)!important;font-size:12px!important;line-height:1.35!important;letter-spacing:.45px!important;text-transform:none!important;color:var(--tinta)!important;font-weight:760!important}',
+  '#lectura .vacioMeta{font-family:var(--sans)!important;font-size:13px!important;line-height:1.35!important;font-weight:500!important;color:rgba(107,98,89,.68)!important;letter-spacing:.1px!important}',
   '#lectura .pilarEstaticoV112,#lectura .pilarEstaticoV112 *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;filter:none!important;transform:none!important}',
-  '@media(max-width:540px){#lectura .pilarEstaticoV112{padding:16px;border-radius:20px}#lectura .pilarAnimalIcon{width:44px;height:44px;flex-basis:44px;border-radius:15px}#lectura .pilarAnimalIcon svg{width:27px;height:27px}#lectura .pilarEstaticoMeta strong{font-size:23px}}'
+  '#p-resultado .resultadoAcciones{flex-wrap:wrap;gap:10px}',
+  '#p-resultado .resultadoAcciones .teMesCarta{min-width:170px;text-decoration:none;text-align:center}',
+  '#seguirCarta.tePistaScroll{position:fixed;z-index:70;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);width:min(340px,calc(100vw - 36px));margin:0;padding:10px 13px 10px 16px;border:1px solid rgba(255,255,255,.84);border-radius:999px;background:linear-gradient(155deg,rgba(255,255,255,.78),rgba(255,255,255,.48));box-shadow:0 14px 38px rgba(58,43,34,.13),inset 0 1px 0 rgba(255,255,255,.94);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%)}',
+  '#seguirCarta.tePistaScroll .seguirTexto{font-size:16px}',
+  '#seguirCarta.tePistaScroll small{font-size:9px;letter-spacing:.9px}',
+  '#seguirCarta.tePistaScroll .seguirFlecha{width:34px;height:34px;font-size:20px}',
+  '@media(max-width:540px){#lectura .pilarEstaticoV112{padding:16px;border-radius:20px}#lectura .pilarAnimalIcon{width:44px;height:44px;flex-basis:44px;border-radius:15px}#lectura .pilarAnimalIcon svg{width:27px;height:27px}#lectura .pilarEstaticoMeta strong{font-size:23px}#p-resultado .resultadoAcciones .btn{min-width:0;flex:1 1 160px}}'
 ].join('');
 document.head.appendChild(estilos);
 
@@ -141,6 +148,44 @@ function transformarPilares(){
   return true;
 }
 
+function perfilDeRuta(){
+  try{return new URLSearchParams(location.search).get('perfil')||'';}catch(e){return'';}
+}
+
+function instalarMesCarta(){
+  var acciones=$('#p-resultado .resultadoAcciones');
+  if(!acciones||acciones.querySelector('.teMesCarta'))return;
+  var a=document.createElement('a');
+  a.className='btn fantasma teMesCarta';
+  a.textContent='Ver tu mes';
+  var id=perfilDeRuta();
+  a.href='mes.html'+(id?'?perfil='+encodeURIComponent(id):'');
+  acciones.appendChild(a);
+}
+
+var scrollPendiente=false;
+function actualizarPistaScroll(){
+  scrollPendiente=false;
+  var btn=$('#seguirCarta'),pant=$('#p-resultado');
+  if(!btn||!pant)return;
+  var activa=pant.classList.contains('viva');
+  var lectura=$('#lectura');
+  var inicioLectura=lectura&&lectura.getBoundingClientRect?lectura.getBoundingClientRect().top:9999;
+  var mostrar=activa&&window.scrollY<220&&inicioLectura>window.innerHeight*.74;
+  btn.classList.toggle('tePistaScroll',mostrar);
+}
+function pedirPistaScroll(){
+  if(scrollPendiente)return;
+  scrollPendiente=true;
+  if(typeof requestAnimationFrame==='function')requestAnimationFrame(actualizarPistaScroll);
+  else setTimeout(actualizarPistaScroll,16);
+}
+
+function instalarUIExtra(){
+  instalarMesCarta();
+  pedirPistaScroll();
+}
+
 var lectura=$('#lectura');
 var obs=null;
 if(lectura&&typeof MutationObserver!=='undefined'){
@@ -148,11 +193,14 @@ if(lectura&&typeof MutationObserver!=='undefined'){
     if(!lectura.querySelector('.columnas'))return;
     obs.disconnect();
     transformarPilares();
+    instalarUIExtra();
     obs.observe(lectura,{childList:true});
   });
   obs.observe(lectura,{childList:true});
 }
-setTimeout(transformarPilares,0);
+setTimeout(function(){transformarPilares();instalarUIExtra();},0);
+window.addEventListener('scroll',pedirPistaScroll,{passive:true});
+window.addEventListener('resize',pedirPistaScroll,{passive:true});
 
 /* Cualquier botón viejo que alcance a existir durante un frame queda inerte. */
 document.addEventListener('click',function(e){
