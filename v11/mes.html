@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+<meta name="theme-color" content="#FBF7F0">
+<meta name="tu-elemento-release" content="V1 Artx · Tu mes experimental">
+<title>Tu mes — Tu Elemento</title>
+<meta name="description" content="Lectura mensual personalizada desde tu carta BaZi: perfil del mes, etapa de crecimiento e interacciones con tus cuatro pilares.">
+<link rel="stylesheet" href="app.css?b=1.0.0-artx">
+<link rel="stylesheet" href="mes.css?b=mes-0.1">
+</head>
+<body class="mesApp">
+<div id="fondo" aria-hidden="true"></div>
+<main>
+<section class="pantalla viva mensualPantalla" id="p-mes">
+  <p class="marca">Tu Elemento</p>
+  <h1>¿Qué trae este mes?</h1>
+  <p class="mesBajada">Tu carta se cruza con el pilar solar de cada mes para ver qué tema gana fuerza, qué etapa estás atravesando y en qué parte de tu vida se siente más.</p>
+
+  <section class="mesPerfilBox" id="mesPerfilBox" hidden>
+    <label for="perfilMes">Lectura para</label>
+    <select id="perfilMes" aria-label="Carta usada para la lectura mensual"></select>
+    <p class="mesPerfilMeta" id="perfilMesMeta"></p>
+  </section>
+
+  <div id="mesConCarta" hidden>
+    <div class="mesNavBar" aria-label="Navegación mensual">
+      <button type="button" id="mesAnt" aria-label="Mes anterior">‹</button>
+      <div class="mesNavCentro"><button type="button" id="mesHoy" aria-label="Volver al mes actual"><strong id="mesTitulo">Mes</strong><span>volver a este mes</span></button></div>
+      <button type="button" id="mesSig" aria-label="Mes siguiente">›</button>
+    </div>
+    <div id="mesContenido"></div>
+    <div class="acciones mesAcciones">
+      <a class="btn fantasma" id="verCartaMes" href="index.html">Ver esta carta</a>
+      <a class="btn fantasma" href="calendario.html">Ver calendario</a>
+    </div>
+  </div>
+
+  <section class="vidrio mesSinCarta" id="mesSinCarta" hidden>
+    <h2>Esta lectura necesita una carta</h2>
+    <p>Con tu fecha y lugar de nacimiento podemos cruzar cada mes con tu Día Maestro y tus cuatro pilares.</p>
+    <a class="btn" href="index.html?nueva=1">Calcular una carta</a>
+  </section>
+</section>
+</main>
+<p class="pie">Hecho con ♥ por Ebermedia · <a href="index.html">tus cartas</a></p>
+
+<script src="release.js?b=1.0.0-artx"></script>
+<script src="acuarela.js?b=1.0.0-artx"></script>
+<script src="zonas.js?b=1.0.0-artx"></script>
+<script src="motor.js?b=1.0.0-artx"></script>
+<script src="traduccion.js?b=1.0.0-artx"></script>
+<script src="base.js?b=1.0.0-artx"></script>
+<script src="lectura-mensual.js?b=mes-0.1"></script>
+<script src="mes.js?b=mes-0.1"></script>
+</body>
+</html>
