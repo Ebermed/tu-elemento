@@ -1,0 +1,188 @@
+name: V10.3 clarity patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '_v10_3_trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Apply V10.3
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          # ── lectura.js: Tu centro + vacíos claros y personalizados ──
+          p=Path('lectura.js')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace("dia:  { titulo:'Tú', etapa:'tu centro y tus vínculos cercanos',", "dia:  { titulo:'Tu centro', etapa:'tu centro y tus vínculos cercanos',")
+          s=s.replace("intro:'Este pilar te pone a ti en el centro. Aquí aparece el tallo que define tu elemento base, junto con una capa ligada a pareja, intimidad y vida emocional.'", "intro:'Tu centro reúne la parte más personal de la carta. Aquí aparece el tallo que define tu elemento base, junto con una capa ligada a pareja, intimidad y vida emocional.'")
+          for a,b in {
+            'Tu origen y tú quedan':'Tu origen y tu centro quedan',
+            'Tu trayectoria y tú piden':'Tu trayectoria y tu centro piden',
+            'Tú y tu futuro pueden':'Tu centro y tu futuro pueden',
+            'Tu origen y tú encuentran':'Tu origen y tu centro encuentran',
+            'Tu trayectoria y tú se entienden':'Tu trayectoria y tu centro se entienden',
+            'Tú y tu futuro encuentran':'Tu centro y tu futuro encuentran'
+          }.items(): s=s.replace(a,b)
+
+          nuevo_vacios=r'''var VACIOS = {
+            anio: {
+              nombre:'Tu origen',
+              directo:'Este vacío cae en la parte de tu carta relacionada con familia, pertenencia, amistades tempranas y la sensación de encajar en un grupo.',
+              experiencia:'Puede sentirse como tener que descubrir por tu cuenta dónde perteneces, con quién te sientes en casa y qué partes de tu historia familiar sí quieres conservar.' },
+            mes: {
+              nombre:'Tu trayectoria',
+              directo:'Este vacío cae en la parte de tu carta relacionada con estudios, trabajo, carrera, responsabilidades y logros.',
+              experiencia:'Puede sentirse como construir tu manera de trabajar sobre la marcha: probar caminos, cambiar de criterio y encontrar una definición propia de éxito.' },
+            hora: {
+              nombre:'Tu futuro',
+              directo:'Este vacío cae en la parte de tu carta relacionada con proyectos, hijos, vida interior, planes de largo plazo y legado.',
+              experiencia:'Puede sentirse como un futuro que tarda en tomar forma. La claridad suele aparecer mientras haces, pruebas y eliges qué proyecto merece quedarse contigo.' },
+          };
+
+          var VACIO_ELEMENTO = {
+            madera: {
+              sentido:'Como aquí aparece Madera, el aprendizaje gira alrededor de crecer con recursos propios: aprender, desarrollar habilidades y darte permiso de empezar aunque todavía falte apoyo externo.',
+              trabajo:'Lo útil aquí es preguntarte qué puedes empezar a construir por ti mismo, aunque sea pequeño.' },
+            fuego: {
+              sentido:'Como aquí aparece Fuego, el aprendizaje gira alrededor de claridad y dirección: entender qué quieres, hacerlo visible y confiar más en tu propia lectura de la situación.',
+              trabajo:'Lo útil aquí es ponerle nombre a lo que quieres antes de buscar aprobación afuera.' },
+            tierra: {
+              sentido:'Como aquí aparece Tierra, el aprendizaje gira alrededor de pertenencia y estabilidad: saber qué te sostiene, qué ya pesa de más y qué merece quedarse.',
+              trabajo:'Lo útil aquí es distinguir entre sostener algo porque todavía importa y sostenerlo solo por costumbre.' },
+            metal: {
+              sentido:'Como aquí aparece Metal, el aprendizaje gira alrededor de criterio y voz propia: decir lo que piensas con claridad, poner límites y confiar en tu juicio.',
+              trabajo:'Lo útil aquí es expresar de forma concreta algo que llevas tiempo sabiendo por dentro.' },
+            agua: {
+              sentido:'Como aquí aparece Agua, el aprendizaje gira alrededor de decisiones: ordenar lo que piensas, elegir una dirección y convertir esa elección en movimiento.',
+              trabajo:'Lo útil aquí es tomar una decisión concreta y darle un primer paso visible.' },
+          };'''
+          s=re.sub(r"var VACIOS = \{[\s\S]*?\n\};\n\n/\*\* ¿Qué pilares de esta carta caen en vacío\? \*/", nuevo_vacios+"\n\n/** ¿Qué pilares de esta carta caen en vacío? */", s, count=1)
+
+          nueva_func=r'''function vaciosDe(carta, claves) {
+            var RM = _dep('RAMAS','./motor');
+            var out = [];
+            claves.forEach(function (k) {
+              if (k === 'dia') return;
+              var p = carta.pilares[k];
+              var r = RM.indexOf(p.rama);
+              if (carta.vacio.ramas.indexOf(r) !== -1 && VACIOS[k]) {
+                var elemento = p.tallo.elemento;
+                var matiz = VACIO_ELEMENTO[elemento] || { sentido:'', trabajo:'' };
+                var etiqueta = elemento.charAt(0).toUpperCase() + elemento.slice(1);
+                out.push({
+                  pilar:k,
+                  titulo:'Vacío de ' + etiqueta + ' en ' + VACIOS[k].nombre,
+                  texto:VACIOS[k].directo + ' ' + VACIOS[k].experiencia + ' ' + matiz.sentido,
+                  filo:matiz.trabajo,
+                  rama:p.rama.animal,
+                  elemento:elemento,
+                  elementoEtiqueta:etiqueta
+                });
+              }
+            });
+            return out;
+          }'''
+          s=re.sub(r"function vaciosDe\(carta, claves\) \{[\s\S]*?\n\}", nueva_func, s, count=1)
+          p.write_text(s,encoding='utf-8')
+
+          # ── app-source: nomenclatura y explicación de vacío ──
+          p=Path('app-source-v10.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('tu origen, tu trayectoria, tú y lo que vas construyendo hacia el futuro.','tu origen, tu trayectoria, tu centro y lo que vas construyendo hacia el futuro.')
+          s=s.replace("var cortos = { 'Tu origen':'Tu origen', 'Tu trayectoria':'Tu trayectoria', 'Tú':'Tú', 'Tu futuro':'Tu futuro',", "var cortos = { 'Tu origen':'Tu origen', 'Tu trayectoria':'Tu trayectoria', 'Tu centro':'Tu centro', 'Tú':'Tu centro', 'Tu futuro':'Tu futuro',")
+          s=s.replace("'Raíces':'Tu origen', 'Trayectoria':'Tu trayectoria', 'Centro':'Tú', 'Proyección':'Tu futuro',", "'Raíces':'Tu origen', 'Trayectoria':'Tu trayectoria', 'Centro':'Tu centro', 'Proyección':'Tu futuro',")
+          s=s.replace("'De dónde vienes':'Tu origen', 'Cómo trabajas':'Tu trayectoria', 'Quién eres':'Tú', 'Hacia dónde vas':'Tu futuro'", "'De dónde vienes':'Tu origen', 'Cómo trabajas':'Tu trayectoria', 'Quién eres':'Tu centro', 'Hacia dónde vas':'Tu futuro'")
+          s=s.replace("'<p class=\"sub\">En cada bloque del ciclo quedan dos ramas en vacío. Si una coincide con uno de tus pilares, esa zona suele sentirse menos dada de antemano y más construida con experiencia propia.</p>';", "'<p class=\"sub\">Un vacío marca una zona donde parte del aprendizaje se construye sobre la marcha. La lectura cambia según el pilar donde aparece y el elemento que lo acompaña.</p>';" )
+          p.write_text(s,encoding='utf-8')
+
+          # ── tarjeta y carta descargable: Tu centro ──
+          for nombre in ('tarjeta.js','carta.js'):
+            p=Path(nombre); s=p.read_text(encoding='utf-8')
+            s=s.replace("'Tu trayectoria':'Tu trayectoria', 'Tú':'Tú',", "'Tu trayectoria':'Tu trayectoria', 'Tu centro':'Tu centro', 'Tú':'Tu centro',")
+            s=s.replace("'Trayectoria':'Tu trayectoria', 'Centro':'Tú',", "'Trayectoria':'Tu trayectoria', 'Centro':'Tu centro',")
+            s=s.replace("'Quién eres':'Tú'", "'Quién eres':'Tu centro'")
+            s=s.replace("'Tu trayectoria':'TU TRAYECTORIA', 'Tú':'TÚ',", "'Tu trayectoria':'TU TRAYECTORIA', 'Tu centro':'TU CENTRO', 'Tú':'TU CENTRO',")
+            s=s.replace("'Trayectoria':'TU TRAYECTORIA', 'Centro':'TÚ',", "'Trayectoria':'TU TRAYECTORIA', 'Centro':'TU CENTRO',")
+            s=s.replace("'Quién eres':'TÚ'", "'Quién eres':'TU CENTRO'")
+            p.write_text(s,encoding='utf-8')
+
+          # ── calendario: hero corto, explicación abajo ──
+          p=Path('calendario-source-v10.html')
+          s=p.read_text(encoding='utf-8')
+          intro='Cada fecha mezcla dos ritmos del calendario solar chino. Juntos ayudan a ver qué tipo de actividades fluyen mejor ese día y cuáles agradecen un poco más de margen. Con una carta guardada, la lectura también se cruza con su origen.'
+          s=s.replace('    <h1 style="font-size:clamp(25px,5vw,34px); margin-bottom:8px">¿Cómo viene el día?</h1>\n    <p class="bajada" style="margin-bottom:20px">'+intro+'</p>\n', '    <h1 style="font-size:clamp(25px,5vw,34px); margin-bottom:18px">¿Cómo viene el día?</h1>\n')
+          s=s.replace('      <summary>¿De dónde sale esta lectura?</summary>\n      <p>Usamos dos ciclos tradicionales del calendario chino.', '      <summary>¿De dónde sale esta lectura?</summary>\n      <p>'+intro+'</p>\n      <p>Usamos dos ciclos tradicionales del calendario chino.')
+          # Versionar assets en las fuentes estables.
+          s=re.sub(r'href="estilo\.css(?:\?v=[^"]+)?"','href="estilo.css?v=10.3.0"',s)
+          s=re.sub(r'src="([a-zA-Z0-9_-]+\.js)(?:\?v=[^"]+)?"',lambda m:'src="'+m.group(1)+'?v=10.3.0"',s)
+          p.write_text(s,encoding='utf-8')
+
+          p=Path('app-source-v10.html')
+          s=p.read_text(encoding='utf-8')
+          s=re.sub(r'href="estilo\.css(?:\?v=[^"]+)?"','href="estilo.css?v=10.3.0"',s)
+          s=re.sub(r'src="([a-zA-Z0-9_-]+\.js)(?:\?v=[^"]+)?"',lambda m:'src="'+m.group(1)+'?v=10.3.0"',s)
+          p.write_text(s,encoding='utf-8')
+
+          # ── selector de perfiles más discreto ──
+          p=Path('estilo.css')
+          s=p.read_text(encoding='utf-8')
+          marker='/* V10.3 selector compacto */'
+          if marker not in s:
+            s += r'''
+
+/* V10.3 selector compacto */
+.calPerfilBox{width:min(88%,360px)!important;margin:0 auto 14px!important;padding:9px 11px!important;border-radius:18px!important;box-shadow:0 7px 22px rgba(58,43,34,.045),inset 0 1px 0 rgba(255,255,255,.82)!important}
+.calPerfilBox label{margin:0 0 4px!important;font-size:9px!important;letter-spacing:1.55px!important}
+.calPerfilSelect select{min-height:40px!important;padding:0 38px 0 12px!important;border-radius:14px!important;font-size:14px!important;font-weight:620!important}
+.calPerfilBox .pista{margin:5px 2px 0!important;font-size:11px!important;line-height:1.35!important;opacity:.76}
+.calSinPerfil{width:min(88%,360px)!important;margin:0 auto 14px!important;padding:9px 12px!important;border-radius:16px!important;font-size:12px!important;line-height:1.4!important;text-align:center!important}
+'''
+          p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Validate
+        shell: bash
+        run: |
+          node --check lectura.js
+          node --check tarjeta.js
+          node --check carta.js
+          node test.js
+          node test-decadas.js
+          node - <<'JS'
+          const M=require('./motor');
+          const L=require('./lectura');
+          let found=null;
+          for(let m=1;m<=12&&!found;m++) for(let d=1;d<=28&&!found;d++){
+            const c=M.cuatroPilares({anio:1996,mes:m,dia:d,hora:12,offsetTZ:0});
+            const l=L.lecturaCompleta(c,false);
+            if(l.vacios&&l.vacios.length) found=l.vacios[0];
+          }
+          if(!found) throw new Error('Sin caso de vacío para prueba');
+          if(!/^Vacío de /.test(found.titulo)||!/Lo útil aquí/.test(found.filo)) throw new Error('Vacío dinámico incompleto');
+          console.log(found.titulo); console.log(found.texto); console.log(found.filo);
+          JS
+
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name "Tu Elemento Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add lectura.js app-source-v10.html calendario-source-v10.html tarjeta.js carta.js estilo.css
+          git diff --cached --quiet && exit 0
+          git commit -m "Clarify void readings and compact calendar hero"
+          git push
