@@ -1,72 +1,32 @@
 /**
  * TU ELEMENTO — cortes solares de Tu mes
  *
- * Traduce la navegación enero–diciembre a los 12 meses solares BaZi:
- *   enero    → Xiao Han / Buey
- *   febrero  → Li Chun / Tigre
- *   marzo    → Jing Zhe / Conejo
- *   ...
- *   diciembre→ Da Xue / Rata
- *
- * Los límites se toman del instante astronómico Jié calculado por motor.js.
- * La fecha civil mostrada se convierte a la zona IANA guardada en la carta.
+ * Esta capa reutiliza calendario-solar.js para que carta, calendario y
+ * lectura mensual compartan exactamente los mismos cortes Jié.
  */
 (function(raiz){
   'use strict';
 
-  function dep(nombre,ruta){
-    if(typeof globalThis!=='undefined'&&globalThis[nombre]!==undefined)return globalThis[nombre];
-    if(typeof require!=='undefined'){try{return require(ruta)[nombre];}catch(e){}}
-    return undefined;
-  }
-
   var MESES_ES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-
-  function tsDesdeJD(J){return (J-2440587.5)*86400000;}
-
-  function localDesdeJD(J,zona){
-    var desdeJD=dep('desdeJD','./motor');
-    var offsetEnZona=dep('offsetEnZona','./zonas');
-    var off=8;
-    if(zona&&offsetEnZona){
-      try{off=offsetEnZona(tsDesdeJD(J),zona);}catch(e){}
-    }
-    var d=desdeJD(J+off/24);
-    d.offset=off;
-    return d;
-  }
-
-  function terminoParaMes(anio,mes){
-    var terms=dep('terminosDelAnio','./motor');
-    if(mes===1){
-      var prev=terms(anio-1,8),actual=terms(anio,8);
-      return {inicio:prev[11],fin:actual[0]};
-    }
-    var lista=terms(anio,8),i=mes-2;
-    return {inicio:lista[i],fin:lista[i+1]};
-  }
 
   function periodoSolarParaMes(anio,mes,zona){
     anio=Number(anio);mes=Number(mes);
     if(mes<1||mes>12)throw new Error('Tu mes: mes fuera de rango.');
-    var par=terminoParaMes(anio,mes);
-    var mid=(par.inicio.jd+par.fin.jd)/2;
-    var desdeJD=dep('desdeJD','./motor');
-    var cuatro=dep('cuatroPilares','./motor');
-    var utc=desdeJD(mid);
-    var transito=cuatro({anio:utc.anio,mes:utc.mes,dia:utc.dia,hora:utc.hora,minuto:utc.minuto,offsetTZ:0});
+    if(typeof raiz.resumenMesGregoriano!=='function')throw new Error('Tu mes: falta calendario-solar.js.');
+    var resumen=raiz.resumenMesGregoriano(anio,mes,zona);
+    var p=resumen.final;
     return {
       anioGregoriano:anio,
       mesGregoriano:mes,
       etiqueta:MESES_ES[mes-1],
-      inicio:par.inicio,
-      fin:par.fin,
-      inicioLocal:localDesdeJD(par.inicio.jd,zona),
-      finLocal:localDesdeJD(par.fin.jd,zona),
-      zona:zona||'Asia/Shanghai',
-      transito:transito,
-      pilar:transito.pilares.mes,
-      pilarAnio:transito.pilares.anio
+      inicio:p.inicio,
+      fin:p.fin,
+      inicioLocal:p.inicioLocal,
+      finLocal:p.finLocal,
+      zona:p.zona,
+      transito:p.transito,
+      pilar:p.pilarMes,
+      pilarAnio:p.pilarAnio
     };
   }
 
