@@ -7,7 +7,8 @@
     'motor.js':'cuatroPilares',
     'traduccion.js':'IDENTIDADES',
     'base.js':'listarPerfiles',
-    'lectura-mensual.js':'lecturaMensual'
+    'lectura-mensual.js':'dinamicaMensualDeTallo',
+    'mes-solar.js':'lecturaMensualSolar'
   })) return;
 
   var perfiles=listarPerfiles();
@@ -23,6 +24,8 @@
   function etiquetaDM(c){return cap(c.diaMaestro.elemento)+' '+(c.diaMaestro.yang?'Yang':'Yin');}
   function etiquetaPilar(p){return cap(p.rama.animal)+' · '+cap(p.tallo.elemento)+' '+(p.tallo.yang?'Yang':'Yin');}
   function formaDinamica(d){return d.forma==='paralela'?'polaridad paralela':'polaridad cruzada';}
+  function fechaCorta(d){return d.dia+' '+MESES[d.mes-1].slice(0,3);}
+  function rangoSolar(p){return fechaCorta(p.inicioLocal)+' — '+fechaCorta(p.finLocal);}
 
   function listaHTML(arr){return '<ul class="mesLista">'+arr.map(function(x){return '<li>'+esc(cap(x))+'</li>';}).join('')+'</ul>';}
 
@@ -57,13 +60,14 @@
   function pintarMes(){
     if(!carta||!perfil)return;
     var anio=fechaVista.getFullYear(),mes=fechaVista.getMonth()+1;
-    var l=lecturaMensual(carta,{anio:anio,mes:mes,sinHora:!!perfil.nacimiento.sinHora});
+    var l=lecturaMensualSolar(carta,{anio:anio,mes:mes,sinHora:!!perfil.nacimiento.sinHora,zona:perfil.nacimiento.zona});
+    var periodo=l.periodoSolar;
     $('#mesTitulo').textContent=nombreMes(fechaVista);
 
     var dinamica=l.dinamicaPrincipal,ritmo=l.ritmo,id=IDENTIDADES[carta.diaMaestro.pinyin],nombreCarta=etiquetaPerfil(perfil);
 
     var h='<article class="vidrio mesHero">'+
-      '<p class="mesEyebrow">'+esc(MESES[mes-1]+' '+anio+' · '+nombreCarta)+'</p>'+
+      '<p class="mesEyebrow">'+esc(MESES[mes-1]+' solar · '+rangoSolar(periodo)+' · '+nombreCarta)+'</p>'+
       '<h2>'+esc(l.resumen.titulo)+'</h2>'+
       '<p class="mesPilar">'+esc(etiquetaPilar(l.pilar))+' · dinámica '+esc(dinamica.nombre)+'</p>'+
       '<div class="mesEtapaWrap">'+
@@ -102,6 +106,8 @@
     h+='</section>';
 
     h+='<details class="mesTecnico"><summary>¿Cómo salió esta lectura?</summary><div class="mesSeccion">'+
+      '<p><strong>Corte solar:</strong> '+esc(periodo.inicio.nombre)+' → '+esc(periodo.fin.nombre)+' · '+esc(rangoSolar(periodo))+'.</p>'+
+      '<p><strong>Año solar vigente:</strong> '+esc(l.pilarAnio.nombre)+' · cambia en Li Chun.</p>'+
       '<p><strong>Día Maestro:</strong> '+esc(carta.diaMaestro.pinyin)+' · '+esc(etiquetaDM(carta))+' · '+esc(id.nombre)+'.</p>'+
       '<p><strong>Pilar solar del mes:</strong> '+esc(l.pilar.nombre)+' · '+esc(etiquetaPilar(l.pilar))+'.</p>'+
       '<p><strong>Dinámica principal:</strong> '+esc(dinamica.nombre)+' · '+esc(formaDinamica(dinamica))+'.</p>'+
@@ -112,7 +118,7 @@
       h+='<div class="mesPerfilFila"><div><span class="mesPerfilCodigo">'+esc(d.nombre.slice(0,2).toUpperCase())+'</span></div><div><b>'+esc(d.nombre)+'</b><small>'+esc(d.tallo.pinyin)+' · '+esc(cap(d.tallo.elemento))+' '+(d.tallo.yang?'Yang':'Yin')+' · '+esc(formaDinamica(d))+'</small></div></div>';
     });
 
-    h+='<p class="mesNota">Las dinámicas y los doce ritmos son nombres editoriales propios de Tu Elemento. La base matemática compara elementos, polaridades, tallos y ramas; la lectura los convierte en lenguaje cotidiano para organizar la reflexión del mes.</p></div></details>';
+    h+='<p class="mesNota">Las dinámicas y los doce ritmos son nombres editoriales propios de Tu Elemento. Los meses se delimitan por los doce cortes solares Jié; la fecha civil mostrada corresponde a la zona horaria guardada en esta carta.</p></div></details>';
 
     var caja=$('#mesContenido');caja.classList.remove('mesEntrada');caja.innerHTML=h;void caja.offsetWidth;caja.classList.add('mesEntrada');
   }
