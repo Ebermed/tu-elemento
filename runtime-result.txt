@@ -1,8 +1,0 @@
-Tu Elemento runtime 2026-08-21T18:42:34Z
---- UI CONTRACT ---
-V10.5.2 UI: contrato de botones y navegación OK
-exit_ui=0
---- REAL FORM FLOW ---
-V10.5.2 runtime: alta → guardado → reapertura de carta OK
-exit_runtime=0
-overall=0
