@@ -9,7 +9,12 @@
   html,body { margin:0; padding:0; }
   body { background:var(--papel); color:var(--tinta); font-family:var(--sans);
          font-size:17px; line-height:1.65; overflow-x:hidden; }
-  #fondo { position:fixed; inset:0; z-index:0; transition:opacity .8s ease; }
+  /* El fondo vive en su propia capa del compositor: se rasteriza una vez
+     y el scroll ya no lo repinta. translateZ(0) es lo que fuerza la capa. */
+  #fondo { position:fixed; inset:0; z-index:0;
+           background-size:cover; background-position:center;
+           transform:translateZ(0); will-change:transform;
+           transition:background-image .6s ease; }
   #fondo svg { width:100%; height:100%; display:block; }
   main { position:relative; z-index:1; min-height:100vh;
          display:flex; align-items:center; justify-content:center; padding:40px 24px; }
@@ -195,11 +200,13 @@
                  color:var(--tinta-suave); }
   .diaCab .pil { margin-top:12px; font-family:var(--serif); font-size:22px; }
 
+  .tipoDia { font-family:var(--serif); font-size:24px; text-align:center;
+             margin:16px 0 0; }
   .medidor { height:7px; border-radius:99px; background:rgba(0,0,0,.09);
              overflow:hidden; margin:18px 0 6px; }
   .medidor i { display:block; height:100%; border-radius:99px; background:var(--acento,#888);
                transition:width .5s cubic-bezier(.2,.7,.3,1); }
-  .medidor + .leyenda { font-size:13px; color:var(--tinta-suave); text-align:center; margin:0; }
+  .medidor + .leyenda { font-size:14px; color:var(--tinta-suave); text-align:center; margin:0; }
 
   .listas { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:22px; }
   @media (max-width:460px) { .listas { grid-template-columns:1fr; } }
@@ -221,3 +228,72 @@
   .pie { position:relative; z-index:1; text-align:center; padding:26px;
          font-size:13px; color:var(--tinta-suave); }
   .pie a { color:inherit; }
+
+/* ══════════════════════════════════════════════════════════════
+   MOVIMIENTO
+   Una sola curva para todo, para que la app se sienta de una pieza.
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  --curva: cubic-bezier(.22,.68,.24,1);
+  --curva-suave: cubic-bezier(.34,.9,.3,1);
+}
+
+/* Entrada escalonada: los hijos aparecen uno tras otro, no de golpe. */
+.escalona > * { animation: subir .5s var(--curva) both; }
+.escalona > *:nth-child(1) { animation-delay:.02s }
+.escalona > *:nth-child(2) { animation-delay:.07s }
+.escalona > *:nth-child(3) { animation-delay:.12s }
+.escalona > *:nth-child(4) { animation-delay:.17s }
+.escalona > *:nth-child(5) { animation-delay:.22s }
+.escalona > *:nth-child(6) { animation-delay:.27s }
+.escalona > *:nth-child(n+7) { animation-delay:.31s }
+@keyframes subir { from{opacity:0; transform:translateY(16px) scale(.985)} to{opacity:1; transform:none} }
+
+/* ── CALENDARIO DE MES ────────────────────────────────────── */
+.mesNav { display:flex; align-items:center; justify-content:space-between;
+          max-width:520px; margin:0 auto 12px; gap:10px; }
+.mesNav .titulo { font-family:var(--serif); font-size:22px; text-align:center; flex:1;
+                  text-transform:capitalize; }
+
+.rejilla { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+.rejilla .dowCab { text-align:center; font-size:10px; letter-spacing:1px;
+                   text-transform:uppercase; color:var(--tinta-suave); padding-bottom:6px; }
+.celda { position:relative; aspect-ratio:1; border:0; border-radius:13px; cursor:pointer;
+         background:rgba(255,255,255,.34);
+         -webkit-backdrop-filter:blur(9px); backdrop-filter:blur(9px);
+         box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+         font:inherit; color:inherit; display:flex; flex-direction:column;
+         align-items:center; justify-content:center; gap:4px;
+         transition:transform .22s var(--curva), background .22s, box-shadow .22s;
+         animation:aparecerCelda .34s var(--curva) both; }
+@keyframes aparecerCelda { from{opacity:0; transform:scale(.86)} to{opacity:1; transform:none} }
+.celda:hover { background:rgba(255,255,255,.62); transform:translateY(-2px) scale(1.04); }
+.celda:active { transform:scale(.94); }
+.celda:focus-visible { outline:2px solid var(--tinta); outline-offset:2px; }
+.celda .n { font-family:var(--serif); font-size:16px; line-height:1; }
+.celda .pt { width:16px; height:3px; border-radius:99px; background:var(--acento,#999); }
+.celda.fuera { opacity:.32; }
+.celda.hoy { box-shadow:inset 0 0 0 2px var(--acento,#777), inset 0 1px 0 rgba(255,255,255,.6); }
+
+/* ── TRANSICIÓN MES ⇄ DÍA ─────────────────────────────────── */
+/* La rejilla se aleja y encoge mientras el día crece desde el fondo:
+   lee como un acercamiento, no como un cambio de página. */
+.zoomEntra { animation:zoomEntra .44s var(--curva-suave) both; }
+.zoomSale  { animation:zoomSale  .30s var(--curva) both; }
+@keyframes zoomEntra { from{opacity:0; transform:scale(.90)} to{opacity:1; transform:none} }
+@keyframes zoomSale  { from{opacity:0; transform:scale(1.06)} to{opacity:1; transform:none} }
+
+.cambiaVista { display:flex; justify-content:center; gap:6px; margin:0 auto 16px;
+               max-width:250px; padding:4px; border-radius:100px;
+               background:rgba(255,255,255,.34); border:1px solid rgba(255,255,255,.5);
+               -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
+.cambiaVista button { flex:1; border:0; background:transparent; font:inherit; font-size:14px;
+                      color:var(--tinta-suave); padding:8px 4px; border-radius:100px;
+                      cursor:pointer; transition:background .22s var(--curva), color .22s; }
+.cambiaVista button[aria-pressed="true"] { background:rgba(255,255,255,.85); color:var(--tinta);
+                                           box-shadow:0 1px 6px rgba(0,0,0,.07); }
+
+@media (prefers-reduced-motion:reduce) {
+  .escalona > *, .celda, .zoomEntra, .zoomSale { animation:none !important; }
+  .celda { transition:none; }
+}

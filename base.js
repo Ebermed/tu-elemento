@@ -11,13 +11,32 @@ var DOW = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado']
 
 var $ = function (s) { return document.querySelector(s); };
 
-/** Pinta el fondo de acuarela. */
+/**
+ * Pinta el fondo de acuarela.
+ *
+ * RENDIMIENTO: si el SVG se mete como innerHTML, sus filtros quedan
+ * VIVOS y el navegador recalcula el ruido Perlin en cada repintado. Con
+ * el fondo fijo durante el scroll, eso se siente trabado.
+ *
+ * La solución no baja la calidad: el mismo SVG se pasa como imagen de
+ * fondo en data-URI. El navegador lo rasteriza UNA vez y a partir de
+ * ahí solo compone un bitmap, que es prácticamente gratis. Los filtros
+ * se aplican igual, solo que una sola vez en lugar de sesenta por
+ * segundo.
+ */
 function pintarFondo(paleta, semilla, opac) {
   var f = $('#fondo');
   if (!f) return;
-  f.innerHTML = fondoAcuarela(paleta, 1200, 1600, {
+  var svg = fondoAcuarela(paleta, 1200, 1600, {
     semilla: semilla, opacidad: opac == null ? 1.9 : opac
   });
+  try {
+    f.style.backgroundImage = 'url("data:image/svg+xml;charset=utf-8,' +
+      encodeURIComponent(svg).replace(/'/g, '%27').replace(/"/g, '%22') + '")';
+    f.innerHTML = '';
+  } catch (e) {
+    f.innerHTML = svg;   // respaldo por si algo falla
+  }
 }
 
 /** Cambia de pantalla dentro de la misma página. */

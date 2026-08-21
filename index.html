@@ -95,6 +95,9 @@
           <ul id="sugerencias" role="listbox"></ul>
         </div>
         <p class="pista" id="pistaLugar" style="margin:7px 0 0"></p>
+        <p class="pista" style="margin:6px 0 0">Si no está la tuya, usa la ciudad grande
+          más cercana: cien kilómetros al este o al oeste mueven la hora solar unos
+          cuatro minutos, y eso rara vez cambia algo.</p>
       </div>
 
       <p class="error" id="err" role="alert"></p>
@@ -412,6 +415,7 @@
             '</div>';
 
     $('#lectura').innerHTML = html;
+    $('#lectura').classList.add('escalona');   // las hojas entran una tras otra
 
     // Las columnas abren su lectura. Así no hay un scroll larguísimo de
     // texto plano: cada quien abre el pilar que le interesa.
@@ -448,6 +452,7 @@
       var dec = decadas(ultimo.carta, ultimo.sexo, 9);
       var edad = edadHoy(ultimo.nacAnio, ultimo.nacMes, ultimo.nacDia);
       $('#cartaCaja').innerHTML = lineaTiempoHTML(ultimo.t, ultimo.lec, dec, edad);
+      $('#cartaCaja').classList.add('escalona');
       ir('p-carta');
     });
 

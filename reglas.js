@@ -174,6 +174,19 @@ function evaluarDia(fecha, natal = null) {
   };
 }
 
+/**
+ * El puntaje en palabras. "85 de 100" no dice de qué: un número suelto
+ * no significa nada sin unidad. Lo que mide es cuánto empuja el día en
+ * la dirección de lo que quieras empezar.
+ */
+function vientoDelDia(puntaje) {
+  if (puntaje >= 80) return 'El día empuja muy a favor';
+  if (puntaje >= 68) return 'El día empuja a favor';
+  if (puntaje >= 55) return 'El día ni empuja ni estorba';
+  if (puntaje >= 25) return 'El día opone algo de resistencia';
+  return 'El día va en contra';
+}
+
 /** Los mejores días de un rango, ordenados. */
 function mejoresDias(desde, hasta, natal = null, limite = 10) {
   const out = [];
@@ -191,7 +204,7 @@ function mejoresDias(desde, hasta, natal = null, limite = 10) {
    Se asigna a globalThis a propósito — los `const` de nivel superior NO se
    cuelgan de window, y depender de eso hace frágil la carga entre archivos. */
 (function (raiz) {
-  var api = { OFICIALES, oficialDelDia, friccionAnio, friccionMes, friccionPersonal, sanSha, evaluarSanSha, evaluarDia, mejoresDias };
+  var api = { OFICIALES, oficialDelDia, vientoDelDia, friccionAnio, friccionMes, friccionPersonal, sanSha, evaluarSanSha, evaluarDia, mejoresDias };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else for (var k in api) raiz[k] = api[k];
 })(typeof globalThis !== 'undefined' ? globalThis : this);

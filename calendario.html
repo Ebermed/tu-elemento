@@ -20,13 +20,25 @@
     <p class="bajada" style="margin-bottom:24px">En el calendario chino cada día tiene un
       carácter. Unos sirven para empezar, otros para cerrar, otros para no forzar nada.</p>
 
-    <div class="nav">
+    <div class="cambiaVista">
+      <button id="vDia" aria-pressed="true">Día</button>
+      <button id="vMes" aria-pressed="false">Mes</button>
+    </div>
+
+    <div class="nav" id="navDia">
       <button id="diaAnt" aria-label="Día anterior">‹</button>
       <button class="hoy" id="diaHoy">Hoy</button>
       <button id="diaSig" aria-label="Día siguiente">›</button>
     </div>
 
+    <div class="mesNav" id="navMes" hidden>
+      <button id="mesAnt" aria-label="Mes anterior">‹</button>
+      <span class="titulo" id="mesTitulo"></span>
+      <button id="mesSig" aria-label="Mes siguiente">›</button>
+    </div>
+
     <div id="diaCaja"></div>
+    <div id="mesCaja" hidden></div>
 
     <div class="acciones" style="justify-content:center; margin-top:26px; flex-wrap:wrap">
       <a class="btn" href="index.html">Calcular mi carta</a>
@@ -96,10 +108,11 @@
         '<p class="mes">' + MESES[f.getMonth()] + ' de ' + f.getFullYear() + '</p>' +
         '<p class="pil">' + esc(p.rama.animal) + ' de ' + esc(p.tallo.elemento) + '</p>' +
       '</div>' +
+      '<p class="tipoDia">Día para ' + esc(d.oficial.nombre.toLowerCase()) + '</p>' +
       '<div class="medidor"><i style="width:' + d.puntaje + '%"></i></div>' +
-      '<p class="leyenda">' + esc(d.oficial.nombre) + ' · ' + d.puntaje + ' de 100</p>' +
+      '<p class="leyenda">' + esc(vientoDelDia(d.puntaje)) + '</p>' +
       '<p style="margin-top:16px">' + esc(d.oficial.caracter) + '</p>' +
-      '<div class="listas">' +
+      '<div class="listas escalona">' +
         '<div class="si"><h3>Va a favor</h3><ul>' +
           d.recomendadoPara.slice(0,5).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') +
         '</ul></div>' +
@@ -121,9 +134,15 @@
     h += '</div>';
 
     var caja = $('#diaCaja');
-    caja.style.setProperty('--dir', (dir || 0) >= 0 ? '16px' : '-16px');
     caja.innerHTML = h;
-    caja.style.animation = 'none'; void caja.offsetWidth; caja.style.animation = '';
+    caja.classList.remove('zoomEntra', 'zoomSale');
+    if (dir === 'zoom') {
+      void caja.offsetWidth;
+      caja.classList.add('zoomEntra');     // crece desde el fondo: acercamiento
+    } else {
+      caja.style.setProperty('--dir', (dir || 0) >= 0 ? '16px' : '-16px');
+      caja.style.animation = 'none'; void caja.offsetWidth; caja.style.animation = '';
+    }
     diaVisto = f;
   }
 
@@ -138,8 +157,10 @@
   $('#diaHoy').addEventListener('click', function () { pintarDia(new Date(), 0); });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowLeft') moverDia(-1);
-    if (e.key === 'ArrowRight') moverDia(1);
+    var n = e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowRight' ? 1 : 0;
+    if (!n) return;
+    if (enMes) { var f = new Date(mesVisto.getTime()); f.setMonth(f.getMonth() + n); pintarMes(f, n); }
+    else moverDia(n);
   });
   (function () {
     var x0 = null, z = $('#p-dias');
@@ -147,10 +168,92 @@
     z.addEventListener('touchend', function (e) {
       if (x0 === null) return;
       var dx = e.changedTouches[0].clientX - x0;
-      if (Math.abs(dx) > 55) moverDia(dx < 0 ? 1 : -1);
+      if (Math.abs(dx) > 55) {
+        var n = dx < 0 ? 1 : -1;
+        if (enMes) { var f = new Date(mesVisto.getTime()); f.setMonth(f.getMonth() + n); pintarMes(f, n); }
+        else moverDia(n);
+      }
       x0 = null;
     }, {passive:true});
   })();
+
+  // ── VISTA DE MES ────────────────────────────────────────
+  var mesVisto = null;
+  var enMes = false;
+
+  function pintarMes(base, dir) {
+    var natal = mia ? { ramaAnio: RAMAS.indexOf(mia.pilares.anio.rama) } : null;
+    var y = base.getFullYear(), m = base.getMonth();
+    var primero = new Date(y, m, 1);
+    var arranque = primero.getDay();              // domingo = 0
+    var diasMes = new Date(y, m + 1, 0).getDate();
+    var hoy = new Date();
+    var esHoy = function (d) {
+      return hoy.getFullYear() === y && hoy.getMonth() === m && hoy.getDate() === d;
+    };
+
+    $('#mesTitulo').textContent = MESES[m] + ' ' + y;
+
+    var h = '<div class="vidrio"><div class="rejilla">';
+    ['d','l','m','m','j','v','s'].forEach(function (x) {
+      h += '<div class="dowCab">' + x + '</div>';
+    });
+    for (var i = 0; i < arranque; i++) h += '<div></div>';
+    for (var d = 1; d <= diasMes; d++) {
+      var ev = evaluarDia({ anio:y, mes:m+1, dia:d }, natal);
+      // el retraso escalonado hace que la rejilla se arme en cascada
+      var retraso = (arranque + d - 1) * 8;
+      h += '<button class="celda' + (esHoy(d) ? ' hoy' : '') + '" data-d="' + d + '" ' +
+             'style="animation-delay:' + retraso + 'ms" ' +
+             'aria-label="' + d + ' de ' + MESES[m] + '. ' + vientoDelDia(ev.puntaje) + '">' +
+             '<span class="n">' + d + '</span>' +
+             '<span class="pt" style="opacity:' + (0.18 + ev.puntaje / 125).toFixed(2) + '"></span>' +
+           '</button>';
+    }
+    h += '</div><p class="leyenda" style="margin-top:14px">La barra de cada día crece con ' +
+         'lo que sopla a favor. Toca uno para verlo.</p></div>';
+
+    var caja = $('#mesCaja');
+    caja.innerHTML = h;
+    caja.classList.remove('zoomEntra', 'zoomSale');
+    void caja.offsetWidth;
+    caja.classList.add(dir === 'zoom' ? 'zoomSale' : 'zoomEntra');
+
+    Array.prototype.forEach.call(caja.querySelectorAll('.celda'), function (b) {
+      b.addEventListener('click', function () {
+        var f = new Date(y, m, parseInt(b.getAttribute('data-d'), 10));
+        verDia(f, 'zoom');
+      });
+    });
+    mesVisto = new Date(y, m, 1);
+  }
+
+  function verMes(base, dir) {
+    enMes = true;
+    $('#diaCaja').hidden = true;  $('#navDia').hidden = true;
+    $('#mesCaja').hidden = false; $('#navMes').hidden = false;
+    $('#vDia').setAttribute('aria-pressed', 'false');
+    $('#vMes').setAttribute('aria-pressed', 'true');
+    pintarMes(base || mesVisto || diaVisto || new Date(), dir);
+  }
+
+  function verDia(f, dir) {
+    enMes = false;
+    $('#mesCaja').hidden = true;  $('#navMes').hidden = true;
+    $('#diaCaja').hidden = false; $('#navDia').hidden = false;
+    $('#vDia').setAttribute('aria-pressed', 'true');
+    $('#vMes').setAttribute('aria-pressed', 'false');
+    pintarDia(f, dir === 'zoom' ? 'zoom' : 0);
+  }
+
+  $('#vDia').addEventListener('click', function () { verDia(diaVisto || new Date(), 'zoom'); });
+  $('#vMes').addEventListener('click', function () { verMes(diaVisto || new Date()); });
+  $('#mesAnt').addEventListener('click', function () {
+    var f = new Date(mesVisto.getTime()); f.setMonth(f.getMonth() - 1); pintarMes(f, -1);
+  });
+  $('#mesSig').addEventListener('click', function () {
+    var f = new Date(mesVisto.getTime()); f.setMonth(f.getMonth() + 1); pintarMes(f, 1);
+  });
 
   pintarDia(new Date(), 0);
 })();

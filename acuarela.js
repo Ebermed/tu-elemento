@@ -105,11 +105,14 @@ function capasAcuarela(paleta, w, h, op = {}) {
 /** Fondo completo listo para usar como <svg> de fondo. */
 function fondoAcuarela(paleta, w, h, op = {}) {
   const { semilla = 42, papel = '#FBF7F0', densidad = 1, opacidad = 1 } = op;
-  // Se dibuja a un tercio y el CSS lo estira. Nueve veces menos píxeles
-  // que filtrar, y como todo está desenfocado no se nota la diferencia.
-  const k = op.escala || (1 / 3);
+  // Tamaño completo. Reducir el lienzo abarataba el filtrado pero mataba
+  // la textura: el grano estirado deja de ser papel y se vuelve manchones.
+  // El único ahorro que se conserva es bajar las octavas del ruido, que a
+  // esa frecuencia no se distingue. Si algún día hace falta más velocidad,
+  // se puede pasar {escala: 0.7} sin cambiar nada más.
+  const k = op.escala || 1;
   w = Math.round(w * k); h = Math.round(h * k);
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" width="100%" height="100%">
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" width="${w}" height="${h}">
   <defs>${filtrosAcuarela(semilla, k)}
     <clipPath id="cp${semilla}"><rect width="${w}" height="${h}"/></clipPath>
   </defs>
