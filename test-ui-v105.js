@@ -43,6 +43,11 @@ has(appJs, "href=\"calendario.html?perfil=", 'Cada carta debe enlazar a su calen
 has(appJs, "if (mPerfil)", 'La app debe abrir ?perfil=');
 has(appJs, "/[?&]nueva=1", 'La app debe abrir ?nueva=1');
 
+// Pulido del mosaico y copy de guardado.
+has(appHtml, '.perfilIcono .iconito svg', 'Falta el refuerzo visual del icono en el mosaico');
+has(appHtml, 'stroke-width:2.15!important', 'El icono del mosaico debe tener mayor presencia');
+has(appHtml, 'Todas tus cartas quedarán guardadas en este navegador para que puedas volver a ellas y usarlas en el calendario.', 'El formulario debe explicar el guardado de todas las cartas');
+
 const appClicks = {
   irForm:'nuevaCarta', paraMi:'ponerTipoCarta', paraOtra:'ponerTipoCarta',
   volverPortada:'pintarPerfilesGuardados', volverCartas:'pintarPerfilesGuardados', volverResultado:"ir('p-resultado')",
@@ -83,7 +88,7 @@ const selectorPos = calHtml.indexOf('id="calPerfilBox"');
 const introPos = calHtml.indexOf('Cada fecha mezcla dos ritmos');
 ok(h1Pos >= 0 && selectorPos > h1Pos && introPos > selectorPos, 'El texto explicativo volvió al hero del calendario');
 
-has(index, 'app-v105.html?v=10.5.2', 'index.html debe pedir V10.5.2');
+has(index, 'app-v105.html?v=10.5.4', 'index.html debe pedir V10.5.4');
 has(index, 'location.search', 'index.html pierde ?perfil o ?nueva');
 has(calendarIndex, 'calendario-v105.html?v=10.5.3', 'calendario.html debe pedir V10.5.3');
 has(calendarIndex, 'location.search', 'calendario.html pierde ?perfil');
@@ -93,4 +98,4 @@ if (fallos.length) {
   fallos.forEach(x => console.error('  - ' + x));
   process.exit(1);
 }
-console.log('V10.5.3 UI: contrato de botones, navegación y copys OK');
+console.log('V10.5.4 UI: contrato de botones, navegación, copys y mosaico OK');
