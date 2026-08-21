@@ -1,0 +1,21 @@
+name: Tu Elemento runtime
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install jsdom
+        run: npm install --no-save jsdom@24
+      - name: UI contract
+        run: node test-ui-v105.js
+      - name: Runtime new-chart flow
+        run: node test-runtime-v105.js
