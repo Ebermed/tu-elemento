@@ -5,6 +5,7 @@ const appJs = fs.readFileSync('app-v105.js','utf8');
 const submitFix = fs.readFileSync('app-v105-submit-fix.js','utf8');
 const calHtml = fs.readFileSync('calendario-v105.html','utf8');
 const calJs = fs.readFileSync('calendario-v105.js','utf8');
+const calCopy = fs.readFileSync('calendario-v105-copyfix.js','utf8');
 const index = fs.readFileSync('index.html','utf8');
 const calendarIndex = fs.readFileSync('calendario.html','utf8');
 
@@ -15,6 +16,7 @@ function has(txt, s, msg) { ok(txt.includes(s), msg || ('Falta: ' + s)); }
 try { new Function(appJs); } catch (e) { fallos.push('app-v105.js tiene error de sintaxis: ' + e.message); }
 try { new Function(submitFix); } catch (e) { fallos.push('app-v105-submit-fix.js tiene error de sintaxis: ' + e.message); }
 try { new Function(calJs); } catch (e) { fallos.push('calendario-v105.js tiene error de sintaxis: ' + e.message); }
+try { new Function(calCopy); } catch (e) { fallos.push('calendario-v105-copyfix.js tiene error de sintaxis: ' + e.message); }
 
 function revisarAssets(nombre, html, version) {
   const assets = [...html.matchAll(/(?:src|href)="([^"]+\.(?:js|css))(?:\?([^\"]+))?"/g)];
@@ -22,7 +24,7 @@ function revisarAssets(nombre, html, version) {
   assets.forEach(m => ok(String(m[2]||'').includes('v=' + version), nombre + ': asset con versión distinta: ' + m[1]));
 }
 revisarAssets('app', appHtml, '10.5.2');
-revisarAssets('calendario', calHtml, '10.5.0');
+revisarAssets('calendario', calHtml, '10.5.3');
 
 // Formulario desde cero: usa submit nativo y una ruta estable de perfil guardado.
 has(appHtml, 'type="submit" class="btn" id="calcular"', 'Ver mi elemento debe ser submit nativo');
@@ -68,6 +70,14 @@ has(calJs, "$('#verCartaPerfil').href = 'index.html?perfil='", 'Ver esta carta d
 has(calHtml, 'href="index.html?nueva=1"', 'Calcular otra carta debe abrir formulario nuevo');
 has(calJs, "if(enMes) verDia(hoy,'zoom')", 'Hoy debe salir de mes y abrir el día de hoy');
 
+// Copys editoriales del calendario general.
+has(calHtml, 'calendario-v105-copyfix.js?v=10.5.3', 'Falta el ajuste editorial del calendario');
+has(calCopy, '<span>Lectura general</span>', 'La lectura general debe sustituir al animal del día cuando faltan cartas');
+has(calCopy, '¿Qué es una lectura general?', 'La lectura general debe explicar su significado');
+has(calCopy, 'href="index.html?nueva=1">Crear mi carta</a>', 'El tooltip debe enlazar a crear una carta');
+has(calCopy, "si.textContent = 'Te recomendamos'", 'Falta el encabezado Te recomendamos');
+has(calCopy, "evitar.textContent = 'Es mejor no hacer'", 'Falta el encabezado Es mejor no hacer');
+
 const h1Pos = calHtml.indexOf('¿Cómo viene el día?');
 const selectorPos = calHtml.indexOf('id="calPerfilBox"');
 const introPos = calHtml.indexOf('Cada fecha mezcla dos ritmos');
@@ -75,7 +85,7 @@ ok(h1Pos >= 0 && selectorPos > h1Pos && introPos > selectorPos, 'El texto explic
 
 has(index, 'app-v105.html?v=10.5.2', 'index.html debe pedir V10.5.2');
 has(index, 'location.search', 'index.html pierde ?perfil o ?nueva');
-has(calendarIndex, 'calendario-v105.html', 'calendario.html sigue apuntando a versión anterior');
+has(calendarIndex, 'calendario-v105.html?v=10.5.3', 'calendario.html debe pedir V10.5.3');
 has(calendarIndex, 'location.search', 'calendario.html pierde ?perfil');
 
 if (fallos.length) {
@@ -83,4 +93,4 @@ if (fallos.length) {
   fallos.forEach(x => console.error('  - ' + x));
   process.exit(1);
 }
-console.log('V10.5.2 UI: contrato de botones y navegación OK');
+console.log('V10.5.3 UI: contrato de botones, navegación y copys OK');
