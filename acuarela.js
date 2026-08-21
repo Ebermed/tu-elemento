@@ -102,26 +102,52 @@ function capasAcuarela(paleta, w, h, op = {}) {
   }).join('\n    ');
 }
 
-/** Fondo completo listo para usar como <svg> de fondo. */
+/**
+ * Fondo completo para la interfaz.
+ * Las manchas usan gradientes radiales enormes que se pierden en el papel;
+ * un blur común mezcla sus intersecciones y evita bordes duros.
+ */
 function fondoAcuarela(paleta, w, h, op = {}) {
-  const { semilla = 42, papel = '#FBF7F0', densidad = 1, opacidad = 1 } = op;
-  // Tamaño completo. Reducir el lienzo abarataba el filtrado pero mataba
-  // la textura: el grano estirado deja de ser papel y se vuelve manchones.
-  // El único ahorro que se conserva es bajar las octavas del ruido, que a
-  // esa frecuencia no se distingue. Si algún día hace falta más velocidad,
-  // se puede pasar {escala: 0.7} sin cambiar nada más.
-  const k = op.escala || 1;
-  w = Math.round(w * k); h = Math.round(h * k);
+  const { semilla = 42, papel = '#FBF7F0', opacidad = 1 } = op;
+  const r = rng(semilla);
+  const colores = (paleta && paleta.length ? paleta : PALETA_NEUTRA);
+  const bases = [
+    [0.10,0.08,0.52,0.34], [0.88,0.10,0.46,0.30], [0.48,0.34,0.58,0.34],
+    [0.06,0.62,0.45,0.34], [0.88,0.60,0.52,0.36], [0.38,0.88,0.56,0.32],
+    [0.78,0.94,0.42,0.27], [0.60,0.68,0.40,0.26]
+  ];
+  const defs = [], manchas = [];
+  bases.forEach((b, i) => {
+    const id = 'wash' + semilla + '_' + i;
+    const c = colores[i % colores.length];
+    const centro = Math.min(0.62, (0.30 + r() * 0.18) * opacidad);
+    const medio = Math.min(0.38, (0.16 + r() * 0.12) * opacidad);
+    defs.push(`<radialGradient id="${id}" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="${c}" stop-opacity="${centro.toFixed(3)}"/>
+      <stop offset="38%" stop-color="${c}" stop-opacity="${medio.toFixed(3)}"/>
+      <stop offset="76%" stop-color="${c}" stop-opacity="${(medio * .34).toFixed(3)}"/>
+      <stop offset="100%" stop-color="${c}" stop-opacity="0"/>
+    </radialGradient>`);
+    const cx = (b[0] + (r()-.5)*.08) * w, cy = (b[1] + (r()-.5)*.08) * h;
+    const rx = b[2] * w * (.92 + r()*.18), ry = b[3] * h * (.92 + r()*.20);
+    manchas.push(`<ellipse cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" rx="${rx.toFixed(0)}" ry="${ry.toFixed(0)}" fill="url(#${id})"/>`);
+  });
+  defs.push(`<filter id="soft${semilla}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22"/></filter>`);
+  defs.push(`<filter id="bokeh${semilla}" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="18"/></filter>`);
+  defs.push(`<filter id="paper${semilla}" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="1" seed="${semilla + 5}"/><feColorMatrix type="saturate" values="0"/></filter>`);
+  defs.push(`<linearGradient id="light${semilla}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".50"/><stop offset=".48" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".28"/></linearGradient>`);
+  const luces = [];
+  for (let i = 0; i < 7; i++) {
+    const cx = (0.08 + r()*.84) * w, cy = (0.06 + r()*.88) * h, rr = (0.035 + r()*.075) * w;
+    luces.push(`<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="${rr.toFixed(0)}" fill="#fff" opacity="${(0.08 + r()*.11).toFixed(3)}"/>`);
+  }
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" width="${w}" height="${h}">
-  <defs>${filtrosAcuarela(semilla, k)}
-    <clipPath id="cp${semilla}"><rect width="${w}" height="${h}"/></clipPath>
-  </defs>
-  <g clip-path="url(#cp${semilla})">
-    <rect width="${w}" height="${h}" fill="${papel}"/>
-    ${capasAcuarela(paleta, w, h, { semilla, densidad, opacidad })}
-    <rect width="${w}" height="${h}" filter="url(#grano)" opacity="0.07" style="mix-blend-mode:multiply"/>
-  </g>
-</svg>`;
+    <defs>${defs.join('')}</defs><rect width="${w}" height="${h}" fill="${papel}"/>
+    <g filter="url(#soft${semilla})">${manchas.join('')}</g>
+    <g filter="url(#bokeh${semilla})">${luces.join('')}</g>
+    <rect width="${w}" height="${h}" fill="url(#light${semilla})"/>
+    <rect width="${w}" height="${h}" filter="url(#paper${semilla})" opacity=".018" style="mix-blend-mode:multiply"/>
+  </svg>`;
 }
 
 /** Paleta neutra para pantallas donde todavía no hay elemento asignado. */

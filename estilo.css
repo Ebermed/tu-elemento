@@ -297,3 +297,36 @@
   .escalona > *, .celda, .zoomEntra, .zoomSale { animation:none !important; }
   .celda { transition:none; }
 }
+
+
+/* ═══ ZEN DIFFUSE V4 ═══ */
+:root { --acento-2:#D7D3C9; --acento-3:#E9D7C9; --borde-vidrio:rgba(255,255,255,.72); --sombra-suave:0 18px 54px rgba(69,52,39,.09); }
+#fondo { inset:-4%; opacity:.98; filter:blur(12px) saturate(106%); transform:scale(1.04) translateZ(0); background-size:cover; background-position:center; transition:opacity .45s ease, background-image .7s ease; }
+body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none; background:radial-gradient(circle at 18% 12%,rgba(255,255,255,.42),transparent 26%),radial-gradient(circle at 78% 22%,rgba(255,255,255,.22),transparent 22%),radial-gradient(circle at 44% 84%,rgba(255,255,255,.26),transparent 28%); filter:blur(18px); }
+main { position:relative; z-index:1; }
+.btn,.vidrio,.hoja,.inter,.col,.cambiaVista,.nav button,.mesNav { -webkit-backdrop-filter:blur(22px) saturate(150%); backdrop-filter:blur(22px) saturate(150%); border-color:var(--borde-vidrio); box-shadow:var(--sombra-suave),inset 0 1px 0 rgba(255,255,255,.84); }
+.btn { background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.44)); color:var(--tinta); border:1px solid var(--borde-vidrio); }
+.btn.fantasma { background:rgba(255,255,255,.26); }
+.hoja,.vidrio,.inter { background:linear-gradient(155deg,rgba(255,255,255,.62),rgba(255,255,255,.34)); border-radius:26px; }
+.hoja { padding:23px 21px; margin-bottom:18px; }
+.inter { padding:16px; }
+input,select { background:rgba(255,255,255,.58); border:1px solid rgba(255,255,255,.76); -webkit-backdrop-filter:blur(15px); backdrop-filter:blur(15px); box-shadow:inset 0 1px 0 rgba(255,255,255,.82),0 10px 30px rgba(75,58,44,.045); }
+.iconito { display:inline-flex!important; align-items:center; justify-content:center; width:18px!important; height:18px!important; min-width:18px; flex:0 0 18px; line-height:1; vertical-align:-3px; margin-right:7px; border-radius:999px; background:rgba(255,255,255,.48); box-shadow:inset 0 1px 0 rgba(255,255,255,.72); }
+.iconito svg { display:block!important; width:12px!important; height:12px!important; max-width:12px!important; max-height:12px!important; overflow:visible; fill:none!important; stroke:var(--acento,#5f5a54)!important; stroke-width:1.65; stroke-linecap:round; stroke-linejoin:round; }
+.titIcon { display:flex; align-items:center; gap:9px; }
+.titIcon .iconito { width:22px!important; height:22px!important; min-width:22px; margin-right:0; }
+.titIcon .iconito svg { width:14px!important; height:14px!important; max-width:14px!important; max-height:14px!important; }
+.titIcon.cent { justify-content:center; }
+.col .rot { display:flex; align-items:center; justify-content:center; gap:5px; }
+.col .iconito { width:14px!important; height:14px!important; min-width:14px; margin-right:0; }
+.col .iconito svg { width:9px!important; height:9px!important; max-width:9px!important; max-height:9px!important; }
+.diaCab .pil .iconito { width:18px!important; height:18px!important; margin-right:8px; }
+.revela-prep { opacity:0; transform:translate3d(0,14px,0) scale(.99); filter:blur(4px); transition:opacity .62s cubic-bezier(.22,.68,.24,1) var(--reveal-delay,0ms),transform .62s cubic-bezier(.22,.68,.24,1) var(--reveal-delay,0ms),filter .48s ease var(--reveal-delay,0ms); }
+.revela-prep.revela-viva { opacity:1; transform:none; filter:blur(0); }
+.celda { background:linear-gradient(180deg,rgba(255,255,255,.60),rgba(255,255,255,.30)); border:1px solid rgba(255,255,255,.50); border-radius:17px; box-shadow:0 8px 24px rgba(64,48,36,.065),inset 0 1px 0 rgba(255,255,255,.78); }
+.celda:active { transform:scale(.92); }
+.celda.hoy { box-shadow:0 8px 24px rgba(64,48,36,.07),inset 0 0 0 1.5px var(--acento,#777),inset 0 1px 0 rgba(255,255,255,.82); }
+@media (prefers-reduced-motion:reduce){.revela-prep,.revela-prep.revela-viva{opacity:1;transform:none;filter:none;transition:none;}}
+
+.mesNav .hoyMes { width:auto; min-width:48px; height:34px; padding:0 12px; border:1px solid rgba(255,255,255,.64); border-radius:999px; background:rgba(255,255,255,.50); color:var(--tinta); font:inherit; font-size:12px; cursor:pointer; -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); box-shadow:inset 0 1px 0 rgba(255,255,255,.82); transition:transform .18s var(--curva),background .18s ease; }
+.mesNav .hoyMes:active { transform:scale(.92); }

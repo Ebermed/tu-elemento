@@ -11,6 +11,40 @@ var DOW = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado']
 
 var $ = function (s) { return document.querySelector(s); };
 
+
+/** Revelado progresivo para bloques que entran al viewport. */
+function activarApariciones(scope) {
+  var raiz = scope && scope.querySelectorAll ? scope : document;
+  var nodos = raiz.querySelectorAll('.hoja, .inter, .vidrio, .col, .revela');
+  if (!nodos || !nodos.length) return;
+  for (var i = 0; i < nodos.length; i++) {
+    nodos[i].classList.add('revela-prep');
+    if (nodos[i].style && nodos[i].style.setProperty) {
+      nodos[i].style.setProperty('--reveal-delay', Math.min(i, 8) * 34 + 'ms');
+    }
+  }
+  if (typeof globalThis.IntersectionObserver === 'undefined') {
+    for (var j = 0; j < nodos.length; j++) nodos[j].classList.add('revela-viva');
+    return;
+  }
+  var io = new globalThis.IntersectionObserver(function (entradas) {
+    for (var k = 0; k < entradas.length; k++) {
+      if (!entradas[k].isIntersecting) continue;
+      entradas[k].target.classList.add('revela-viva');
+      io.unobserve(entradas[k].target);
+    }
+  }, { threshold: 0.10, rootMargin: '0px 0px -5% 0px' });
+  for (var n = 0; n < nodos.length; n++) io.observe(nodos[n]);
+}
+
+function aplicarPaletaUI(paleta) {
+  if (!paleta || !paleta.length || !document.documentElement) return;
+  var s = document.documentElement.style;
+  s.setProperty('--acento', paleta[2] || paleta[0]);
+  s.setProperty('--acento-2', paleta[1] || paleta[0]);
+  s.setProperty('--acento-3', paleta[0]);
+}
+
 /**
  * Pinta el fondo de acuarela.
  *
@@ -27,15 +61,16 @@ var $ = function (s) { return document.querySelector(s); };
 function pintarFondo(paleta, semilla, opac) {
   var f = $('#fondo');
   if (!f) return;
+  aplicarPaletaUI(paleta);
   var svg = fondoAcuarela(paleta, 1200, 1600, {
-    semilla: semilla, opacidad: opac == null ? 1.9 : opac
+    semilla: semilla, opacidad: opac == null ? 1.35 : opac
   });
   try {
     f.style.backgroundImage = 'url("data:image/svg+xml;charset=utf-8,' +
       encodeURIComponent(svg).replace(/'/g, '%27').replace(/"/g, '%22') + '")';
     f.innerHTML = '';
   } catch (e) {
-    f.innerHTML = svg;   // respaldo por si algo falla
+    f.innerHTML = svg;
   }
 }
 
@@ -136,7 +171,7 @@ function cartaGuardada() {
 }
 
 (function (raiz) {
-  var api = { MESES, DOW, $, pintarFondo, ir, faltantes, descargarSVG,
+  var api = { MESES, DOW, $, activarApariciones, aplicarPaletaUI, pintarFondo, ir, faltantes, descargarSVG,
               guardarNacimiento, leerNacimiento, olvidarNacimiento, cartaGuardada };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else for (var k in api) raiz[k] = api[k];

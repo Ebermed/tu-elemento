@@ -11,21 +11,16 @@
 const fs = require('fs'), vm = require('vm');
 
 function nodoFalso(id) {
+  const eventos = {};
   const n = {
-    id, _html: '', style: { setProperty(){}, removeProperty(){} },
-    classList: { _s:new Set(), add(c){this._s.add(c)}, remove(c){this._s.delete(c)},
-                 toggle(c,v){v?this._s.add(c):this._s.delete(c)}, contains(c){return this._s.has(c)} },
-    dataset: {}, value: '', textContent: '', hidden: false, options: [], selectedIndex: 0,
-    offsetWidth: 100, children: [],
-    addEventListener(){}, removeEventListener(){}, appendChild(c){ this.children.push(c); },
-    insertAdjacentHTML(){}, setAttribute(k,v){ this[k]=v; }, getAttribute(k){ return this[k]; },
-    querySelector(){ return nodoFalso('x'); }, querySelectorAll(){ return []; },
-    focus(){}, click(){}, scrollTo(){},
+    id, _html: '', style: { setProperty(k,v){this[k]=v}, removeProperty(k){delete this[k]} },
+    classList: { _s:new Set(), add(c){this._s.add(c)}, remove(c){this._s.delete(c)}, toggle(c,v){v?this._s.add(c):this._s.delete(c)}, contains(c){return this._s.has(c)} },
+    dataset: {}, value: '', textContent: '', hidden: false, options: [], selectedIndex: 0, offsetWidth: 100, children: [],
+    addEventListener(t,fn){ (eventos[t]||(eventos[t]=[])).push(fn); }, removeEventListener(){}, appendChild(c){this.children.push(c)}, insertAdjacentHTML(){}, setAttribute(k,v){this[k]=v}, getAttribute(k){return this[k]},
+    querySelector(){return nodoFalso('x')}, querySelectorAll(){return []}, focus(){}, scrollTo(){},
+    click(){ (eventos.click||[]).forEach(fn=>fn.call(n,{target:n,preventDefault(){}})); }, _eventos:eventos,
   };
-  Object.defineProperty(n, 'innerHTML', {
-    get(){ return n._html; },
-    set(v){ n._html = String(v); }
-  });
+  Object.defineProperty(n,'innerHTML',{get(){return n._html},set(v){n._html=String(v)}});
   return n;
 }
 
@@ -57,7 +52,7 @@ function probar(pagina, modulos) {
     XMLSerializer: class { serializeToString(){ return '<svg/>'; } },
     URL: { createObjectURL(){ return 'blob:x'; }, revokeObjectURL(){} },
     Blob: class {}, Image: class { set src(v){} },
-    setTimeout(){}, navigator: { userAgent:'test' },
+    setTimeout(){}, scrollTo(){}, navigator: { userAgent:'test' },
   };
   ctx.globalThis = ctx; ctx.window = ctx;
   vm.createContext(ctx);
@@ -80,10 +75,22 @@ function probar(pagina, modulos) {
   try { vm.runInContext(inline, ctx, { filename: pagina + ' (script en línea)' }); }
   catch (e) { fallos.push(`al ejecutar: ${e.message}`); }
 
-  // ¿pintó el fondo?
+  // ¿pintó el fondo? Acepta SVG en DOM o el data-URI rasterizado.
   const fondo = doc._cache['#fondo'];
-  if (!fondo || !fondo._html || fondo._html.indexOf('<svg') !== 0) {
-    fallos.push('el fondo de acuarela quedó vacío');
+  const fondoSvg = !!(fondo && fondo._html && fondo._html.indexOf('<svg') === 0);
+  const fondoBg = !!(fondo && fondo.style && String(fondo.style.backgroundImage || '').includes('data:image/svg+xml'));
+  if (!fondoSvg && !fondoBg) fallos.push('el fondo de acuarela quedó vacío');
+
+  if (typeof ctx.activarApariciones !== 'function') fallos.push('base.js no exporta activarApariciones');
+
+  if (pagina === 'index.html') {
+    const btn = doc._cache['#irForm'];
+    if (!btn || !(btn._eventos.click || []).length) fallos.push('Descubre tu elemento quedó sin manejador de click');
+    else {
+      btn.click();
+      const form = doc._cache['#p-form'];
+      if (!form || !form.classList.contains('viva')) fallos.push('Descubre tu elemento no abre el formulario');
+    }
   }
 
   // ids referenciados que no existen en el marcado
