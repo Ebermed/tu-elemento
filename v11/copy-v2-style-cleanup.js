@@ -24,6 +24,8 @@ var REEMPLAZOS=[
    'Esto lo usas poco. Te cuesta más arrancarlo y necesitas intención para que aparezca. Se puede desarrollar, pero toca practicarlo.'],
   ['Balancear no es tener 20% de cada cosa. Es dejar de pedirle a un solo ingrediente que te resuelva todo.',
    'Balancear significa dejar de pedirle a un solo ingrediente que te resuelva todo. Los porcentajes pueden seguir disparejos; lo importante es tener más de una respuesta disponible.'],
+  ['Balancear no es tener 20% de cada cosa: es dejar de pedirle a un solo ingrediente que te resuelva todo.',
+   'Balancear significa dejar de pedirle a un solo ingrediente que te resuelva todo. Los porcentajes pueden seguir disparejos; lo importante es tener más de una respuesta disponible.'],
   ['Tú decides. Consultar es opcional y normalmente decides que no. No es que no valores a la gente: es que ya lo pensaste y lo que sigue es hacerlo.',
    'Tú decides. Consultar es opcional y normalmente decides que no. Sueles llegar a la conversación con la decisión bastante cocinada; para ti, lo que sigue es hacerla.'],
   ['Ves cómo debería ser y no te aguantas las ganas de decirlo. Lo que dices no es decorativo: quiere cambiar algo.',
@@ -35,6 +37,8 @@ var REEMPLAZOS=[
   ['Lo que llevas meses aguantando se vuelve visible justo ahora. No es mala suerte: es que ya se acumuló lo suficiente para notarse. Este mes rinde muchísimo más atender la señal chiquita que empujar por inercia — porque la señal chiquita, si la ignoras, no se queda chiquita.',
    'Lo que llevas meses aguantando se vuelve visible justo ahora porque ya se acumuló lo suficiente para notarse. Este mes rinde muchísimo más atender la señal chiquita que empujar por inercia — porque la señal chiquita, si la ignoras, crece.'],
   ['Sí, son animales. No, no significa que te parezcas al animal — eso es una simplificación que se popularizó en los manteles.',
+   'Aquí los animales funcionan como nombres fáciles de recordar para doce energías.'],
+  ['Sí, son animales. No, no significa que te parezcas al animal',
    'Aquí los animales funcionan como nombres fáciles de recordar para doce energías.'],
   ['Son nombres para doce energías, y aquí no describen cómo eres tú: describen cómo se siente la etapa que estás viviendo. Cada una dura unos diez años.',
    'Cada animal etiqueta una etapa de unos diez años. La lectura que sigue habla de cómo se siente ese periodo mientras lo estás viviendo.'],
@@ -73,9 +77,15 @@ function limpiarNodo(base){
     if(limpio!==original)node.nodeValue=limpio;
   }
 }
+function limpiarEspeciales(){
+  var ciclos=document.querySelector('.copyV2CiclosEncuadre');
+  if(ciclos)ciclos.innerHTML='<p><strong>Aquí los animales funcionan como nombres fáciles de recordar para doce energías.</strong></p><p>Cada animal etiqueta una etapa de unos diez años. La lectura que sigue habla de cómo se siente ese periodo mientras lo estás viviendo.</p>';
+  var pilares=document.querySelector('.copyV2PilaresEncuadre');
+  if(pilares)pilares.innerHTML='<strong>Tus cuatro pilares son cuatro zonas que traes activas al mismo tiempo.</strong> La lectura cruza lo que muestras, lo que empuja por debajo, las capas ocultas y la posición exacta donde aparecen.';
+}
 function iniciar(){
-  limpiarNodo(document.body);
-  if(typeof MutationObserver!=='undefined')new MutationObserver(function(ms){ms.forEach(function(m){Array.prototype.forEach.call(m.addedNodes,limpiarNodo);});}).observe(document.body,{childList:true,subtree:true});
+  limpiarNodo(document.body);limpiarEspeciales();
+  if(typeof MutationObserver!=='undefined')new MutationObserver(function(ms){ms.forEach(function(m){Array.prototype.forEach.call(m.addedNodes,limpiarNodo);});limpiarEspeciales();}).observe(document.body,{childList:true,subtree:true});
 }
 if(document.readyState==='complete')iniciar();else root.addEventListener('load',iniciar,{once:true});
 })(typeof globalThis!=='undefined'?globalThis:this);
