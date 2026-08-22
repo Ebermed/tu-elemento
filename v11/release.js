@@ -8,12 +8,12 @@
   ];
 
   var RELEASE = Object.freeze({
-    major: 1,
-    minor: 0,
-    patch: 0,
-    codename: CODENAMES[0],
-    label: 'V1 Artx',
-    build: '1.0.0-artx'
+    major: 2,
+    minor: 1,
+    patch: 1,
+    codename: CODENAMES[1],
+    label: 'V2 Broadway',
+    build: '2.1.1-broadway'
   });
 
   function nombreVersion(major, minor, patch) {
@@ -30,5 +30,26 @@
   raiz.TU_ELEMENTO_CODENAMES = CODENAMES.slice();
   raiz.TU_ELEMENTO_RELEASE = RELEASE;
   raiz.nombreVersionTuElemento = nombreVersion;
-  if (typeof document !== 'undefined') document.documentElement.setAttribute('data-release', RELEASE.label);
+
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('data-release', RELEASE.label);
+    var actual = document.currentScript && document.currentScript.src ? document.currentScript.src : '';
+    var base = actual ? actual.replace(/release\.js(?:\?.*)?$/,'') : '';
+    if (base) {
+      if (!document.getElementById('te-ecosistema-css')) {
+        var link = document.createElement('link');
+        link.id = 'te-ecosistema-css';
+        link.rel = 'stylesheet';
+        link.href = base + 'ecosistema.css?b=' + RELEASE.build;
+        document.head.appendChild(link);
+      }
+      if (!document.getElementById('te-ecosistema-js')) {
+        var script = document.createElement('script');
+        script.id = 'te-ecosistema-js';
+        script.src = base + 'ecosistema.js?b=' + RELEASE.build;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+    }
+  }
 })(typeof globalThis !== 'undefined' ? globalThis : this);

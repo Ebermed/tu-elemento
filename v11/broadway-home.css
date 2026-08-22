@@ -1,0 +1,90 @@
+/* TU ELEMENTO V2 BROADWAY — inicio compacto del ecosistema */
+body.broadwayHome{min-height:100vh}
+.broadwayHome main{width:min(1120px,calc(100% - 32px));max-width:1120px!important;margin:0 auto;padding:30px 0 52px!important;display:block!important;text-align:left!important}
+
+/* Hero corto: presenta, orienta y deja paso al hub */
+.bwHero{padding:18px 4px 14px;text-align:center}
+.bwKicker{margin:0 0 8px;font-size:10px;letter-spacing:3.7px;text-transform:uppercase;color:var(--tinta-suave)}
+.bwHero h1{max-width:760px;margin:0 auto;font-family:var(--serif);font-size:clamp(36px,5vw,58px);font-weight:400;line-height:1.02;letter-spacing:-1.2px}
+.bwHero p.bwIntro{max-width:600px;margin:11px auto 0;color:var(--tinta-suave);font-size:clamp(14px,1.7vw,16px);line-height:1.48}
+.bwHeroAcciones{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:15px}
+.bwHeroAcciones .btn{min-height:46px;padding:10px 20px}
+
+/* Perfil activo: refuerza la continuidad entre herramientas */
+.bwPerfilActivo{width:max-content;max-width:min(100%,520px);margin:6px auto 0;padding:8px 11px 8px 10px;display:flex;align-items:center;gap:9px;border:1px solid rgba(255,255,255,.78);border-radius:999px;background:rgba(255,255,255,.44);box-shadow:0 7px 24px rgba(55,43,35,.06),inset 0 1px 0 rgba(255,255,255,.94);-webkit-backdrop-filter:blur(16px) saturate(145%);backdrop-filter:blur(16px) saturate(145%);color:var(--tinta);text-decoration:none}
+.bwPerfilPunto{width:30px;height:30px;flex:0 0 30px;border-radius:11px;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.92),rgba(255,255,255,.34));border:1px solid rgba(255,255,255,.86);box-shadow:inset 0 1px 0 rgba(255,255,255,.95)}
+.bwPerfilActivo span:nth-child(2){display:flex;flex-direction:column;min-width:0}
+.bwPerfilActivo small{font-size:8px;line-height:1.1;letter-spacing:1.35px;text-transform:uppercase;color:var(--tinta-suave)}
+.bwPerfilActivo strong{margin-top:2px;max-width:390px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:620}
+.bwPerfilActivo>b{margin-left:3px;font-family:var(--serif);font-size:21px;font-weight:400;color:var(--tinta-suave)}
+
+/* Contenedores */
+.bwSeccion{margin-top:16px;padding:18px;border:1px solid rgba(255,255,255,.75);border-radius:26px;background:linear-gradient(150deg,rgba(255,255,255,.50),rgba(255,255,255,.24));box-shadow:0 12px 38px rgba(55,43,35,.067),inset 0 1px 0 rgba(255,255,255,.94);-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%)}
+.bwSeccionCab{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:13px}
+.bwSeccionCab .mini{margin:0 0 3px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--tinta-suave)}
+.bwSeccionCab h2{margin:0;font-family:var(--serif);font-size:clamp(25px,3vw,33px);font-weight:400;line-height:1.05}
+.bwSeccionCab p{max-width:420px;margin:0;color:var(--tinta-suave);font-size:12px;line-height:1.4}
+
+/* Cartas guardadas: compactas; en móvil se recorren horizontalmente */
+.bwCartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.bwCarta{min-height:174px;padding:15px;display:grid;grid-template-columns:44px 1fr;grid-template-rows:auto auto auto 1fr;column-gap:11px;border-radius:20px;border:1px solid rgba(255,255,255,.78);background:rgba(255,253,249,.62);box-shadow:inset 0 1px 0 rgba(255,255,255,.94)}
+.bwCartaIcono{grid-row:1/4;width:44px;height:44px;display:grid;place-items:center;border-radius:14px;border:1px solid rgba(255,255,255,.86);background:rgba(255,255,255,.62);box-shadow:0 4px 14px rgba(54,43,35,.05),inset 0 1px 0 rgba(255,255,255,.98)}
+.bwCartaIcono svg{width:26px;height:26px;fill:none;stroke:var(--acento,var(--tinta-suave));stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bwCartaNombre{grid-column:2;margin:1px 0 1px;font-size:8px;font-weight:680;letter-spacing:1.55px;text-transform:uppercase;color:var(--tinta-suave)}
+.bwCarta h3{grid-column:2;margin:0;font-family:var(--serif);font-size:26px;font-weight:400;line-height:1}
+.bwCartaMeta{grid-column:2;margin:4px 0 0;color:var(--tinta-suave);font-size:11px;line-height:1.3;text-transform:capitalize}
+.bwCartaAcciones{grid-column:1/-1;align-self:end;margin-top:13px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.bwCartaAcciones a{min-height:34px;display:flex;align-items:center;justify-content:center;padding:6px 7px;border:1px solid rgba(255,255,255,.84);border-radius:11px;background:rgba(255,255,255,.50);color:var(--tinta);font-size:10px;text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.95)}
+.bwCartaAcciones a:first-child{grid-column:auto;background:rgba(255,255,255,.75);font-weight:620}
+
+/* Herramientas: 3x2 en escritorio, 2x3 en móvil */
+.bwSeccionHerramientas{padding-bottom:19px}
+.bwHerramientas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.bwTool{position:relative;min-height:142px;padding:15px;display:grid;grid-template-columns:42px 1fr 22px;align-items:start;column-gap:11px;overflow:hidden;border:1px solid rgba(255,255,255,.76);border-radius:20px;background:linear-gradient(150deg,rgba(255,255,255,.58),rgba(255,255,255,.26));color:var(--tinta);text-decoration:none;box-shadow:0 7px 22px rgba(55,43,35,.05),inset 0 1px 0 rgba(255,255,255,.94);transition:transform .16s ease,box-shadow .16s ease}
+.bwTool:hover{transform:translateY(-2px);box-shadow:0 11px 29px rgba(55,43,35,.08),inset 0 1px 0 rgba(255,255,255,.98)}
+.bwTool:after{content:'';position:absolute;width:120px;height:120px;border-radius:50%;right:-50px;bottom:-68px;background:radial-gradient(circle,rgba(255,255,255,.48),rgba(255,255,255,0) 68%);pointer-events:none}
+.bwToolIcon{width:42px;height:42px;grid-row:1;display:grid;place-items:center;border-radius:13px;background:rgba(255,255,255,.64);border:1px solid rgba(255,255,255,.88);font-family:var(--serif);font-size:21px;color:var(--acento,var(--tinta-suave))}
+.bwToolTexto{min-width:0}
+.bwTool .tag{display:block;margin:1px 0 3px;font-size:7.5px;letter-spacing:1.35px;text-transform:uppercase;color:var(--tinta-suave)}
+.bwTool h3{margin:0 0 4px;font-family:var(--serif);font-size:23px;font-weight:400;line-height:1.04}
+.bwTool p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0;color:var(--tinta-suave);font-size:11px;line-height:1.35}
+.bwTool .abrir{align-self:center;justify-self:end;margin:0;padding:0;font-family:var(--serif);font-size:24px;font-weight:400;text-decoration:none;color:var(--tinta-suave)}
+.bwToolDestacado{grid-column:auto;min-height:142px}
+
+.bwVacio{padding:18px;border-radius:18px;background:rgba(255,255,255,.34);color:var(--tinta-suave);text-align:center}
+.bwPie{text-align:center;margin:22px 0 0;color:var(--tinta-suave);font-size:11px}.bwPie b{font-weight:600;color:var(--tinta)}
+
+@media(max-width:820px){
+  .bwHerramientas{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(max-width:720px){
+  .broadwayHome main{width:min(100% - 22px,620px);padding-top:17px!important;padding-bottom:40px!important}
+  .bwHero{padding:16px 6px 11px}
+  .bwHero h1{font-size:clamp(34px,10.7vw,48px)}
+  .bwHero p.bwIntro{margin-top:8px;font-size:14px;line-height:1.4}
+  .bwHeroAcciones{margin-top:12px}
+  .bwHeroAcciones .btn{min-height:43px;padding:9px 16px;font-size:13px}
+  .bwPerfilActivo{margin-top:4px}
+  .bwSeccion{padding:14px;border-radius:22px;margin-top:12px}
+  .bwSeccionCab{display:block;margin-bottom:10px}.bwSeccionCab p{margin-top:5px;font-size:11px}
+  .bwSeccionCab h2{font-size:27px}
+  .bwHerramientas{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .bwTool,.bwToolDestacado{grid-column:auto;min-height:132px;padding:12px;grid-template-columns:36px 1fr 16px;column-gap:8px;border-radius:18px}
+  .bwToolIcon{width:36px;height:36px;border-radius:12px;font-size:18px}
+  .bwTool .tag{font-size:6.8px;letter-spacing:1.05px}
+  .bwTool h3{font-size:20px}
+  .bwTool p{font-size:10.5px;line-height:1.32;-webkit-line-clamp:2}
+  .bwTool .abrir{font-size:21px}
+  .bwCartas{display:flex;overflow-x:auto;gap:8px;padding-bottom:3px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .bwCartas::-webkit-scrollbar{display:none}
+  .bwCarta{flex:0 0 min(78vw,255px);min-height:166px;scroll-snap-align:start}
+}
+
+@media(max-width:390px){
+  .bwHerramientas{grid-template-columns:1fr}
+  .bwTool,.bwToolDestacado{min-height:108px;grid-template-columns:39px 1fr 18px;align-items:center}
+  .bwToolTexto{align-self:center}.bwTool p{-webkit-line-clamp:1}
+}
+
+@media(prefers-reduced-motion:reduce){.bwTool{transition:none}}

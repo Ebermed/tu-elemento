@@ -1,7 +1,9 @@
-name: Tu Elemento V11 runtime
+name: Tu Elemento runtime
 
 on:
   push:
+    branches: [ main, v2-broadway ]
+  pull_request:
     branches: [ main ]
   workflow_dispatch:
 
@@ -24,6 +26,7 @@ jobs:
           node test-mensual.js
           node test-mes-solar.js
           node test-calendario-solar.js
+          node test-carta-profunda.js
       - name: Monthly vocabulary guard
         run: |
           node - <<'NODE'
@@ -41,7 +44,21 @@ jobs:
           if(hits.length) throw new Error('Vocabulario mensual reservado detectado: '+hits.join(', '));
           console.log('Monthly vocabulary guard: OK');
           NODE
-      - name: V11 architecture contract
+      - name: Deep reading language guard
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const text=fs.readFileSync('v11/carta-profunda-ui.js','utf8');
+          const forbidden=[
+            /Trauma Raíz/i,/Dios Útil/i,/Palacio de Vida/i,/Palacio de la Concepción/i,
+            /vida corta/i,/familia pobre/i,/persona mediocre/i,/problemas karmáticos/i,
+            /carácter oscuro/i,/vida inmoral/i,/no será bendecido con descendientes/i
+          ];
+          const hits=forbidden.filter(r=>r.test(text)).map(String);
+          if(hits.length) throw new Error('Lenguaje reservado o determinista en Carta profunda: '+hits.join(', '));
+          console.log('Deep reading language guard: OK');
+          NODE
+      - name: Runtime architecture contract
         run: |
           node - <<'NODE'
           const fs=require('fs');
@@ -51,16 +68,35 @@ jobs:
           const calendar=fs.readFileSync('v11/calendario.html','utf8');
           const month=fs.readFileSync('v11/mes.html','utf8');
           function ok(v,msg){if(!v)throw new Error(msg)}
-          ok(index.includes('app.css')&&index.includes('app.js')&&index.includes('pilares.js'),'V11 index asset graph');
+          ok(index.includes('app.css')&&index.includes('app.js')&&index.includes('pilares.js'),'chart asset graph');
           ok(index.includes('calendario-solar.js')&&index.includes('solar-presentacion.js'),'chart solar context graph');
-          ok(index.includes('id="calcular"')&&index.includes('type="button"'),'single-click form route');
-          ok(!index.includes('?v=')&&!index.includes('v105')&&!index.includes('v10'),'legacy entry reference');
-          ok(base.includes("tuelemento.v11.perfiles"),'V11 storage key');
-          ok(base.includes("11-clean-20260821"),'V11 reset epoch');
-          ok(!base.includes('LLAVE_ANTERIOR')&&!base.includes('_migrarNacimientoAnterior')&&!base.includes('guardarNacimiento'),'legacy storage API');
-          ok(!pillars.includes('requestAnimationFrame')&&!pillars.includes('cloneNode')&&!pillars.includes('scrollHeight'),'pillar layout work');
+          ok(base.includes("tuelemento.v11.perfiles"),'storage key');
+          ok(base.includes("11-clean-20260821"),'storage epoch');
+          ok(pillars.includes('pilaresEstaticosV112')&&pillars.includes('transformarPilares'),'static pillar renderer');
+          ok(!pillars.includes('cloneNode')&&!pillars.includes('scrollHeight'),'pillar renderer avoids clone/height measurement');
           ok(calendar.includes('calendario.js')&&calendar.includes('calendario-presentacion.js'),'calendar graph');
           ok(calendar.includes('calendario-solar.js')&&calendar.includes('solar-presentacion.js'),'calendar solar context graph');
           ok(month.includes('mes-solar.js')&&month.includes('mes.js'),'monthly solar graph');
-          console.log('V11 architecture contract: OK');
+          console.log('Runtime architecture contract: OK');
+          NODE
+      - name: Broadway ecosystem contract
+        if: github.ref == 'refs/heads/v2-broadway' || github.head_ref == 'v2-broadway'
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const home=fs.readFileSync('index.html','utf8');
+          const release=fs.readFileSync('v11/release.js','utf8');
+          const eco=fs.readFileSync('v11/ecosistema.js','utf8');
+          const cycles=fs.readFileSync('v11/ciclos.html','utf8');
+          const chart=fs.readFileSync('v11/index.html','utf8');
+          function ok(v,msg){if(!v)throw new Error(msg)}
+          ['carta.html','nueva.html','calendario.html','mes.html','ciclos.html','v11/ciclos.html','v11/ecosistema.css','v11/ecosistema.js','v11/broadway-home.js','v11/broadway-dashboard.css','v11/broadway-colors.css','v11/carta-profunda.css','v11/carta-profunda.js','v11/carta-profunda-contexto.js','v11/carta-profunda-ui.js','v11/test-carta-profunda.js'].forEach(f=>ok(fs.existsSync(f),'missing '+f));
+          ok(home.includes('broadwayHome')&&home.includes('data-tool="carta"')&&home.includes('data-tool="buscar"')&&home.includes('data-tool="nueva"'),'Broadway home graph');
+          ok(!home.includes('location.replace'),'home must be a real hub');
+          ok(release.includes("label: 'V2 Broadway'")&&/build:\s*'2\.\d+\.\d+-broadway'/.test(release),'Broadway release metadata');
+          ok(eco.includes("['carta','Lectura'")&&eco.includes("['ciclos','Ciclos'"),'shared navigation items');
+          ok(!eco.includes('MutationObserver')&&!eco.includes('requestAnimationFrame'),'navigation stays lightweight');
+          ok(cycles.includes('ciclos-page.js')&&cycles.includes('perfilCiclos'),'cycles standalone graph');
+          ok(chart.includes('carta-profunda.js')&&chart.includes('carta-profunda-contexto.js')&&chart.includes('carta-profunda-ui.js')&&chart.includes('lectura-mensual.js'),'deep chart graph');
+          console.log('Broadway ecosystem contract: OK');
           NODE

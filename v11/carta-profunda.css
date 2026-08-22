@@ -1,0 +1,55 @@
+/* TU ELEMENTO V2 BROADWAY — lecturas profundas de Carta */
+.cpVista{max-width:860px;margin:0 auto}
+.cpVolver{display:inline-flex;align-items:center;gap:7px;margin:0 0 14px;padding:7px 11px;border:1px solid rgba(255,255,255,.82);border-radius:999px;background:rgba(255,255,255,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.95);color:var(--tinta);font-size:11px;font-weight:630;text-decoration:none;-webkit-backdrop-filter:blur(14px) saturate(145%);backdrop-filter:blur(14px) saturate(145%)}
+.cpVolver span{font-family:var(--serif);font-size:19px;font-weight:400;line-height:.7;color:var(--tinta-suave)}
+.cpCab{margin-bottom:14px;padding:18px 20px;border:1px solid rgba(255,255,255,.78);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.54),rgba(255,255,255,.25));box-shadow:0 10px 32px rgba(55,43,35,.055),inset 0 1px 0 rgba(255,255,255,.95);-webkit-backdrop-filter:blur(18px) saturate(145%);backdrop-filter:blur(18px) saturate(145%)}
+.cpKicker{margin:0 0 5px;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--tinta-suave)}
+.cpCab h2{margin:0;font-family:var(--serif);font-size:clamp(30px,5vw,43px);font-weight:400;line-height:1.03}
+.cpCab p{max-width:690px;margin:8px 0 0;color:var(--tinta-suave);font-size:14px;line-height:1.55}
+
+.cpHoja{margin:12px 0;padding:20px;border:1px solid rgba(255,255,255,.76);border-radius:24px;background:linear-gradient(150deg,rgba(255,255,255,.53),rgba(255,251,246,.29));box-shadow:0 10px 31px rgba(55,43,35,.055),inset 0 1px 0 rgba(255,255,255,.94);-webkit-backdrop-filter:blur(18px) saturate(145%);backdrop-filter:blur(18px) saturate(145%)}
+.cpHoja h3{margin:0 0 6px;font-family:var(--serif);font-size:clamp(23px,4vw,31px);font-weight:400;line-height:1.05}
+.cpHoja h4{margin:16px 0 5px;font-size:9px;letter-spacing:1.6px;text-transform:uppercase;color:var(--tinta-suave)}
+.cpHoja>p,.cpTexto{margin:7px 0;font-size:14px;line-height:1.58;color:var(--tinta)}
+.cpHoja .cpSuave{color:var(--tinta-suave)}
+.cpRemate{margin:17px 0 0!important;padding-top:13px;border-top:1px solid rgba(66,55,47,.09);font-family:var(--serif);font-style:italic;font-size:16px!important;line-height:1.45!important;color:var(--tinta-suave)!important}
+.cpAccion{display:flex;align-items:flex-start;gap:9px;margin:7px 0;padding:9px 11px;border-radius:14px;background:rgba(255,255,255,.42);font-size:12.5px;line-height:1.45}
+.cpAccion:before{content:'→';flex:0 0 auto;font-family:var(--serif);font-size:18px;line-height:1;color:var(--acento,var(--tinta-suave))}
+
+/* General: cada bloque funciona como puerta de entrada. */
+.cpResumenGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}
+.cpResumen{min-height:178px;padding:16px;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.80);border-radius:20px;background:rgba(255,255,255,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.95);text-decoration:none;color:var(--tinta);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.cpResumen:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(55,43,35,.07),inset 0 1px 0 rgba(255,255,255,.98);border-color:rgba(255,255,255,.96)}
+.cpResumen .tag{font-size:7px;letter-spacing:1.4px;text-transform:uppercase;color:var(--tinta-suave)}
+.cpResumen h3{margin:5px 0 5px;font-family:var(--serif);font-size:25px;font-weight:400;line-height:1}
+.cpResumen p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0;color:var(--tinta-suave);font-size:11.5px;line-height:1.42}
+.cpResumen b{margin-top:auto;padding-top:11px;font-size:10.5px;font-weight:680;text-decoration:underline;text-underline-offset:4px}
+.cpResumen--mezcla{background:linear-gradient(145deg,rgba(229,239,230,.66),rgba(255,255,255,.38))}
+.cpResumen--perfiles{background:linear-gradient(145deg,rgba(238,233,247,.68),rgba(255,255,255,.38))}
+.cpResumen--pilares{background:linear-gradient(145deg,rgba(232,240,244,.70),rgba(255,255,255,.38))}
+.cpResumen--vacios{background:linear-gradient(145deg,rgba(245,236,226,.71),rgba(255,255,255,.38))}
+.cpResumen--nudo{background:linear-gradient(145deg,rgba(245,231,231,.66),rgba(255,255,255,.38))}
+.cpResumen--recurso{background:linear-gradient(145deg,rgba(244,239,218,.70),rgba(255,255,255,.38))}
+.cpMasAlla{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.cpMasAlla a{min-height:54px;padding:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.8);border-radius:15px;background:rgba(255,255,255,.42);color:var(--tinta);font-size:11px;font-weight:650;text-decoration:none;text-align:center}
+
+/* Mezcla */
+.cpElementos{display:grid;gap:10px;margin-top:14px}.cpElementoFila{display:grid;grid-template-columns:72px 1fr 34px;align-items:center;gap:10px}.cpElementoNombre{font-size:11px;font-weight:650;text-transform:capitalize}.cpElementoTrack{height:9px;overflow:hidden;border-radius:999px;background:rgba(70,60,52,.07);box-shadow:inset 0 1px 2px rgba(50,40,32,.04)}.cpElementoTrack i{height:100%;display:block;min-width:3px;border-radius:inherit;background:linear-gradient(90deg,var(--acento,rgba(95,120,105,.55)),rgba(255,255,255,.7));opacity:.73}.cpElementoN{font-family:var(--serif);font-size:18px;text-align:right}.cpDosColumnas{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.cpMini{padding:14px;border-radius:17px;background:rgba(255,255,255,.38);border:1px solid rgba(255,255,255,.7)}.cpMini small{display:block;margin-bottom:4px;font-size:7px;letter-spacing:1.3px;text-transform:uppercase;color:var(--tinta-suave)}.cpMini strong{display:block;font-family:var(--serif);font-size:22px;font-weight:400;text-transform:capitalize}.cpMini p{margin:6px 0 0;color:var(--tinta-suave);font-size:11.5px;line-height:1.45}
+
+/* Perfiles */
+.cpPerfilPrincipal{padding:17px;border-radius:19px;background:linear-gradient(145deg,rgba(238,233,247,.72),rgba(255,255,255,.42));border:1px solid rgba(255,255,255,.82)}.cpPerfilPrincipal .numero{font-size:8px;letter-spacing:1.4px;text-transform:uppercase;color:var(--tinta-suave)}.cpPerfilPrincipal strong{display:block;margin-top:5px;font-family:var(--serif);font-size:clamp(31px,5vw,43px);font-weight:400;line-height:1}.cpPerfilPrincipal em{display:block;margin-top:6px;font-style:normal;color:var(--tinta-suave);font-size:12px}.cpPerfilLista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.cpPerfil{padding:13px;border:1px solid rgba(255,255,255,.76);border-radius:17px;background:rgba(255,255,255,.38)}.cpPerfilTop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.cpPerfil strong{font-family:var(--serif);font-size:21px;font-weight:400}.cpPerfil .conteo{flex:0 0 auto;padding:3px 6px;border-radius:999px;background:rgba(255,255,255,.58);font-size:8px;color:var(--tinta-suave)}.cpPerfil small{display:block;margin:2px 0 7px;font-size:7px;letter-spacing:1.1px;text-transform:uppercase;color:var(--tinta-suave)}.cpPerfil p{margin:0;color:var(--tinta-suave);font-size:11px;line-height:1.4}
+
+/* Pilares */
+.cpPilares{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.cpPilar{padding:16px;border:1px solid rgba(255,255,255,.78);border-radius:19px;background:rgba(255,255,255,.4)}.cpPilar .tag{font-size:7px;letter-spacing:1.3px;text-transform:uppercase;color:var(--tinta-suave)}.cpPilar h3{margin:5px 0 2px;font-size:25px}.cpPilar .meta{margin:0 0 9px;color:var(--tinta-suave);font-size:10px;text-transform:capitalize}.cpPilar p{margin:6px 0;font-size:12px;line-height:1.48}.cpPilar .filo{color:var(--tinta-suave)}.cpPilarExtra{background:linear-gradient(145deg,rgba(232,240,244,.67),rgba(255,255,255,.4))}.cpInteracciones{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}.cpInteraccion{padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.52);font-size:8px;color:var(--tinta-suave)}
+
+/* Vacíos / nudo */
+.cpRamasVacias{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.cpRamaVacia{padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.76);background:rgba(255,255,255,.45);font-family:var(--serif);font-size:17px;text-transform:capitalize}.cpNudo{padding:16px;margin:9px 0;border-radius:19px;border:1px solid rgba(255,255,255,.79);background:linear-gradient(145deg,rgba(245,231,231,.64),rgba(255,255,255,.39))}.cpNudo h3{font-size:25px}.cpNudo .meta{margin:0 0 8px;color:var(--tinta-suave);font-size:10px;text-transform:capitalize}.cpNudo p{font-size:12.5px;line-height:1.5}.cpSecuencia{counter-reset:paso;display:grid;gap:7px;margin-top:9px}.cpPaso{position:relative;padding:10px 11px 10px 39px;border-radius:14px;background:rgba(255,255,255,.41);font-size:12px;line-height:1.45}.cpPaso:before{counter-increment:paso;content:counter(paso);position:absolute;left:10px;top:9px;width:20px;height:20px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.67);font-family:var(--serif);font-size:12px}
+
+/* Recurso */
+.cpRecursoHero{padding:20px;border-radius:21px;border:1px solid rgba(255,255,255,.82);background:linear-gradient(145deg,rgba(244,239,218,.76),rgba(255,255,255,.42))}.cpRecursoHero small{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tinta-suave)}.cpRecursoHero strong{display:block;margin:4px 0 4px;font-family:var(--serif);font-size:clamp(39px,7vw,58px);font-weight:400;line-height:1;text-transform:capitalize}.cpRecursoHero p{max-width:650px;margin:8px 0 0;font-size:13px;line-height:1.5}.cpAlternativas{margin-top:9px;color:var(--tinta-suave);font-size:10px}.cpPuente{margin-top:12px;padding:16px;border-radius:19px;background:linear-gradient(145deg,rgba(245,231,231,.5),rgba(244,239,218,.47));border:1px solid rgba(255,255,255,.78)}
+
+@media(max-width:620px){
+ .cpCab,.cpHoja{padding:16px;border-radius:21px}.cpCab h2{font-size:32px}.cpCab p,.cpHoja>p,.cpTexto{font-size:13px}
+ .cpResumenGrid,.cpPerfilLista,.cpPilares,.cpDosColumnas{grid-template-columns:1fr}.cpResumen{min-height:138px;padding:14px}.cpResumen p{-webkit-line-clamp:2}.cpMasAlla{grid-template-columns:1fr 1fr}.cpMasAlla a:last-child{grid-column:1/-1}
+ .cpElementoFila{grid-template-columns:64px 1fr 28px;gap:7px}.cpPilar{padding:14px}.cpPerfilPrincipal{padding:15px}
+}
+@media(prefers-reduced-motion:reduce){.cpResumen{transition:none}}
