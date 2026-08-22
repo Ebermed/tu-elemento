@@ -3,6 +3,8 @@ name: Tu Elemento runtime
 on:
   push:
     branches: [ main, v2-broadway ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -62,7 +64,7 @@ jobs:
           console.log('Runtime architecture contract: OK');
           NODE
       - name: Broadway ecosystem contract
-        if: github.ref == 'refs/heads/v2-broadway'
+        if: github.ref == 'refs/heads/v2-broadway' || github.head_ref == 'v2-broadway'
         run: |
           node - <<'NODE'
           const fs=require('fs');
