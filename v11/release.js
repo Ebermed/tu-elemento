@@ -8,12 +8,12 @@
   ];
 
   var RELEASE = Object.freeze({
-    major: 2,
-    minor: 1,
-    patch: 4,
-    codename: CODENAMES[1],
-    label: 'V2 Broadway',
-    build: '2.1.4-broadway'
+    major: 3,
+    minor: 0,
+    patch: 0,
+    codename: CODENAMES[2],
+    label: 'V3 Cell Preview',
+    build: '3.0.0-cell-preview'
   });
 
   function nombreVersion(major, minor, patch) {
@@ -49,6 +49,23 @@
         script.src = base + 'ecosistema.js?b=' + RELEASE.build;
         script.defer = true;
         document.head.appendChild(script);
+      }
+      if (/\/v11\/index\.html$/.test(location.pathname)) {
+        raiz.addEventListener('load', function () {
+          if (document.getElementById('te-copy-v3')) return;
+          var copy = document.createElement('script');
+          copy.id = 'te-copy-v3';
+          copy.src = base + 'copy-v3.js?b=' + RELEASE.build;
+          copy.async = false;
+          copy.onload = function () {
+            var renderer = document.createElement('script');
+            renderer.id = 'te-carta-v3-render';
+            renderer.src = base + 'carta-v3-render.js?b=' + RELEASE.build;
+            renderer.async = false;
+            document.body.appendChild(renderer);
+          };
+          document.body.appendChild(copy);
+        }, {once:true});
       }
     }
   }
