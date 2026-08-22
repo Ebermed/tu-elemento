@@ -1,0 +1,48 @@
+/* TU ELEMENTO — PILARES PERSONALIZADOS PREVIEW */
+html[data-copy-v2-preview="1"] .cpPilares.copyV2PilaresPersonalizados{display:grid!important;grid-template-columns:1fr!important;gap:18px!important;max-width:720px!important;margin:0 auto!important}
+html[data-copy-v2-preview="1"] .copyPilarPersonalizado{position:relative;padding:30px 30px 26px;border-radius:24px;border:1px solid rgba(255,255,255,.82);background:linear-gradient(150deg,rgba(255,255,255,.68),rgba(255,250,245,.45));box-shadow:0 10px 32px rgba(63,48,38,.06),inset 0 1px 0 rgba(255,255,255,.95);overflow:hidden}
+html[data-copy-v2-preview="1"] .copyPilarPersonalizado:before{content:'';position:absolute;inset:0 auto 0 0;width:4px;background:var(--acento,rgba(117,91,70,.5));opacity:.38}
+html[data-copy-v2-preview="1"] .copyPilarCab{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding-bottom:18px;border-bottom:1px solid rgba(46,42,38,.08)}
+html[data-copy-v2-preview="1"] .copyPilarCab small{display:block;margin-bottom:5px;font-size:9px;letter-spacing:1.55px;text-transform:uppercase;color:var(--tinta-suave)}
+html[data-copy-v2-preview="1"] .copyPilarCab h3{margin:0!important;font-family:var(--serif);font-size:clamp(28px,4.4vw,36px)!important;line-height:1.08!important;font-weight:400!important}
+html[data-copy-v2-preview="1"] .copyPilarCab>span{max-width:46%;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.56);border:1px solid rgba(46,42,38,.07);font-size:11px;line-height:1.3;color:var(--tinta-suave);text-align:right}
+html[data-copy-v2-preview="1"] .copyPilarIntro{max-width:610px;margin:17px 0 0!important;font-size:13px!important;line-height:1.72!important;color:var(--tinta-suave);font-style:italic}
+html[data-copy-v2-preview="1"] .copyPilarLectura{margin-top:24px;padding-top:22px;border-top:1px solid rgba(46,42,38,.08)}
+html[data-copy-v2-preview="1"] .copyPilarLectura h4{max-width:620px;margin:0 0 12px!important;font-family:var(--serif);font-size:clamp(24px,4vw,32px)!important;line-height:1.2!important;font-weight:500!important;letter-spacing:-.015em;color:var(--tinta)}
+html[data-copy-v2-preview="1"] .copyPilarLectura p{max-width:630px;margin:0!important;font-size:16px!important;line-height:1.72!important;color:var(--tinta)}
+html[data-copy-v2-preview="1"] .copyPilarTres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-top:24px}
+html[data-copy-v2-preview="1"] .copyPilarTres section{padding:16px 15px 15px;border-radius:17px;background:rgba(255,255,255,.46);border:1px solid rgba(255,255,255,.76);min-width:0}
+html[data-copy-v2-preview="1"] .copyPilarTres small,
+html[data-copy-v2-preview="1"] .copyPilarCruces>small,
+html[data-copy-v2-preview="1"] .copyPilarMapa small{display:block;margin-bottom:7px;font-size:9px;letter-spacing:1.25px;text-transform:uppercase;color:var(--tinta-suave)}
+html[data-copy-v2-preview="1"] .copyPilarTres p{margin:0!important;font-size:13.5px!important;line-height:1.62!important;color:var(--tinta)}
+html[data-copy-v2-preview="1"] .copyPilarTres section:nth-child(2){background:rgba(255,248,244,.52)}
+html[data-copy-v2-preview="1"] .copyPilarTres section:nth-child(3){background:rgba(248,251,246,.58)}
+html[data-copy-v2-preview="1"] .copyPilarCruces{margin-top:18px;padding-top:17px;border-top:1px solid rgba(46,42,38,.08)}
+html[data-copy-v2-preview="1"] .copyPilarCruces span{display:inline-flex;margin:0 7px 7px 0;padding:7px 10px;border-radius:999px;background:rgba(46,42,38,.055);font-size:11px;line-height:1.3;color:var(--tinta-suave)}
+html[data-copy-v2-preview="1"] .copyPilarCruces b{color:var(--tinta);font-weight:650}
+html[data-copy-v2-preview="1"] .copyPilarTecnico{margin-top:18px;padding-top:16px;border-top:1px solid rgba(46,42,38,.08)}
+html[data-copy-v2-preview="1"] .copyPilarTecnico summary{cursor:pointer;list-style:none;font-size:12px;font-weight:650;color:var(--tinta-suave)}
+html[data-copy-v2-preview="1"] .copyPilarTecnico summary::-webkit-details-marker{display:none}
+html[data-copy-v2-preview="1"] .copyPilarTecnico summary:after{content:' +';font-weight:400}
+html[data-copy-v2-preview="1"] .copyPilarTecnico[open] summary:after{content:' −'}
+html[data-copy-v2-preview="1"] .copyPilarMapa{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+html[data-copy-v2-preview="1"] .copyPilarMapa>div{padding:13px 14px;border-radius:14px;background:rgba(255,255,255,.38);border:1px solid rgba(255,255,255,.72)}
+html[data-copy-v2-preview="1"] .copyPilarMapa strong{display:block;font-family:var(--serif);font-size:17px;font-weight:400;line-height:1.25}
+html[data-copy-v2-preview="1"] .copyPilarMapa span{display:block;margin-top:3px;font-size:11px;line-height:1.45;color:var(--tinta-suave)}
+html[data-copy-v2-preview="1"] .copyPilarMapa .copyPilarOcultos{grid-column:1/-1}
+html[data-copy-v2-preview="1"] .copyPilarOcultos>div{display:flex;flex-wrap:wrap;gap:7px}
+html[data-copy-v2-preview="1"] .copyPilarOcultos>div>span{margin:0;padding:7px 9px;border-radius:999px;background:rgba(46,42,38,.05)}
+html[data-copy-v2-preview="1"] .copyPilarOcultos b{color:var(--tinta);font-weight:600}
+html[data-copy-v2-preview="1"] .copyPilarFaltante{opacity:.72}
+html[data-copy-v2-preview="1"] .copyPilarFaltante .copyPilarIntro{font-style:normal}
+
+@media(max-width:720px){
+  html[data-copy-v2-preview="1"] .copyPilarPersonalizado{padding:25px 21px 22px;border-radius:21px}
+  html[data-copy-v2-preview="1"] .copyPilarCab{display:block}
+  html[data-copy-v2-preview="1"] .copyPilarCab>span{display:inline-block;max-width:100%;margin-top:10px;text-align:left}
+  html[data-copy-v2-preview="1"] .copyPilarTres{grid-template-columns:1fr;gap:9px}
+  html[data-copy-v2-preview="1"] .copyPilarTres section{padding:15px 14px}
+  html[data-copy-v2-preview="1"] .copyPilarMapa{grid-template-columns:1fr}
+  html[data-copy-v2-preview="1"] .copyPilarMapa .copyPilarOcultos{grid-column:auto}
+}
