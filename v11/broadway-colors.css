@@ -1,0 +1,111 @@
+/* TU ELEMENTO V2 BROADWAY — identidad cromática del hub
+   Cada herramienta conserva el glass neutro del sistema y recibe un lavado
+   acuarelado propio para que se lea como una acción, no como información. */
+
+.broadwayHome .bwTool{
+  --bwWash:rgba(255,255,255,.46);
+  --bwLine:rgba(255,255,255,.78);
+  --bwIconWash:rgba(255,255,255,.48);
+  --bwAccent:var(--tinta-suave);
+  --bwShadow:rgba(55,43,35,.05);
+  --bwButton:rgba(255,255,255,.62);
+  background:
+    linear-gradient(148deg,var(--bwWash),rgba(255,255,255,.29))!important;
+  border-color:var(--bwLine)!important;
+  box-shadow:0 8px 25px var(--bwShadow),inset 0 1px 0 rgba(255,255,255,.93)!important;
+}
+
+.broadwayHome .bwToolIcon{
+  background:linear-gradient(145deg,rgba(255,255,255,.78),var(--bwIconWash))!important;
+  border-color:var(--bwLine)!important;
+  color:var(--bwAccent)!important;
+  box-shadow:0 4px 13px var(--bwShadow),inset 0 1px 0 rgba(255,255,255,.96)!important;
+}
+
+.broadwayHome .bwTool .tag{
+  color:var(--bwAccent)!important;
+  opacity:.88;
+}
+
+.broadwayHome .bwTool .abrir{
+  background:var(--bwButton)!important;
+  border-color:var(--bwLine)!important;
+}
+
+/* Carta · salvia */
+.broadwayHome .bwTool[data-tool="carta"]{
+  --bwWash:rgba(214,230,216,.62);
+  --bwLine:rgba(128,161,134,.25);
+  --bwIconWash:rgba(188,215,192,.54);
+  --bwAccent:#718d75;
+  --bwShadow:rgba(77,110,82,.075);
+  --bwButton:rgba(238,247,239,.78);
+}
+
+/* Calendario · durazno */
+.broadwayHome .bwTool[data-tool="calendario"]{
+  --bwWash:rgba(245,221,200,.64);
+  --bwLine:rgba(197,150,109,.25);
+  --bwIconWash:rgba(239,201,169,.55);
+  --bwAccent:#a87850;
+  --bwShadow:rgba(140,96,60,.075);
+  --bwButton:rgba(252,239,228,.80);
+}
+
+/* Buscar fecha · rosa arena */
+.broadwayHome .bwTool[data-tool="buscar"]{
+  --bwWash:rgba(240,215,211,.62);
+  --bwLine:rgba(183,132,126,.24);
+  --bwIconWash:rgba(230,191,186,.52);
+  --bwAccent:#9c6d68;
+  --bwShadow:rgba(130,84,80,.07);
+  --bwButton:rgba(249,234,232,.80);
+}
+
+/* Tu mes · lavanda humo */
+.broadwayHome .bwTool[data-tool="mes"]{
+  --bwWash:rgba(227,220,240,.64);
+  --bwLine:rgba(145,130,171,.24);
+  --bwIconWash:rgba(207,197,228,.53);
+  --bwAccent:#81759d;
+  --bwShadow:rgba(101,89,128,.07);
+  --bwButton:rgba(242,238,249,.80);
+}
+
+/* Ciclos · azul humo */
+.broadwayHome .bwTool[data-tool="ciclos"]{
+  --bwWash:rgba(216,229,236,.66);
+  --bwLine:rgba(111,145,165,.24);
+  --bwIconWash:rgba(192,215,226,.54);
+  --bwAccent:#688596;
+  --bwShadow:rgba(75,105,123,.07);
+  --bwButton:rgba(235,244,248,.80);
+}
+
+/* Nueva carta · crema dorado */
+.broadwayHome .bwTool[data-tool="nueva"]{
+  --bwWash:rgba(241,232,204,.67);
+  --bwLine:rgba(180,158,104,.24);
+  --bwIconWash:rgba(230,216,175,.55);
+  --bwAccent:#927d4f;
+  --bwShadow:rgba(123,105,62,.07);
+  --bwButton:rgba(249,244,225,.82);
+}
+
+.broadwayHome .bwTool:hover,
+.broadwayHome .bwTool:focus-visible{
+  transform:translateY(-2px);
+  box-shadow:0 13px 32px var(--bwShadow),inset 0 1px 0 rgba(255,255,255,.98)!important;
+  filter:saturate(1.06);
+}
+
+.broadwayHome .bwTool:active{
+  transform:scale(.985);
+  filter:saturate(1.03);
+}
+
+@media(prefers-reduced-motion:reduce){
+  .broadwayHome .bwTool:hover,
+  .broadwayHome .bwTool:focus-visible,
+  .broadwayHome .bwTool:active{transform:none}
+}
