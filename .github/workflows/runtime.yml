@@ -57,7 +57,8 @@ jobs:
           ok(index.includes('calendario-solar.js')&&index.includes('solar-presentacion.js'),'chart solar context graph');
           ok(base.includes("tuelemento.v11.perfiles"),'storage key');
           ok(base.includes("11-clean-20260821"),'storage epoch');
-          ok(!pillars.includes('requestAnimationFrame')&&!pillars.includes('cloneNode')&&!pillars.includes('scrollHeight'),'pillar layout work');
+          ok(pillars.includes('pilaresEstaticosV112')&&pillars.includes('transformarPilares'),'static pillar renderer');
+          ok(!pillars.includes('cloneNode')&&!pillars.includes('scrollHeight'),'pillar renderer avoids clone/height measurement');
           ok(calendar.includes('calendario.js')&&calendar.includes('calendario-presentacion.js'),'calendar graph');
           ok(calendar.includes('calendario-solar.js')&&calendar.includes('solar-presentacion.js'),'calendar solar context graph');
           ok(month.includes('mes-solar.js')&&month.includes('mes.js'),'monthly solar graph');
