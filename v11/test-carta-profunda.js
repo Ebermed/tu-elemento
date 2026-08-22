@@ -1,7 +1,7 @@
 const M = require('./motor');
 const L = require('./lectura');
 const LM = require('./lectura-mensual');
-const C = require('./carta-profunda');
+const C = require('./carta-profunda-contexto');
 
 let ok = 0, fail = 0;
 function check(nombre, actual, esperado) {
@@ -19,6 +19,10 @@ check('mezcla conserva ocho caracteres', analisis.mezcla.total, 8);
 truth('perfil principal calculado', analisis.perfiles.principal.dinamica && analisis.perfiles.principal.dinamica.nombre);
 truth('lista de perfiles presentes', analisis.perfiles.apariciones.length > 0);
 truth('recurso de equilibrio calculado', analisis.recurso && analisis.recurso.elemento);
+
+const sinHora = C.analizarCartaProfunda(carta,{sinHora:true,nacimiento:{anio:1985,mes:10,dia:17,sinHora:true,sexo:'m'}});
+check('sin hora solo cuenta seis caracteres', sinHora.mezcla.total, 6);
+check('sin hora no calcula brújula', sinHora.extras.brujula, null);
 
 console.log('\n═══ TU BRÚJULA · EJEMPLOS DEL MANUAL ═══');
 // Ejemplo del manual: 17 oct 1985, 14:00 → mes Perro (11), hora Cabra (8) → Rata (1).
