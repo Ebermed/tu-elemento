@@ -10,10 +10,10 @@
   var RELEASE = Object.freeze({
     major: 2,
     minor: 1,
-    patch: 5,
+    patch: 6,
     codename: CODENAMES[1],
     label: 'V2 Broadway · Copy Preview',
-    build: '2.1.5-copy-v2-preview'
+    build: '2.1.6-copy-v2-preview'
   });
 
   function nombreVersion(major, minor, patch) {
@@ -63,6 +63,20 @@
         previewJs.src = base + 'copy-v2-preview.js?b=' + RELEASE.build;
         previewJs.defer = true;
         document.head.appendChild(previewJs);
+      }
+      if (!document.getElementById('te-pilares-personalizados-preview-css')) {
+        var pilaresCss = document.createElement('link');
+        pilaresCss.id = 'te-pilares-personalizados-preview-css';
+        pilaresCss.rel = 'stylesheet';
+        pilaresCss.href = base + 'pilares-personalizados-preview.css?b=' + RELEASE.build;
+        document.head.appendChild(pilaresCss);
+      }
+      if (!document.getElementById('te-pilares-personalizados-preview-js')) {
+        var pilaresJs = document.createElement('script');
+        pilaresJs.id = 'te-pilares-personalizados-preview-js';
+        pilaresJs.src = base + 'pilares-personalizados-preview.js?b=' + RELEASE.build;
+        pilaresJs.defer = true;
+        document.head.appendChild(pilaresJs);
       }
     }
   }
