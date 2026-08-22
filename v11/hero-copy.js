@@ -1,4 +1,4 @@
-/** TU ELEMENTO V2 BROADWAY — microcopy del hero de la lectura. */
+/** TU ELEMENTO V2 BROADWAY — microcopy del hero y capa de lectura general. */
 (function(){
   'use strict';
   if(typeof document==='undefined')return;
@@ -32,9 +32,21 @@
     descripcion.setAttribute('data-copy-broadway','1');
   }
 
+  function cargarLecturaGeneral(){
+    if(!document.getElementById('te-carta-general-css')){
+      var css=document.createElement('link');
+      css.id='te-carta-general-css';css.rel='stylesheet';css.href='carta-general-v2.css?b=2.1.3-broadway';document.head.appendChild(css);
+    }
+    if(!document.getElementById('te-carta-general-js')){
+      var js=document.createElement('script');
+      js.id='te-carta-general-js';js.src='carta-general-v2.js?b=2.1.3-broadway';document.body.appendChild(js);
+    }
+  }
+
   pulir();
   var hero=document.getElementById('resultadoHero');
-  if(hero&&typeof MutationObserver!=='undefined'){
-    new MutationObserver(function(){pulir();}).observe(hero,{childList:true,subtree:true});
-  }
+  if(hero&&typeof MutationObserver!=='undefined')new MutationObserver(function(){pulir();}).observe(hero,{childList:true,subtree:true});
+
+  if(document.readyState==='complete')cargarLecturaGeneral();
+  else window.addEventListener('load',cargarLecturaGeneral,{once:true});
 })();
