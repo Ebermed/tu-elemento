@@ -38,12 +38,6 @@ check('sin hora marca conteo parcial', sinHora.mezcla.completa, false);
 check('sin hora no calcula brújula', sinHora.extras.brujula, null);
 
 console.log('\n═══ ESTADO DEL DÍA MAESTRO · TABLA DEL MANUAL ═══');
-function estadoPara(anio,mes,dia,hora,elementoEsperado,estadoEsperado) {
-  const c=M.cuatroPilares({anio,mes,dia,hora,minuto:0,offsetTZ:0});
-  if(elementoEsperado) check(`${anio}-${String(mes).padStart(2,'0')} elemento`, c.diaMaestro.elemento, elementoEsperado);
-  check(`${anio}-${String(mes).padStart(2,'0')} estado`, D.estadoDiaMaestro(c,D.mezclaDe(c,false)).estado, estadoEsperado);
-}
-// Buscamos fechas conocidas por su Día Maestro y comprobamos la relación con la estación.
 function primeraFecha(anio,mes,elemento) {
   for(let d=10;d<=20;d++) {
     const c=M.cuatroPilares({anio,mes,dia:d,hora:12,minuto:0,offsetTZ:0});
@@ -67,6 +61,17 @@ function primeraFecha(anio,mes,elemento) {
   const e=primeraFecha(2026,x[1],x[0]);
   check('invierno · '+x[0],D.estadoDiaMaestro(e.c,D.mezclaDe(e.c,false)).estado,x[2]);
 });
+
+console.log('\n═══ RECURSO DE EQUILIBRIO · PAUTAS ESTACIONALES ═══');
+function reglaBase(mes,elemento){
+  const e=primeraFecha(2026,mes,elemento),mez=D.mezclaDe(e.c,false),est=D.estadoDiaMaestro(e.c,mez);
+  const limpio={estado:est.estado,estacion:est.estacion,elementoEstacion:est.elementoEstacion,elementoDiaMaestro:est.elementoDiaMaestro,conteoPropio:est.conteoPropio,contradiccion:null};
+  return D.candidatosRecurso(e.c,false,mez,limpio).candidatos;
+}
+check('Tierra en primavera → Fuego', reglaBase(3,'tierra')[0], 'fuego');
+check('Fuego en verano → Agua', reglaBase(6,'fuego')[0], 'agua');
+check('Metal en primavera → Metal', reglaBase(3,'metal')[0], 'metal');
+check('Agua en invierno → Fuego y Tierra', reglaBase(12,'agua').slice(0,2), ['fuego','tierra']);
 
 console.log('\n═══ TU BRÚJULA · EJEMPLOS DEL MANUAL ═══');
 check('17 oct 1985 → rama Rata', analisis.extras.brujula.rama.pinyin, 'Zi');
