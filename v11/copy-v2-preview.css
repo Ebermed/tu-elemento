@@ -1,0 +1,139 @@
+/* TU ELEMENTO — COPY V2 PREVIEW
+   Capa visual aislada para textos largos. No modifica producción. */
+
+html[data-copy-v2-preview="1"] body{--copy-v2-ancho:760px}
+html[data-copy-v2-preview="1"] .resultadoDescripcion{max-width:720px!important;margin-left:auto!important;margin-right:auto!important;line-height:1.62!important}
+html[data-copy-v2-preview="1"] .resultadoDescripcion strong{display:inline;font-weight:750}
+
+/* Carta general / profunda */
+html[data-copy-v2-preview="1"] .cpgVista,
+html[data-copy-v2-preview="1"] .cpVista{max-width:var(--copy-v2-ancho)!important;margin-left:auto!important;margin-right:auto!important}
+html[data-copy-v2-preview="1"] .cpgCab,
+html[data-copy-v2-preview="1"] .cpCab{max-width:690px!important;margin-left:auto!important;margin-right:auto!important}
+html[data-copy-v2-preview="1"] .cpgCab>p:last-child,
+html[data-copy-v2-preview="1"] .cpCab>p:last-child{max-width:650px!important;font-size:16px!important;line-height:1.7!important}
+html[data-copy-v2-preview="1"] .cpgModulo,
+html[data-copy-v2-preview="1"] .cpgCompacto,
+html[data-copy-v2-preview="1"] .cpHoja,
+html[data-copy-v2-preview="1"] .cpgElementoProfundo,
+html[data-copy-v2-preview="1"] .cpgForma,
+html[data-copy-v2-preview="1"] .cpPerfil,
+html[data-copy-v2-preview="1"] .cpPilar,
+html[data-copy-v2-preview="1"] .cpNudo{height:auto!important;min-height:0!important;overflow:visible!important}
+html[data-copy-v2-preview="1"] .cpgModulo{padding:32px 30px!important}
+html[data-copy-v2-preview="1"] .cpgModulo>h3,
+html[data-copy-v2-preview="1"] .cpgCompacto>h3{margin-bottom:7px!important;letter-spacing:.06em!important}
+html[data-copy-v2-preview="1"] .cpgExplica{max-width:660px!important;margin:0 0 24px!important;font-size:13.5px!important;line-height:1.72!important;font-style:italic!important;color:var(--tinta-suave)!important}
+html[data-copy-v2-preview="1"] .cpgDato{padding:18px 0!important}
+html[data-copy-v2-preview="1"] .cpgDato strong{font-size:19px!important;line-height:1.35!important}
+html[data-copy-v2-preview="1"] .cpgDato span{display:block;margin-top:8px!important;font-size:15px!important;line-height:1.72!important;max-width:640px!important}
+html[data-copy-v2-preview="1"] .cpgEstado{padding:20px!important}
+html[data-copy-v2-preview="1"] .cpgEstado strong{font-size:22px!important}
+html[data-copy-v2-preview="1"] .cpgEstado p{font-size:15px!important;line-height:1.7!important;max-width:610px!important}
+
+html[data-copy-v2-preview="1"] .cpgElementosProfundos,
+html[data-copy-v2-preview="1"] .cpgFormasLista{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important;align-items:start!important}
+html[data-copy-v2-preview="1"] .cpgElementoProfundo,
+html[data-copy-v2-preview="1"] .cpgForma{padding:25px 23px!important;align-self:start!important}
+html[data-copy-v2-preview="1"] .cpgElementoProfundoTop,
+html[data-copy-v2-preview="1"] .cpgFormaTop{align-items:flex-start!important;gap:14px!important}
+html[data-copy-v2-preview="1"] .cpgElementoProfundo h3,
+html[data-copy-v2-preview="1"] .cpgForma h3{font-size:25px!important;line-height:1.12!important}
+html[data-copy-v2-preview="1"] .cpgElementoProfundo h4,
+html[data-copy-v2-preview="1"] .cpgForma h4{margin:19px 0 5px!important;font-size:10px!important;letter-spacing:1.35px!important;text-transform:uppercase!important;color:var(--tinta-suave)!important}
+html[data-copy-v2-preview="1"] .cpgElementoProfundo p,
+html[data-copy-v2-preview="1"] .cpgForma p{font-size:14.5px!important;line-height:1.68!important}
+html[data-copy-v2-preview="1"] .copyV2Menos{margin-top:18px;padding-top:17px;border-top:1px solid rgba(46,42,38,.09)}
+html[data-copy-v2-preview="1"] .copyV2Menos h4{margin-top:0!important}
+html[data-copy-v2-preview="1"] .cpgConsejos{display:grid!important;gap:8px!important;margin-top:10px!important}
+html[data-copy-v2-preview="1"] .cpgConsejos span{display:block!important;line-height:1.55!important;padding:10px 12px!important}
+
+html[data-copy-v2-preview="1"] .cpgPilaresGeneral{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+html[data-copy-v2-preview="1"] .cpgPilar{height:auto!important;min-height:0!important;padding:18px 15px!important}
+html[data-copy-v2-preview="1"] .cpgCapa strong{font-size:17px!important;line-height:1.25!important}
+html[data-copy-v2-preview="1"] .cpgOcultos span{white-space:normal!important;line-height:1.38!important}
+html[data-copy-v2-preview="1"] .cpPilares{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;align-items:start!important}
+html[data-copy-v2-preview="1"] .cpPilar{padding:24px 22px!important}
+html[data-copy-v2-preview="1"] .cpPilar h3{font-size:25px!important;line-height:1.15!important;margin-bottom:7px!important}
+html[data-copy-v2-preview="1"] .cpPilar p{line-height:1.67!important}
+html[data-copy-v2-preview="1"] .copyV2Encuadre{margin:0 0 16px;padding:18px 20px;border:1px solid rgba(255,255,255,.8);border-radius:18px;background:rgba(255,255,255,.43);box-shadow:0 6px 22px rgba(0,0,0,.045);font-size:14px;line-height:1.7;color:var(--tinta-suave)}
+html[data-copy-v2-preview="1"] .copyV2Encuadre strong{color:var(--tinta);font-weight:650}
+html[data-copy-v2-preview="1"] .cpgTrio{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;align-items:stretch!important}
+html[data-copy-v2-preview="1"] .cpgCompacto{padding:22px 19px!important}
+html[data-copy-v2-preview="1"] .cpgCompacto .cpgDato strong{font-size:16px!important}
+html[data-copy-v2-preview="1"] .cpgCompacto .cpgDato span{font-size:13px!important;line-height:1.6!important}
+
+/* Ciclos */
+html[data-copy-v2-preview="1"] .ciclosPantalla{max-width:780px!important}
+html[data-copy-v2-preview="1"] .ciclosResumen{max-width:700px!important;margin-left:auto!important;margin-right:auto!important}
+html[data-copy-v2-preview="1"] .copyV2CiclosEncuadre{max-width:700px;margin:14px auto 18px;padding:20px 22px;border-radius:20px;background:rgba(255,253,249,.72);border:1px solid rgba(255,255,255,.82);box-shadow:0 7px 26px rgba(0,0,0,.05);text-align:left;color:var(--tinta-suave);font-size:14px;line-height:1.7}
+html[data-copy-v2-preview="1"] .copyV2CiclosEncuadre p{margin:0 0 8px}
+html[data-copy-v2-preview="1"] .copyV2CiclosEncuadre p:last-child{margin-bottom:0}
+html[data-copy-v2-preview="1"] .ciclosLista{max-width:700px!important;margin-left:auto!important;margin-right:auto!important}
+html[data-copy-v2-preview="1"] .cicloItem{height:auto!important;min-height:0!important;align-items:flex-start!important;padding-top:20px!important;padding-bottom:20px!important}
+html[data-copy-v2-preview="1"] .cicloCab{font-size:19px!important;line-height:1.35!important;margin-bottom:12px!important}
+html[data-copy-v2-preview="1"] .copyV2CicloDetalle{display:grid;gap:13px;margin-top:8px}
+html[data-copy-v2-preview="1"] .copyV2CicloBloque{padding-top:12px;border-top:1px solid rgba(46,42,38,.08)}
+html[data-copy-v2-preview="1"] .copyV2CicloBloque:first-child{padding-top:0;border-top:0}
+html[data-copy-v2-preview="1"] .copyV2CicloBloque small{display:block;margin-bottom:4px;font-size:9px;letter-spacing:1.25px;text-transform:uppercase;color:var(--tinta-suave)}
+html[data-copy-v2-preview="1"] .copyV2CicloBloque p{margin:0;font-size:14.5px;line-height:1.66}
+html[data-copy-v2-preview="1"] .copyV2CicloBloque--corto p{font-family:var(--serif);font-style:italic;font-size:16px;line-height:1.55}
+
+/* Tu mes */
+html[data-copy-v2-preview="1"] .mensualPantalla{max-width:760px!important}
+html[data-copy-v2-preview="1"] #mesContenido,
+html[data-copy-v2-preview="1"] .mesPerfilBox,
+html[data-copy-v2-preview="1"] .mesNavBar,
+html[data-copy-v2-preview="1"] .mesTecnico{max-width:660px!important}
+html[data-copy-v2-preview="1"] .mesHero{padding:32px 29px 28px!important;overflow:visible!important}
+html[data-copy-v2-preview="1"] .mesIntro{font-size:15.5px!important;line-height:1.72!important;max-width:590px!important}
+html[data-copy-v2-preview="1"] .mesSeccion{padding:25px 25px!important;height:auto!important;overflow:visible!important}
+html[data-copy-v2-preview="1"] .mesSeccion h3{font-size:24px!important;line-height:1.24!important;margin-bottom:10px!important}
+html[data-copy-v2-preview="1"] .mesSeccion p{font-size:15px!important;line-height:1.72!important}
+html[data-copy-v2-preview="1"] .mesSeccion .mesSub{font-size:13.5px!important;line-height:1.62!important}
+html[data-copy-v2-preview="1"] .mesLista li{padding-top:11px!important;padding-bottom:11px!important;line-height:1.6!important}
+html[data-copy-v2-preview="1"] .mesDos{align-items:start!important}
+html[data-copy-v2-preview="1"] .mesInter p{font-size:14px!important;line-height:1.65!important}
+
+/* Calendario */
+html[data-copy-v2-preview="1"] #diaCaja .vidrio{max-width:720px!important;margin-left:auto!important;margin-right:auto!important;padding-left:28px!important;padding-right:28px!important;overflow:visible!important}
+html[data-copy-v2-preview="1"] #diaCaja .tipoDia{font-size:21px!important;line-height:1.45!important;max-width:620px!important;margin-left:auto!important;margin-right:auto!important}
+html[data-copy-v2-preview="1"] #diaCaja .medidor{display:none!important}
+html[data-copy-v2-preview="1"] #diaCaja .leyenda{margin-top:10px!important}
+html[data-copy-v2-preview="1"] #diaCaja .capasTiempo{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;align-items:start!important}
+html[data-copy-v2-preview="1"] #diaCaja .capaTiempo{height:auto!important;min-height:0!important;padding:20px!important}
+html[data-copy-v2-preview="1"] #diaCaja .capaTiempo strong{font-size:22px!important;line-height:1.22!important}
+html[data-copy-v2-preview="1"] #diaCaja .capaTiempo p{font-size:14.5px!important;line-height:1.66!important}
+html[data-copy-v2-preview="1"] #diaCaja .listas{align-items:start!important}
+html[data-copy-v2-preview="1"] #diaCaja .listas>div{height:auto!important;min-height:0!important}
+html[data-copy-v2-preview="1"] #diaCaja .listas li{line-height:1.52!important}
+html[data-copy-v2-preview="1"] #diaCaja .roce{font-size:13.5px!important;line-height:1.65!important}
+
+/* Seguridad general frente a copy largo */
+html[data-copy-v2-preview="1"] .cpgVista *,
+html[data-copy-v2-preview="1"] .cpVista *,
+html[data-copy-v2-preview="1"] #mesContenido *,
+html[data-copy-v2-preview="1"] .ciclosLista *,
+html[data-copy-v2-preview="1"] #diaCaja *{overflow-wrap:break-word;word-break:normal}
+
+@media(max-width:760px){
+  html[data-copy-v2-preview="1"] .cpgElementosProfundos,
+  html[data-copy-v2-preview="1"] .cpgFormasLista,
+  html[data-copy-v2-preview="1"] .cpPilares{grid-template-columns:1fr!important}
+  html[data-copy-v2-preview="1"] .cpgPilaresGeneral{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html[data-copy-v2-preview="1"] .cpgTrio{grid-template-columns:1fr!important}
+  html[data-copy-v2-preview="1"] .mesDos{grid-template-columns:1fr!important}
+}
+@media(max-width:520px){
+  html[data-copy-v2-preview="1"] .cpgModulo{padding:25px 20px!important}
+  html[data-copy-v2-preview="1"] .cpgPilaresGeneral{grid-template-columns:1fr!important}
+  html[data-copy-v2-preview="1"] .cpgPilar{padding:18px!important}
+  html[data-copy-v2-preview="1"] .cpgElementoProfundo,
+  html[data-copy-v2-preview="1"] .cpgForma,
+  html[data-copy-v2-preview="1"] .cpPilar{padding:21px 18px!important}
+  html[data-copy-v2-preview="1"] .mesHero{padding:25px 20px 23px!important}
+  html[data-copy-v2-preview="1"] .mesSeccion{padding:21px 19px!important}
+  html[data-copy-v2-preview="1"] #diaCaja .vidrio{padding-left:19px!important;padding-right:19px!important}
+  html[data-copy-v2-preview="1"] #diaCaja .capasTiempo{grid-template-columns:1fr!important}
+  html[data-copy-v2-preview="1"] .cicloItem{grid-template-columns:58px minmax(0,1fr)!important;gap:12px!important}
+}
