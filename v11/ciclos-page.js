@@ -10,6 +10,21 @@
   function qPerfil(){try{return new URLSearchParams(location.search).get('perfil')||'';}catch(e){return'';}}
   function perfiles(){try{return listarPerfiles()||[];}catch(e){return[];}}
   function etiqueta(p){return p.tipo==='yo'?'Tu carta':(p.nombre||'Carta guardada');}
+  function textoPrincipal(an,idn){
+    if(an&&an.movimiento)return an.movimiento;
+    if(idn&&idn.movimiento)return idn.movimiento;
+    return 'Este tramo cambia el clima de tu carta y pone otras prioridades al frente.';
+  }
+  function textoSecundario(an,idn){
+    if(an&&an.tension)return an.tension;
+    if(idn&&idn.tension)return idn.tension;
+    return 'La clave está en notar qué parte de esta etapa te impulsa y cuál conviene administrar con más intención.';
+  }
+  function textoBreve(an,idn){
+    if(an&&an.frase)return an.frase;
+    if(idn&&idn.frase)return idn.frase;
+    return textoPrincipal(an,idn);
+  }
 
   var ps=perfiles();
   if(!ps.length){
@@ -46,7 +61,7 @@
       var an=globalThis.ANIMALES&&ANIMALES[x.rama.pinyin]?ANIMALES[x.rama.pinyin]:null;
       var idn=globalThis.IDENTIDADES&&IDENTIDADES[x.tallo.pinyin]?IDENTIDADES[x.tallo.pinyin]:null;
       var es=i===actual;
-      h+='<li class="cicloItem'+(es?' actual':'')+'"><div class="cicloEdad">'+x.desde+'<small>a '+x.hasta+'</small></div><div>'+(es?'<span class="cicloSello">Aquí andas</span>':'')+'<p class="cicloCab">'+esc(an?an.nombre:cap(x.animal))+' de '+esc(x.elemento)+(idn?' <em>· '+esc(idn.nombre)+'</em>':'')+(x.enVacio?'<span class="cicloVac">vacío</span>':'')+'</p>'+(es&&an?'<p class="cicloTexto">'+esc(an.movimiento)+'</p><p class="cicloTexto cicloTension">'+esc(an.tension)+'</p>':'<p class="cicloTexto">'+esc(an?an.frase:'Un tramo distinto dentro de la secuencia de tu carta.')+'</p>')+'</div></li>';
+      h+='<li class="cicloItem'+(es?' actual':'')+'"><div class="cicloEdad">'+x.desde+'<small>a '+x.hasta+'</small></div><div>'+(es?'<span class="cicloSello">Aquí andas</span>':'')+'<p class="cicloCab">'+esc(an?an.nombre:cap(x.animal))+' de '+esc(x.elemento)+(idn?' <em>· '+esc(idn.nombre)+'</em>':'')+(x.enVacio?'<span class="cicloVac">vacío</span>':'')+'</p>'+(es?'<p class="cicloTexto">'+esc(textoPrincipal(an,idn))+'</p><p class="cicloTexto cicloTension">'+esc(textoSecundario(an,idn))+'</p>':'<p class="cicloTexto">'+esc(textoBreve(an,idn))+'</p>')+'</div></li>';
     });
     h+='</ul>';
     caja.innerHTML=h;
