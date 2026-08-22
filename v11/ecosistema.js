@@ -16,7 +16,7 @@
 
   function html(){
     var actual=pagina();
-    var items=[['inicio','Inicio',base+'index.html'],['carta','Carta',conPerfil(base+'carta.html')],['calendario','Calendario',conPerfil(base+'calendario.html')],['mes','Tu mes',conPerfil(base+'mes.html')],['ciclos','Ciclos',conPerfil(base+'ciclos.html')]];
+    var items=[['inicio','Inicio',base+'index.html'],['carta','Lectura',conPerfil(base+'carta.html')],['calendario','Calendario',conPerfil(base+'calendario.html')],['mes','Tu mes',conPerfil(base+'mes.html')],['ciclos','Ciclos',conPerfil(base+'ciclos.html')]];
     var links=items.map(function(x){return'<a data-eco="'+x[0]+'" href="'+x[2]+'"'+(actual===x[0]?' aria-current="page"':'')+'>'+x[1]+'</a>';}).join('');
     return '<nav class="teEcoNav" aria-label="Tu Elemento"><div class="teEcoBar"><a class="teEcoBrand" href="'+base+'index.html" aria-label="Inicio de Tu Elemento"><span class="teEcoMark">◇</span><span>Tu Elemento</span></a><span class="teEcoVersion">V2 Broadway</span><button class="teEcoMenuBtn" type="button" aria-expanded="false" aria-label="Abrir menú"><span></span></button><div class="teEcoLinks">'+links+'</div></div></nav><div class="teEcoBackdrop" aria-hidden="true"></div>';
   }
