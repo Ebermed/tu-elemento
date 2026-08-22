@@ -10,6 +10,7 @@
 <meta name="description" content="Descubre tu elemento base, guarda tus cartas y consulta su calendario.">
 <link rel="stylesheet" href="app.css?b=1.0.0-artx">
 <link rel="stylesheet" href="solar.css?b=solar-0.1">
+<link rel="stylesheet" href="carta-profunda.css?b=2.1.0-broadway">
 <style>
 .perfilIcono .iconito{width:42px!important;height:42px!important;min-width:42px!important;margin:0!important;background:transparent!important;box-shadow:none!important}.perfilIcono .iconito svg{width:27px!important;height:27px!important;max-width:27px!important;max-height:27px!important;stroke-width:2.15!important;opacity:.88}
 #p-resultado{position:relative}
@@ -43,21 +44,21 @@
 <form id="forma" novalidate>
 <div class="campo"><label>¿Para quién es esta carta?</label><div class="paraQuien" role="group" aria-label="Persona de esta carta"><button type="button" class="paraQuienBtn activo" id="paraMi" aria-pressed="true">Para mí</button><button type="button" class="paraQuienBtn" id="paraOtra" aria-pressed="false">Para alguien más</button></div><div class="nombrePersona" id="nombrePersona" hidden><label for="nombreCarta">¿Cómo le llamamos?</label><input type="text" id="nombreCarta" placeholder="Nombre o apodo" maxlength="40" autocomplete="off"><p class="pista" style="margin:7px 0 0">Este nombre sirve para distinguir sus cartas dentro de este navegador.</p></div></div>
 <div class="campo"><label for="dia">Fecha de nacimiento</label><div class="trio"><input type="number" id="dia" placeholder="Día" min="1" max="31" inputmode="numeric"><select id="mes"><option value="">Mes</option></select><input type="number" id="anio" placeholder="Año" min="1900" max="2030" inputmode="numeric"></div></div>
-<div class="campo"><label for="hora">Hora <span class="pista">— opcional, afina el resultado</span></label><div class="duo"><input type="number" id="hora" placeholder="Hora (0-23)" min="0" max="23" inputmode="numeric"><input type="number" id="minuto" placeholder="Minutos" min="0" max="59" inputmode="numeric"></div><p class="pista" style="margin:7px 0 0">La hora completa Tu futuro, el pilar ligado a proyectos, vida interior y lo que vas construyendo con el tiempo.</p></div>
-<div class="campo"><label for="sexo">Sexo registrado al nacer <span class="pista">— opcional</span></label><select id="sexo"><option value="">Prefiero omitirlo</option><option value="m">Mujer</option><option value="h">Hombre</option></select><p class="pista" style="margin:7px 0 0">Este dato entra únicamente en tus ciclos de diez años.</p></div>
+<div class="campo"><label for="hora">Hora <span class="pista">— opcional, afina el resultado</span></label><div class="duo"><input type="number" id="hora" placeholder="Hora (0-23)" min="0" max="23" inputmode="numeric"><input type="number" id="minuto" placeholder="Minutos" min="0" max="59" inputmode="numeric"></div><p class="pista" style="margin:7px 0 0">La hora completa Tu futuro y permite calcular Tu brújula, una referencia complementaria dentro de la carta.</p></div>
+<div class="campo"><label for="sexo">Sexo registrado al nacer <span class="pista">— opcional</span></label><select id="sexo"><option value="">Prefiero omitirlo</option><option value="m">Mujer</option><option value="h">Hombre</option></select><p class="pista" style="margin:7px 0 0">Este dato entra en tus ciclos de diez años y, si naciste justo en un punto medio solar del mes, puede hacer un ajuste de una posición en Tu brújula.</p></div>
 <div class="campo"><label for="buscaLugar">Lugar de nacimiento</label><div style="position:relative"><input type="text" id="buscaLugar" placeholder="Escribe tu ciudad" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias"><ul id="sugerencias" role="listbox"></ul></div><p class="pista" id="pistaLugar" style="margin:7px 0 0"></p><p class="pista" style="margin:6px 0 0">Elige tu ciudad o una cercana. La app toma en cuenta el horario histórico y hace una pequeña corrección por la posición del Sol.</p></div>
 <p class="error" id="err" role="alert"></p>
 <div class="acciones"><button type="submit" class="btn" id="calcular">Ver mi elemento</button><button type="button" class="btn fantasma" id="volverPortada">Atrás</button></div>
 </form>
 </section>
 <section class="pantalla" id="p-resultado">
-<button class="cartaVolver" id="volverCartas" type="button" aria-label="Volver a tus cartas">‹</button><p class="marca">Tu Elemento</p><p class="resultadoContexto" id="resultadoContexto" hidden></p><div id="resultadoHero" class="resultadoHero"></div><div class="acciones resultadoAcciones"><button class="btn" type="button" id="bajarTop">Descargar tarjeta</button></div><button class="seguirCarta" id="seguirCarta" type="button" aria-label="Seguir leyendo tu carta"><span class="seguirTexto">Tu carta sigue</span><small>4 pilares · balance · calendario · ciclos</small><span class="seguirFlecha" aria-hidden="true">↓</span></button><div class="lectura" id="lectura"></div>
+<button class="cartaVolver" id="volverCartas" type="button" aria-label="Volver a tus cartas">‹</button><p class="marca">Tu Elemento</p><p class="resultadoContexto" id="resultadoContexto" hidden></p><div id="resultadoHero" class="resultadoHero"></div><div class="acciones resultadoAcciones"><button class="btn" type="button" id="bajarTop">Descargar tarjeta</button></div><button class="seguirCarta" id="seguirCarta" type="button" aria-label="Seguir leyendo tu carta"><span class="seguirTexto">Tu lectura sigue</span><small>mezcla · perfiles · pilares · vacíos · equilibrio</small><span class="seguirFlecha" aria-hidden="true">↓</span></button><div class="lectura" id="lectura"></div>
 <section class="compartirMarco" id="compartirMarco"><h2 class="titIcon cent" id="compartirTitulo">Tu tarjeta para compartir</h2><p class="sub compartirIntro">Esta es la versión breve de tu carta, pensada para guardar o compartir. El resto de la lectura queda aquí contigo.</p><div id="tarjetaCaja"></div><div class="acciones compartirAcciones"><button class="btn" type="button" id="bajarFinal">Descargar tarjeta</button><button class="btn fantasma" type="button" data-nueva-carta>Calcular otra carta</button></div></section>
 </section>
 <section class="pantalla" id="p-carta"><p class="marca">Tu Elemento</p><div id="cartaCaja"></div><div class="acciones" style="justify-content:center;margin-top:24px;flex-wrap:wrap"><button class="btn fantasma" type="button" id="volverResultado">Volver a mi carta</button></div></section>
 </main>
 <p class="pie">Hecho con ♥ por Ebermedia · <a href="calendario.html">calendario del día</a></p>
-<script src="release.js?b=2.0.0-broadway"></script>
+<script src="release.js?b=2.1.0-broadway"></script>
 <script src="acuarela.js?b=1.0.0-artx"></script>
 <script src="lugares.js?b=1.0.0-artx"></script>
 <script src="zonas.js?b=1.0.0-artx"></script>
@@ -67,10 +68,13 @@
 <script src="tarjeta.js?b=1.0.0-artx"></script>
 <script src="lectura.js?b=1.0.0-artx"></script>
 <script src="lectura-personalizada.js?b=1.0.0-artx"></script>
+<script src="lectura-mensual.js?b=2.1.0-broadway"></script>
+<script src="carta-profunda.js?b=2.1.0-broadway"></script>
 <script src="decadas.js?b=1.0.0-artx"></script>
 <script src="base.js?b=1.0.0-artx"></script>
 <script src="pilares.js?b=1.0.1-artx"></script>
 <script src="app.js?b=1.0.0-artx"></script>
+<script src="carta-profunda-ui.js?b=2.1.0-broadway"></script>
 <script src="solar-presentacion.js?b=solar-0.1"></script>
 <script src="pulido-ui.js?b=1.0.4-artx"></script>
 </body>
