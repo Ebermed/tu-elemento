@@ -36,12 +36,12 @@
 
     var n=p.nacimiento||{};
     if(!n.sexo){
-      caja.innerHTML='<section class="ciclosVacio"><h2>Falta un dato para esta secuencia</h2><p>Los ciclos de diez años usan el sexo registrado al nacer para definir la dirección del recorrido. Puedes abrir esta carta y completar ese dato.</p><div class="acciones"><a class="btn" href="../carta.html?perfil='+encodeURIComponent(id)+'">Abrir esta carta</a></div></section>';
+      caja.innerHTML='<section class="ciclosVacio"><h2>Falta un dato para esta secuencia</h2><p>Los ciclos de diez años usan el sexo registrado al nacer para definir la dirección del recorrido. Puedes abrir la lectura y completar ese dato.</p><div class="acciones"><a class="btn" href="../carta.html?perfil='+encodeURIComponent(id)+'">Abrir lectura</a></div></section>';
       return;
     }
 
     var d=decadas(c,n.sexo,9),edad=edadHoy(n.anio,n.mes,n.dia),actual=decadaActual(d,edad),t=traducir(c);
-    var h='<section class="ciclosResumen"><p class="mini">'+esc(etiqueta(p))+' · '+esc(t.tarjeta.nombre)+'</p><h2>Tu recorrido de diez años</h2><p>Esta secuencia empieza alrededor de los '+d.edadInicio+' años. Hoy tienes '+edad+' años y el tramo activo aparece resaltado.</p></section><ul class="ciclosLista">';
+    var h='<section class="ciclosResumen"><p class="mini">'+esc(etiqueta(p))+' · '+esc(t.tarjeta.nombre)+'</p><h2>Tu recorrido de diez años</h2><p>La secuencia empieza alrededor de los '+d.edadInicio+' años. Hoy tienes '+edad+' y el tramo activo aparece resaltado.</p></section><ul class="ciclosLista">';
     d.lista.forEach(function(x,i){
       var an=globalThis.ANIMALES&&ANIMALES[x.rama.pinyin]?ANIMALES[x.rama.pinyin]:null;
       var idn=globalThis.IDENTIDADES&&IDENTIDADES[x.tallo.pinyin]?IDENTIDADES[x.tallo.pinyin]:null;
