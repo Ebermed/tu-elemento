@@ -22,7 +22,7 @@
       '<span>Lectura general</span>' +
       '<button class="lecturaGeneralAyuda" type="button" aria-label="¿Qué es una lectura general?" aria-expanded="false">i</button>' +
       '<span class="lecturaGeneralTooltip" role="tooltip" data-abierto="0" hidden>' +
-        '<span>Esta lectura usa los ritmos generales del calendario. Con tu carta, el día también se cruza con tu información personal.</span>' +
+        '<span>Esta vista lee el ritmo de la fecha por sí sola. Cuando eliges una carta, también toma en cuenta su signo de origen.</span>' +
         '<a href="index.html?nueva=1">Crear mi carta</a>' +
       '</span>' +
     '</span>';
@@ -55,7 +55,7 @@
     var si = caja.querySelector('.listas .si h3');
     var evitar = caja.querySelector('.listas .no h3');
     if (si && si.textContent !== 'Te recomendamos') si.textContent = 'Te recomendamos';
-    if (evitar && evitar.textContent !== 'Es mejor no hacer') evitar.textContent = 'Es mejor no hacer';
+    if (evitar && evitar.textContent !== 'Es mejor dejar para otro día') evitar.textContent = 'Es mejor dejar para otro día';
 
     if (sinCartas()) {
       var pil = caja.querySelector('.pil');
