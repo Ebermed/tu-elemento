@@ -4,7 +4,6 @@
   if(typeof document==='undefined')return;
 
   function esc(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function cap(x){x=String(x||'');return x.charAt(0).toUpperCase()+x.slice(1);}
   function polaridad(c){return c&&c.diaMaestro&&c.diaMaestro.yang?'Yang':'Yin';}
   function activo(){return globalThis.TE_ECOSISTEMA&&TE_ECOSISTEMA.perfilActivo?TE_ECOSISTEMA.perfilActivo():'';}
   function setActivo(id){if(globalThis.TE_ECOSISTEMA&&TE_ECOSISTEMA.setPerfilActivo)TE_ECOSISTEMA.setPerfilActivo(id);}
@@ -31,19 +30,19 @@
   var titulo=document.getElementById('bwTitulo'),intro=document.getElementById('bwIntro'),cartas=document.getElementById('bwCartas'),secCartas=document.getElementById('bwSeccionCartas');
   if(ps.length){
     titulo.textContent='Bienvenido de nuevo';
-    intro.textContent='Tus cartas y herramientas viven ahora en un mismo lugar. Elige a quién quieres consultar o entra directamente a una sección.';
+    intro.textContent='Elige una carta o entra directo a la herramienta que necesitas.';
     secCartas.hidden=false;
     var h='';
     ps.forEach(function(p){
       try{
         var c=cartaDesdePerfil(p),t=traducir(c),nombre=p.tipo==='yo'?'Tu carta':(p.nombre||'Carta guardada'),id=p.id;
-        h+='<article class="bwCarta" data-perfil="'+esc(id)+'"><div class="bwCartaIcono">'+icono(t.tarjeta.nombre)+'</div><p class="bwCartaNombre">'+esc(nombre)+'</p><h3>'+esc(t.tarjeta.nombre)+'</h3><p class="bwCartaMeta">'+esc(t.tarjeta.elemento)+' · '+polaridad(c)+(p.nacimiento&&p.nacimiento.ciudad?' · '+esc(p.nacimiento.ciudad):'')+'</p><div class="bwCartaAcciones"><a href="'+link('carta.html',id)+'">Abrir carta</a><a href="'+link('calendario.html',id)+'">Calendario</a><a href="'+link('mes.html',id)+'">Tu mes</a></div></article>';
+        h+='<article class="bwCarta" data-perfil="'+esc(id)+'"><div class="bwCartaIcono">'+icono(t.tarjeta.nombre)+'</div><p class="bwCartaNombre">'+esc(nombre)+'</p><h3>'+esc(t.tarjeta.nombre)+'</h3><p class="bwCartaMeta">'+esc(t.tarjeta.elemento)+' · '+polaridad(c)+(p.nacimiento&&p.nacimiento.ciudad?' · '+esc(p.nacimiento.ciudad):'')+'</p><div class="bwCartaAcciones"><a href="'+link('carta.html',id)+'">Carta</a><a href="'+link('calendario.html',id)+'">Calendario</a><a href="'+link('mes.html',id)+'">Tu mes</a></div></article>';
       }catch(err){}
     });
     cartas.innerHTML=h;
   }else{
     titulo.textContent='¿Qué quieres mirar hoy?';
-    intro.textContent='Tu Elemento reúne tu carta, el calendario solar chino, lecturas mensuales y ciclos personales en un mismo espacio.';
+    intro.textContent='Carta, calendario, lectura mensual, selección de fechas y ciclos en un mismo lugar.';
     secCartas.hidden=true;
   }
 
@@ -55,6 +54,22 @@
     Object.keys(m).forEach(function(k){var a=document.querySelector('[data-tool="'+k+'"]');if(a)a.href=m[k];});
   }
   hrefHerramientas();
+
+  function pintarPerfilActivo(){
+    var pill=document.getElementById('bwPerfilActivo'),txt=document.getElementById('bwPerfilTexto');
+    if(!pill||!txt||!idActivo)return;
+    try{
+      var p=typeof leerPerfil==='function'?leerPerfil(idActivo):null;
+      var c=p?cartaDesdePerfil(p):null;
+      var t=c?traducir(c):null;
+      if(!p||!t)return;
+      var nombre=p.tipo==='yo'?'Tu carta':(p.nombre||'Carta guardada');
+      txt.textContent=nombre+' · '+t.tarjeta.nombre;
+      pill.href=link('carta.html',idActivo);
+      pill.hidden=false;
+    }catch(e){}
+  }
+  pintarPerfilActivo();
 
   document.addEventListener('click',function(e){
     var a=e.target&&e.target.closest?e.target.closest('.bwCarta a'):null;if(!a)return;
