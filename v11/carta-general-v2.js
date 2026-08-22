@@ -18,7 +18,17 @@
   function q(n){try{return new URLSearchParams(location.search).get(n)||'';}catch(e){return'';}}
   function vista(){return q('vista')||'general';}
   function href(id,v){return 'index.html?perfil='+encodeURIComponent(id)+(v&&v!=='general'?'&vista='+encodeURIComponent(v):'');}
-  function perfilActual(){var id=q('perfil');return id&&raiz.leerPerfil?raiz.leerPerfil(id):null;}
+  function idPerfilActual(){
+    var id=q('perfil');
+    if(id&&raiz.leerPerfil&&raiz.leerPerfil(id))return id;
+    if(raiz.TE_ECOSISTEMA&&typeof raiz.TE_ECOSISTEMA.perfilActivo==='function'){
+      id=raiz.TE_ECOSISTEMA.perfilActivo();if(id&&raiz.leerPerfil&&raiz.leerPerfil(id))return id;
+    }
+    var a=$('#abrirCalendario');
+    if(a){var m=(a.getAttribute('href')||'').match(/[?&]perfil=([^&]+)/);if(m){id=decodeURIComponent(m[1]);if(raiz.leerPerfil&&raiz.leerPerfil(id))return id;}}
+    return '';
+  }
+  function perfilActual(){var id=idPerfilActual();return id&&raiz.leerPerfil?raiz.leerPerfil(id):null;}
 
   function porcentajes(m){
     var total=Number(m&&m.total)||0,res={};
