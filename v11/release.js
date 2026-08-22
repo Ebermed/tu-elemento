@@ -10,10 +10,10 @@
   var RELEASE = Object.freeze({
     major: 2,
     minor: 1,
-    patch: 4,
+    patch: 5,
     codename: CODENAMES[1],
-    label: 'V2 Broadway',
-    build: '2.1.4-broadway'
+    label: 'V2 Broadway · Copy Preview',
+    build: '2.1.5-copy-v2-preview'
   });
 
   function nombreVersion(major, minor, patch) {
@@ -49,6 +49,20 @@
         script.src = base + 'ecosistema.js?b=' + RELEASE.build;
         script.defer = true;
         document.head.appendChild(script);
+      }
+      if (!document.getElementById('te-copy-v2-preview-css')) {
+        var previewCss = document.createElement('link');
+        previewCss.id = 'te-copy-v2-preview-css';
+        previewCss.rel = 'stylesheet';
+        previewCss.href = base + 'copy-v2-preview.css?b=' + RELEASE.build;
+        document.head.appendChild(previewCss);
+      }
+      if (!document.getElementById('te-copy-v2-preview-js')) {
+        var previewJs = document.createElement('script');
+        previewJs.id = 'te-copy-v2-preview-js';
+        previewJs.src = base + 'copy-v2-preview.js?b=' + RELEASE.build;
+        previewJs.defer = true;
+        document.head.appendChild(previewJs);
       }
     }
   }
