@@ -10,10 +10,10 @@
   var RELEASE = Object.freeze({
     major: 2,
     minor: 1,
-    patch: 0,
+    patch: 1,
     codename: CODENAMES[1],
     label: 'V2 Broadway',
-    build: '2.1.0-broadway'
+    build: '2.1.1-broadway'
   });
 
   function nombreVersion(major, minor, patch) {
@@ -33,10 +33,6 @@
 
   if (typeof document !== 'undefined') {
     document.documentElement.setAttribute('data-release', RELEASE.label);
-
-    // Broadway convierte la navegación en parte del shell compartido.
-    // Tomamos como base la carpeta desde la que cargó release.js para que
-    // funcione tanto en /v11/ como desde el nuevo index raíz.
     var actual = document.currentScript && document.currentScript.src ? document.currentScript.src : '';
     var base = actual ? actual.replace(/release\.js(?:\?.*)?$/,'') : '';
     if (base) {
