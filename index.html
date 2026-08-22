@@ -4,12 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="theme-color" content="#FBF7F0">
-<meta name="tu-elemento-release" content="V1 Artx">
+<meta name="tu-elemento-release" content="V2 Broadway">
 <title>Tu Elemento</title>
-<style>html,body{margin:0;min-height:100%;background:#FBF7F0;color:#2E2A26;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{display:grid;place-items:center}span{font-family:Georgia,serif;font-style:italic;font-size:18px;opacity:.58}</style>
+<meta name="description" content="Tu carta, calendario solar chino, lectura mensual, búsqueda de fechas y ciclos en un mismo lugar.">
+<link rel="stylesheet" href="v11/app.css?b=2.0.0-broadway">
+<link rel="stylesheet" href="v11/ecosistema.css?b=2.0.0-broadway">
+<link rel="stylesheet" href="v11/broadway-home.css?b=2.0.0-broadway">
 </head>
-<body><span>Abriendo Tu Elemento · Artx…</span><script>location.replace('v11/'+(location.search||''));</script></body>
+<body class="broadwayHome">
+<div id="fondo" aria-hidden="true"></div>
+<main>
+  <header class="bwHero">
+    <p class="bwKicker">Tu Elemento · Broadway</p>
+    <h1 id="bwTitulo">¿Qué quieres mirar hoy?</h1>
+    <p class="bwIntro" id="bwIntro">Tu carta y tus herramientas viven ahora en un mismo lugar.</p>
+    <div class="bwHeroAcciones"><a class="btn" href="nueva.html">Crear una carta</a><a class="btn fantasma" data-tool="calendario" href="calendario.html">Ver el día de hoy</a></div>
+  </header>
+
+  <section class="bwSeccion" id="bwSeccionCartas" hidden>
+    <div class="bwSeccionCab"><div><p class="mini">Tus cartas</p><h2>Aquí están tus cartas</h2></div><p>Abre una lectura o entra directamente al calendario o al mes de esa persona.</p></div>
+    <div class="bwCartas" id="bwCartas"></div>
+  </section>
+
+  <section class="bwSeccion">
+    <div class="bwSeccionCab"><div><p class="mini">Explora</p><h2>Todo Tu Elemento</h2></div><p>Cada herramienta usa el mismo perfil activo para que puedas moverte entre ellas sin empezar de nuevo.</p></div>
+    <div class="bwHerramientas">
+      <a class="bwTool" data-tool="carta" href="carta.html"><span class="bwToolIcon">◇</span><span class="tag">Tu lectura base</span><h3>Carta</h3><p>Tu elemento base, cuatro pilares, vacíos, balance e interpretación completa.</p><span class="abrir">Abrir carta</span></a>
+      <a class="bwTool" data-tool="calendario" href="calendario.html"><span class="bwToolIcon">☼</span><span class="tag">Día y mes</span><h3>Calendario</h3><p>Mira el ritmo de una fecha, sus cortes solares y cómo se cruza con tu origen.</p><span class="abrir">Abrir calendario</span></a>
+      <a class="bwTool bwToolDestacado" data-tool="buscar" href="calendario.html?vista=buscar"><span class="bwToolIcon">⌕</span><span class="tag">Selección de fechas</span><h3>Buscar una fecha</h3><p>Elige una actividad, una carta o solo un signo y recorre el año para encontrar días con mejor encaje.</p><span class="abrir">Buscar fechas</span></a>
+      <a class="bwTool" data-tool="mes" href="mes.html"><span class="bwToolIcon">◔</span><span class="tag">Lectura mensual</span><h3>Tu mes</h3><p>Ve qué dinámica gana fuerza, qué ritmo atraviesas y dónde se siente dentro de tu carta.</p><span class="abrir">Ver lectura mensual</span></a>
+      <a class="bwTool" data-tool="ciclos" href="ciclos.html"><span class="bwToolIcon">↗</span><span class="tag">Largo plazo</span><h3>Ciclos</h3><p>Consulta los tramos de diez años de una carta y ubica el periodo que está activo.</p><span class="abrir">Ver ciclos</span></a>
+    </div>
+  </section>
+  <p class="bwPie">Tu Elemento · <b>V2 Broadway</b></p>
+</main>
+<script src="v11/release.js?b=2.0.0-broadway"></script>
+<script src="v11/acuarela.js?b=2.0.0-broadway"></script>
+<script src="v11/zonas.js?b=2.0.0-broadway"></script>
+<script src="v11/motor.js?b=2.0.0-broadway"></script>
+<script src="v11/traduccion.js?b=2.0.0-broadway"></script>
+<script src="v11/base.js?b=2.0.0-broadway"></script>
+<script src="v11/ecosistema.js?b=2.0.0-broadway"></script>
+<script src="v11/broadway-home.js?b=2.0.0-broadway"></script>
+</body>
 </html>
