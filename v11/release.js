@@ -30,5 +30,30 @@
   raiz.TU_ELEMENTO_CODENAMES = CODENAMES.slice();
   raiz.TU_ELEMENTO_RELEASE = RELEASE;
   raiz.nombreVersionTuElemento = nombreVersion;
-  if (typeof document !== 'undefined') document.documentElement.setAttribute('data-release', RELEASE.label);
+
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('data-release', RELEASE.label);
+
+    // Broadway convierte la navegación en parte del shell compartido.
+    // Tomamos como base la carpeta desde la que cargó release.js para que
+    // funcione tanto en /v11/ como desde el nuevo index raíz.
+    var actual = document.currentScript && document.currentScript.src ? document.currentScript.src : '';
+    var base = actual ? actual.replace(/release\.js(?:\?.*)?$/,'') : '';
+    if (base) {
+      if (!document.getElementById('te-ecosistema-css')) {
+        var link = document.createElement('link');
+        link.id = 'te-ecosistema-css';
+        link.rel = 'stylesheet';
+        link.href = base + 'ecosistema.css?b=' + RELEASE.build;
+        document.head.appendChild(link);
+      }
+      if (!document.getElementById('te-ecosistema-js')) {
+        var script = document.createElement('script');
+        script.id = 'te-ecosistema-js';
+        script.src = base + 'ecosistema.js?b=' + RELEASE.build;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+    }
+  }
 })(typeof globalThis !== 'undefined' ? globalThis : this);
