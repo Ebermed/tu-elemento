@@ -1,0 +1,51 @@
+/* TU ELEMENTO V2 BROADWAY — inicio del ecosistema */
+body.broadwayHome{min-height:100vh}
+.broadwayHome main{width:min(1120px,calc(100% - 32px));max-width:1120px!important;margin:0 auto;padding:44px 0 72px!important;display:block!important;text-align:left!important}
+.bwHero{padding:34px 4px 26px;text-align:center}
+.bwKicker{margin:0 0 11px;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--tinta-suave)}
+.bwHero h1{max-width:760px;margin:0 auto;font-family:var(--serif);font-size:clamp(38px,6vw,66px);font-weight:400;line-height:1.02;letter-spacing:-1.5px}
+.bwHero p.bwIntro{max-width:620px;margin:17px auto 0;color:var(--tinta-suave);font-size:clamp(15px,2vw,18px);line-height:1.6}
+.bwHeroAcciones{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:23px}
+
+.bwSeccion{margin-top:24px;padding:25px;border:1px solid rgba(255,255,255,.75);border-radius:30px;background:linear-gradient(150deg,rgba(255,255,255,.52),rgba(255,255,255,.26));box-shadow:0 14px 44px rgba(55,43,35,.075),inset 0 1px 0 rgba(255,255,255,.94);-webkit-backdrop-filter:blur(20px) saturate(150%);backdrop-filter:blur(20px) saturate(150%)}
+.bwSeccionCab{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:17px}
+.bwSeccionCab .mini{margin:0 0 5px;font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:var(--tinta-suave)}
+.bwSeccionCab h2{margin:0;font-family:var(--serif);font-size:clamp(28px,4vw,38px);font-weight:400;line-height:1.08}
+.bwSeccionCab p{max-width:470px;margin:0;color:var(--tinta-suave);font-size:14px;line-height:1.5}
+
+.bwCartas{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px}
+.bwCarta{min-height:245px;padding:20px;display:flex;flex-direction:column;border-radius:24px;border:1px solid rgba(255,255,255,.78);background:rgba(255,253,249,.64);box-shadow:inset 0 1px 0 rgba(255,255,255,.94)}
+.bwCartaIcono{width:54px;height:54px;display:grid;place-items:center;border-radius:18px;border:1px solid rgba(255,255,255,.86);background:rgba(255,255,255,.62);box-shadow:0 5px 18px rgba(54,43,35,.055),inset 0 1px 0 rgba(255,255,255,.98)}
+.bwCartaIcono svg{width:31px;height:31px;fill:none;stroke:var(--acento,var(--tinta-suave));stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bwCartaNombre{margin:19px 0 3px;font-size:10px;font-weight:650;letter-spacing:2px;text-transform:uppercase;color:var(--tinta-suave)}
+.bwCarta h3{margin:0;font-family:var(--serif);font-size:34px;font-weight:400;line-height:1}
+.bwCartaMeta{margin:7px 0 18px;color:var(--tinta-suave);font-size:13px;text-transform:capitalize}
+.bwCartaAcciones{margin-top:auto;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.bwCartaAcciones a{min-height:42px;display:flex;align-items:center;justify-content:center;padding:8px 10px;border:1px solid rgba(255,255,255,.85);border-radius:14px;background:rgba(255,255,255,.58);color:var(--tinta);font-size:12px;text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.95)}
+.bwCartaAcciones a:first-child{grid-column:1/-1;background:rgba(255,255,255,.78);font-weight:600}
+
+.bwHerramientas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.bwTool{position:relative;min-height:215px;padding:23px;display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(255,255,255,.76);border-radius:25px;background:linear-gradient(150deg,rgba(255,255,255,.59),rgba(255,255,255,.27));color:var(--tinta);text-decoration:none;box-shadow:0 8px 26px rgba(55,43,35,.055),inset 0 1px 0 rgba(255,255,255,.94);transition:transform .16s ease,box-shadow .16s ease}
+.bwTool:hover{transform:translateY(-2px);box-shadow:0 13px 33px rgba(55,43,35,.09),inset 0 1px 0 rgba(255,255,255,.98)}
+.bwTool:after{content:'';position:absolute;width:190px;height:190px;border-radius:50%;right:-65px;bottom:-90px;background:radial-gradient(circle,rgba(255,255,255,.52),rgba(255,255,255,0) 68%);pointer-events:none}
+.bwToolIcon{width:45px;height:45px;display:grid;place-items:center;border-radius:15px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.86);font-family:var(--serif);font-size:22px;color:var(--acento,var(--tinta-suave))}
+.bwTool .tag{margin:17px 0 5px;font-size:9px;letter-spacing:1.7px;text-transform:uppercase;color:var(--tinta-suave)}
+.bwTool h3{margin:0 0 7px;font-family:var(--serif);font-size:29px;font-weight:400;line-height:1.1}
+.bwTool p{max-width:410px;margin:0;color:var(--tinta-suave);font-size:14px;line-height:1.5}
+.bwTool .abrir{margin-top:auto;padding-top:18px;font-size:12px;font-weight:650;text-decoration:underline;text-underline-offset:4px}
+.bwToolDestacado{grid-column:span 2;min-height:190px}
+
+.bwVacio{padding:21px;border-radius:20px;background:rgba(255,255,255,.34);color:var(--tinta-suave);text-align:center}
+.bwPie{text-align:center;margin:34px 0 0;color:var(--tinta-suave);font-size:12px}.bwPie b{font-weight:600;color:var(--tinta)}
+
+@media(max-width:720px){
+  .broadwayHome main{width:min(100% - 22px,620px);padding-top:25px!important}
+  .bwHero{padding:25px 8px 18px}
+  .bwHero h1{font-size:clamp(38px,12vw,54px)}
+  .bwSeccion{padding:18px;border-radius:24px}
+  .bwSeccionCab{display:block}.bwSeccionCab p{margin-top:8px}
+  .bwHerramientas{grid-template-columns:1fr}.bwTool,.bwToolDestacado{grid-column:auto;min-height:185px}
+  .bwCartas{grid-template-columns:1fr 1fr}
+}
+@media(max-width:500px){.bwCartas{grid-template-columns:1fr}.bwCarta{min-height:220px}.bwCartaAcciones{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.bwTool{transition:none}}
