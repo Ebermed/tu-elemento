@@ -18,6 +18,8 @@ jobs:
       - name: Syntax
         run: |
           for f in v11/*.js; do node --check "$f"; done
+      - name: Editorial antithesis guard
+        run: node v11/audit-copy-style.js
       - name: Core calculations
         run: |
           cd v11
