@@ -8,12 +8,12 @@
   ];
 
   var RELEASE = Object.freeze({
-    major: 1,
+    major: 2,
     minor: 0,
     patch: 0,
-    codename: CODENAMES[0],
-    label: 'V1 Artx',
-    build: '1.0.0-artx'
+    codename: CODENAMES[1],
+    label: 'V2 Broadway',
+    build: '2.0.0-broadway'
   });
 
   function nombreVersion(major, minor, patch) {
