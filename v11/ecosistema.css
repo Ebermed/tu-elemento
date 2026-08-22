@@ -1,0 +1,31 @@
+/* TU ELEMENTO V2 BROADWAY — navegación compartida */
+:root{--eco-top:68px}
+body{padding-top:var(--eco-top)}
+.teEcoNav{position:fixed;z-index:1000;top:0;left:0;right:0;height:var(--eco-top);display:flex;align-items:center;justify-content:center;padding:9px 18px;pointer-events:none}
+.teEcoBar{width:min(1120px,100%);min-height:50px;display:flex;align-items:center;gap:16px;padding:6px 8px 6px 16px;border:1px solid rgba(255,255,255,.78);border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.70),rgba(255,255,255,.38));box-shadow:0 9px 28px rgba(53,42,34,.09),inset 0 1px 0 rgba(255,255,255,.96);-webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);pointer-events:auto}
+.teEcoBrand{display:inline-flex;align-items:center;gap:9px;min-width:max-content;color:var(--tinta,#2E2A26);text-decoration:none}
+.teEcoMark{width:27px;height:27px;display:grid;place-items:center;border-radius:9px;border:1px solid rgba(255,255,255,.86);background:rgba(255,255,255,.52);font-family:Georgia,serif;font-size:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.95)}
+.teEcoBrand span:last-child{font:600 12px/1.1 var(--sans,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif);letter-spacing:1.8px;text-transform:uppercase}
+.teEcoLinks{margin-left:auto;display:flex;align-items:center;gap:2px}
+.teEcoLinks a{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 12px;border-radius:13px;color:var(--tinta-suave,#716960);font:500 12px/1 var(--sans,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif);text-decoration:none;white-space:nowrap;transition:background .16s ease,color .16s ease,transform .14s ease}
+.teEcoLinks a:hover{background:rgba(255,255,255,.52);color:var(--tinta,#2E2A26)}
+.teEcoLinks a:active{transform:scale(.97)}
+.teEcoLinks a[aria-current="page"]{background:rgba(255,255,255,.74);color:var(--tinta,#2E2A26);box-shadow:0 3px 12px rgba(53,42,34,.055),inset 0 1px 0 rgba(255,255,255,.96)}
+.teEcoMenuBtn{display:none;margin-left:auto;width:40px;height:40px;padding:0;border:1px solid rgba(255,255,255,.82);border-radius:13px;background:rgba(255,255,255,.55);color:var(--tinta,#2E2A26);cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.96)}
+.teEcoMenuBtn span,.teEcoMenuBtn:before,.teEcoMenuBtn:after{content:'';display:block;width:17px;height:1.5px;margin:4px auto;border-radius:2px;background:currentColor;transition:transform .2s ease,opacity .2s ease}
+.teEcoMenuBtn[aria-expanded="true"] span{opacity:0}.teEcoMenuBtn[aria-expanded="true"]:before{transform:translateY(5.5px) rotate(45deg)}.teEcoMenuBtn[aria-expanded="true"]:after{transform:translateY(-5.5px) rotate(-45deg)}
+.teEcoBackdrop{display:none;position:fixed;z-index:998;inset:0;background:rgba(42,34,29,.12);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.teEcoVersion{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.38);color:var(--tinta-suave,#716960);font:500 9px/1 var(--sans,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif);letter-spacing:.9px;text-transform:uppercase;white-space:nowrap}
+
+@media(max-width:760px){
+  :root{--eco-top:64px}
+  .teEcoNav{padding:7px 10px}
+  .teEcoBar{min-height:48px;border-radius:18px;padding-left:13px}
+  .teEcoMenuBtn{display:block}
+  .teEcoVersion{display:none}
+  .teEcoLinks{position:fixed;z-index:1001;top:69px;left:10px;right:10px;margin:0;padding:10px;display:grid;grid-template-columns:1fr;gap:4px;border:1px solid rgba(255,255,255,.84);border-radius:20px;background:rgba(252,248,242,.94);box-shadow:0 18px 48px rgba(48,38,32,.16),inset 0 1px 0 rgba(255,255,255,.98);-webkit-backdrop-filter:blur(28px) saturate(160%);backdrop-filter:blur(28px) saturate(160%);transform:translateY(-10px) scale(.985);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,transform .18s ease,visibility .18s}
+  .teEcoLinks.abierto{transform:none;opacity:1;visibility:visible;pointer-events:auto}
+  .teEcoLinks a{justify-content:flex-start;min-height:47px;padding:11px 14px;border-radius:14px;font-size:15px}
+  .teEcoBackdrop.abierto{display:block}
+}
+@media(prefers-reduced-motion:reduce){.teEcoLinks,.teEcoLinks a,.teEcoMenuBtn span,.teEcoMenuBtn:before,.teEcoMenuBtn:after{transition:none}}
