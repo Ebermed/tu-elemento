@@ -44,6 +44,19 @@ jobs:
           if(hits.length) throw new Error('Vocabulario mensual reservado detectado: '+hits.join(', '));
           console.log('Monthly vocabulary guard: OK');
           NODE
+      - name: Deep reading language guard
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const text=fs.readFileSync('v11/carta-profunda-ui.js','utf8');
+          const forbidden=[
+            /Trauma Raíz/i,/Dios Útil/i,/Palacio de Vida/i,/Palacio de la Concepción/i,
+            /vida corta/i,/familia pobre/i,/persona mediocre/i,/problemas karmáticos/i
+          ];
+          const hits=forbidden.filter(r=>r.test(text)).map(String);
+          if(hits.length) throw new Error('Lenguaje reservado o determinista en Carta profunda: '+hits.join(', '));
+          console.log('Deep reading language guard: OK');
+          NODE
       - name: Runtime architecture contract
         run: |
           node - <<'NODE'
@@ -76,13 +89,13 @@ jobs:
           const cycles=fs.readFileSync('v11/ciclos.html','utf8');
           const chart=fs.readFileSync('v11/index.html','utf8');
           function ok(v,msg){if(!v)throw new Error(msg)}
-          ['carta.html','nueva.html','calendario.html','mes.html','ciclos.html','v11/ciclos.html','v11/ecosistema.css','v11/ecosistema.js','v11/broadway-home.js','v11/broadway-dashboard.css','v11/broadway-colors.css','v11/carta-profunda.css','v11/carta-profunda.js','v11/carta-profunda-ui.js','v11/test-carta-profunda.js'].forEach(f=>ok(fs.existsSync(f),'missing '+f));
+          ['carta.html','nueva.html','calendario.html','mes.html','ciclos.html','v11/ciclos.html','v11/ecosistema.css','v11/ecosistema.js','v11/broadway-home.js','v11/broadway-dashboard.css','v11/broadway-colors.css','v11/carta-profunda.css','v11/carta-profunda.js','v11/carta-profunda-contexto.js','v11/carta-profunda-ui.js','v11/test-carta-profunda.js'].forEach(f=>ok(fs.existsSync(f),'missing '+f));
           ok(home.includes('broadwayHome')&&home.includes('data-tool="carta"')&&home.includes('data-tool="buscar"')&&home.includes('data-tool="nueva"'),'Broadway home graph');
           ok(!home.includes('location.replace'),'home must be a real hub');
           ok(release.includes("label: 'V2 Broadway'")&&/build:\s*'2\.\d+\.\d+-broadway'/.test(release),'Broadway release metadata');
           ok(eco.includes("['carta','Carta'")&&eco.includes("['ciclos','Ciclos'"),'shared navigation items');
           ok(!eco.includes('MutationObserver')&&!eco.includes('requestAnimationFrame'),'navigation stays lightweight');
           ok(cycles.includes('ciclos-page.js')&&cycles.includes('perfilCiclos'),'cycles standalone graph');
-          ok(chart.includes('carta-profunda.js')&&chart.includes('carta-profunda-ui.js')&&chart.includes('lectura-mensual.js'),'deep chart graph');
+          ok(chart.includes('carta-profunda.js')&&chart.includes('carta-profunda-contexto.js')&&chart.includes('carta-profunda-ui.js')&&chart.includes('lectura-mensual.js'),'deep chart graph');
           console.log('Broadway ecosystem contract: OK');
           NODE
