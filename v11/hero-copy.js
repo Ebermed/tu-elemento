@@ -1,52 +1,10 @@
-/** TU ELEMENTO V2 BROADWAY — microcopy del hero y capa de lectura general. */
 (function(){
-  'use strict';
-  if(typeof document==='undefined')return;
-
-  var COPY={
-    'madera|Yang':'firme, vertical y orientado a crecer con dirección.',
-    'madera|Yin':'flexible, conectado y capaz de encontrar por dónde seguir.',
-    'fuego|Yang':'visible, expansivo y capaz de cambiar el ánimo de un lugar.',
-    'fuego|Yin':'concentrado, íntimo y capaz de sostener calor durante mucho tiempo.',
-    'tierra|Yang':'estable, sólido y fácil de convertir en punto de apoyo.',
-    'tierra|Yin':'fértil, cuidadoso y atento a lo que necesita cada cosa para crecer.',
-    'metal|Yang':'directo, estructurado y hecho para cortar lo que estorba.',
-    'metal|Yin':'preciso, sensible al detalle y pendiente de la forma final.',
-    'agua|Yang':'amplio, móvil y capaz de conectar muchas cosas a la vez.',
-    'agua|Yin':'sutil, observador y muy atento a lo que cambia en el ambiente.'
-  };
-
-  function cap(x){x=String(x||'');return x?x.charAt(0).toUpperCase()+x.slice(1):'';}
-
-  function pulir(){
-    var hero=document.getElementById('resultadoHero');
-    if(!hero)return;
-    var elemento=hero.querySelector('.resultadoElemento');
-    var descripcion=hero.querySelector('.resultadoDescripcion');
-    if(!elemento||!descripcion||descripcion.getAttribute('data-copy-broadway')==='1')return;
-    var partes=elemento.textContent.split('·').map(function(x){return x.trim();});
-    if(partes.length<2)return;
-    var el=partes[0].toLowerCase(),pol=partes[1],texto=COPY[el+'|'+pol];
-    if(!texto)return;
-    descripcion.innerHTML='<strong>Eres '+cap(el)+' '+pol+'</strong><span aria-hidden="true"> &nbsp;|&nbsp; </span>Tu elemento es '+texto;
-    descripcion.setAttribute('data-copy-broadway','1');
-  }
-
-  function cargarLecturaGeneral(){
-    if(!document.getElementById('te-carta-general-css')){
-      var css=document.createElement('link');
-      css.id='te-carta-general-css';css.rel='stylesheet';css.href='carta-general-v2.css?b=2.1.3-broadway';document.head.appendChild(css);
-    }
-    if(!document.getElementById('te-carta-general-js')){
-      var js=document.createElement('script');
-      js.id='te-carta-general-js';js.src='carta-general-v2.js?b=2.1.3-broadway';document.body.appendChild(js);
-    }
-  }
-
-  pulir();
-  var hero=document.getElementById('resultadoHero');
-  if(hero&&typeof MutationObserver!=='undefined')new MutationObserver(function(){pulir();}).observe(hero,{childList:true,subtree:true});
-
-  if(document.readyState==='complete')cargarLecturaGeneral();
-  else window.addEventListener('load',cargarLecturaGeneral,{once:true});
+'use strict';
+if(typeof document==='undefined')return;
+var COPY={"madera yang":{"title":"Eres alguien que no se dobla.","body":"Cuando decides algo, lo decidiste, y a la gente le queda clarísimo. Te cuesta pedir ayuda porque genuinamente se te ocurre primero cómo resolverlo por tu cuenta. Por fuera aguantas todo. Por dentro las cosas te afectan más de lo que dejas ver."},"madera yin":{"title":"Siempre encuentras por dónde.","body":"Te acomodas a casi cualquier cosa y la gente confunde eso con que te da igual. Lo que pasa es que sabes que hay diez formas de llegar y estás escogiendo la que menos cuesta. Tu humor funciona como armadura, y funciona tan bien que casi nadie te pregunta cómo estás de verdad."},"fuego yang":{"title":"Entras a un lugar y el lugar cambia de temperatura.","body":"No lo haces a propósito y a veces ni te enteras. Le das energía a todo mundo y luego llegas a tu casa sin batería. Con la gente eres flexible. Con tus planes eres otra cosa. El plan A es el plan A."},"fuego yin":{"title":"Eres la vela que aguantó toda la noche.","body":"Necesitas un empujón para arrancar, pero cuando arrancas duras más que nadie. Y sí: te importa muchísimo que alguien note que estuviste ahí, aunque jamás se lo pedirías."},"tierra yang":{"title":"Eres a quien le escriben a las 2 de la mañana.","body":"Todo mundo te cuenta todo. Tú no cuentas casi nada. Confías en la gente, simplemente no te sale. Terminas cargando broncas que ni siquiera eran tuyas, y no se te ocurre que las puedes soltar."},"tierra yin":{"title":"Contigo las cosas crecen.","body":"Te acuerdas de lo que le gusta a cada quien. Das lo que hace falta antes de que te lo pidan. Y por dentro tienes una opinión muy firme sobre cómo deberían hacerse las cosas, que casi nunca dices en voz alta."},"metal yang":{"title":"Cortas. A veces antes de tiempo, casi nunca sin razón.","body":"Dices la verdad aunque incomode y después no entiendes por qué la gente se ofendió. Para ti nada más era información. Eres leal hasta que alguien cruza una línea; cuando la cruza, se acabó, y no hay regreso."},"metal yin":{"title":"Ves la costura que nadie más vio.","body":"El margen chueco, el tono que no combina, la frase que sobraba. Te importa cómo se ve, y sí importa, aunque te hayan dicho que es exagerado. Y te acuerdas del comentario que alguien te hizo hace tres años, aunque quien lo dijo ya lo olvidó."},"agua yang":{"title":"Conoces a alguien en todos lados.","body":"Te aburres rápido, te mueves rápido y conectas gente que jamás se habría conocido sin ti. También abres quince pestañas y cierras tres. Lo que te falta rara vez son ideas."},"agua yin":{"title":"Sientes el ambiente antes de que pase algo.","body":"Entras a un cuarto y sabes quién está enojado sin que nadie diga nada. La gente no siempre sabe qué estás pensando. A veces ni tú. Tu forma de resolver casi nunca es la línea recta."}};
+function cap(x){x=String(x||'');return x?x.charAt(0).toUpperCase()+x.slice(1):'';}
+function pulir(){var hero=document.getElementById('resultadoHero');if(!hero)return false;var elemento=hero.querySelector('.resultadoElemento'),descripcion=hero.querySelector('.resultadoDescripcion');if(!elemento||!descripcion)return false;var partes=elemento.textContent.split('·').map(function(x){return x.trim();});if(partes.length<2)return false;var etiqueta=cap(partes[0].toLowerCase())+' '+partes[1],c=COPY[etiqueta.toLowerCase()];if(!c)return false;var firma=etiqueta+'|'+c.title;if(descripcion.getAttribute('data-copy-v3')===firma)return true;descripcion.innerHTML='<span class="v3HeroIdentidad">Eres '+etiqueta+'</span><strong class="v3HeroGancho">'+c.title+'</strong><span class="v3HeroCuerpo">'+c.body+'</span>';descripcion.setAttribute('data-copy-v3',firma);return true;}
+function intentar(n){if(pulir())return;if(n<8)setTimeout(function(){intentar(n+1);},80+n*35);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){intentar(0);},{once:true});else intentar(0);
+var hero=document.getElementById('resultadoHero');if(hero&&typeof MutationObserver!=='undefined')new MutationObserver(function(){pulir();}).observe(hero,{childList:true,subtree:true});
 })();
