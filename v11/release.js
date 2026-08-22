@@ -9,11 +9,11 @@
 
   var RELEASE = Object.freeze({
     major: 2,
-    minor: 0,
-    patch: 3,
+    minor: 1,
+    patch: 0,
     codename: CODENAMES[1],
     label: 'V2 Broadway',
-    build: '2.0.3-broadway'
+    build: '2.1.0-broadway'
   });
 
   function nombreVersion(major, minor, patch) {
