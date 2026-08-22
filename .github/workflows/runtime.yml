@@ -26,6 +26,7 @@ jobs:
           node test-mensual.js
           node test-mes-solar.js
           node test-calendario-solar.js
+          node test-carta-profunda.js
       - name: Monthly vocabulary guard
         run: |
           node - <<'NODE'
@@ -73,13 +74,15 @@ jobs:
           const release=fs.readFileSync('v11/release.js','utf8');
           const eco=fs.readFileSync('v11/ecosistema.js','utf8');
           const cycles=fs.readFileSync('v11/ciclos.html','utf8');
+          const chart=fs.readFileSync('v11/index.html','utf8');
           function ok(v,msg){if(!v)throw new Error(msg)}
-          ['carta.html','nueva.html','calendario.html','mes.html','ciclos.html','v11/ciclos.html','v11/ecosistema.css','v11/ecosistema.js','v11/broadway-home.js','v11/broadway-dashboard.css','v11/broadway-colors.css'].forEach(f=>ok(fs.existsSync(f),'missing '+f));
+          ['carta.html','nueva.html','calendario.html','mes.html','ciclos.html','v11/ciclos.html','v11/ecosistema.css','v11/ecosistema.js','v11/broadway-home.js','v11/broadway-dashboard.css','v11/broadway-colors.css','v11/carta-profunda.css','v11/carta-profunda.js','v11/carta-profunda-ui.js','v11/test-carta-profunda.js'].forEach(f=>ok(fs.existsSync(f),'missing '+f));
           ok(home.includes('broadwayHome')&&home.includes('data-tool="carta"')&&home.includes('data-tool="buscar"')&&home.includes('data-tool="nueva"'),'Broadway home graph');
           ok(!home.includes('location.replace'),'home must be a real hub');
           ok(release.includes("label: 'V2 Broadway'")&&/build:\s*'2\.\d+\.\d+-broadway'/.test(release),'Broadway release metadata');
           ok(eco.includes("['carta','Carta'")&&eco.includes("['ciclos','Ciclos'"),'shared navigation items');
           ok(!eco.includes('MutationObserver')&&!eco.includes('requestAnimationFrame'),'navigation stays lightweight');
           ok(cycles.includes('ciclos-page.js')&&cycles.includes('perfilCiclos'),'cycles standalone graph');
+          ok(chart.includes('carta-profunda.js')&&chart.includes('carta-profunda-ui.js')&&chart.includes('lectura-mensual.js'),'deep chart graph');
           console.log('Broadway ecosystem contract: OK');
           NODE
