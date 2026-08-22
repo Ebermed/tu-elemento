@@ -26,7 +26,6 @@
   function formaDinamica(d){return d.forma==='paralela'?'polaridad paralela':'polaridad cruzada';}
   function fechaCorta(d){return d.dia+' '+MESES[d.mes-1].slice(0,3);}
   function rangoSolar(p){return fechaCorta(p.inicioLocal)+' — '+fechaCorta(p.finLocal);}
-
   function listaHTML(arr){return '<ul class="mesLista">'+arr.map(function(x){return '<li>'+esc(cap(x))+'</li>';}).join('')+'</ul>';}
 
   function pintarSelector(){
@@ -64,12 +63,12 @@
     var periodo=l.periodoSolar;
     $('#mesTitulo').textContent=nombreMes(fechaVista);
 
-    var dinamica=l.dinamicaPrincipal,ritmo=l.ritmo,id=IDENTIDADES[carta.diaMaestro.pinyin],nombreCarta=etiquetaPerfil(perfil);
+    var dinamica=l.dinamicaPrincipal,ritmo=l.ritmo,nombreCarta=etiquetaPerfil(perfil);
 
     var h='<article class="vidrio mesHero">'+
       '<p class="mesEyebrow">'+esc(MESES[mes-1]+' solar · '+rangoSolar(periodo)+' · '+nombreCarta)+'</p>'+
       '<h2>'+esc(l.resumen.titulo)+'</h2>'+
-      '<p class="mesPilar">'+esc(etiquetaPilar(l.pilar))+' · dinámica '+esc(dinamica.nombre)+'</p>'+
+      '<p class="mesPilar">'+esc(etiquetaPilar(l.pilar))+' · '+esc(dinamica.nombre)+'</p>'+
       '<div class="mesEtapaWrap">'+
         '<p class="mesEtapaRot">Tu ritmo del mes</p>'+
         '<p class="mesEtapa">'+esc(ritmo.nombre)+'</p>'+
@@ -78,10 +77,10 @@
       '</div></article>';
 
     h+='<section class="mesSeccion">'+
-      '<p class="mesClave">Dinámica del mes</p>'+
-      '<h3>'+esc(dinamica.nombre)+' · '+esc(l.area.titulo)+'</h3>'+
+      '<p class="mesClave">Qué se mueve</p>'+
+      '<h3>'+esc(l.area.titulo)+'</h3>'+
       '<p>'+esc(dinamica.matiz)+'</p>'+
-      '<p class="mesSub">La relación elemental del tallo mensual con tu '+esc(id.nombre)+' pone atención en '+esc(l.area.tema)+'.</p>'+
+      '<p class="mesSub">Este mes pone más atención en '+esc(l.area.tema)+'.</p>'+
     '</section>';
 
     h+='<section class="mesSeccion">'+
@@ -91,20 +90,21 @@
     '</section>';
 
     h+='<div class="mesDos">'+
-      '<section class="mesSeccion"><p class="mesClave">Puede moverse</p><h3>Lo que puede aparecer</h3>'+listaHTML(l.resumen.puede)+'</section>'+
-      '<section class="mesSeccion"><p class="mesClave">Para trabajar</p><h3>Cómo aprovecharlo</h3>'+listaHTML(l.resumen.trabajar)+'</section>'+
+      '<section class="mesSeccion"><p class="mesClave">Puede aparecer</p><h3>Lo que puede moverse</h3>'+listaHTML(l.resumen.puede)+'</section>'+
+      '<section class="mesSeccion"><p class="mesClave">Para aprovecharlo</p><h3>Qué puedes hacer</h3>'+listaHTML(l.resumen.trabajar)+'</section>'+
     '</div>';
 
-    h+='<section class="mesSeccion"><p class="mesClave">Pon atención a</p><h3>El costo del mes</h3><p>'+esc(l.resumen.atencion)+'</p><p class="mesSub">Usa el ritmo como referencia para decidir dónde poner energía y dónde guardar margen.</p></section>';
+    h+='<section class="mesSeccion"><p class="mesClave">Pon atención a</p><h3>Lo que puede complicarlo</h3><p>'+esc(l.resumen.atencion)+'</p><p class="mesSub">Úsalo como recordatorio para decidir dónde vale la pena poner energía y dónde conviene guardar margen.</p></section>';
 
     h+='<section class="mesSeccion"><p class="mesClave">Dónde se siente</p><h3>El mes frente a tus pilares</h3>';
     if(l.interacciones.length){
       l.interacciones.forEach(function(x){h+='<div class="mesInter"><b>'+esc(x.titulo)+'</b><span>'+esc(x.tipo)+'</span><p>'+esc(x.texto)+'</p></div>';});
     }else{
-      h+='<p>El peso principal de este mes queda en la dinámica '+esc(dinamica.nombre)+' y en el ritmo '+esc(ritmo.nombre)+'. Tus cuatro ramas natales aportan un fondo más estable durante este tramo.</p>';
+      h+='<p>Este mes no forma un cruce directo con tus ramas natales. La parte principal de la lectura queda en '+esc(l.area.titulo.toLowerCase())+' y en el ritmo '+esc(ritmo.nombre)+'.</p>';
     }
     h+='</section>';
 
+    var id=IDENTIDADES[carta.diaMaestro.pinyin];
     h+='<details class="mesTecnico"><summary>¿Cómo salió esta lectura?</summary><div class="mesSeccion">'+
       '<p><strong>Corte solar:</strong> '+esc(periodo.inicio.nombre)+' → '+esc(periodo.fin.nombre)+' · '+esc(rangoSolar(periodo))+'.</p>'+
       '<p><strong>Año solar vigente:</strong> '+esc(l.pilarAnio.nombre)+' · cambia en Li Chun.</p>'+
@@ -118,7 +118,7 @@
       h+='<div class="mesPerfilFila"><div><span class="mesPerfilCodigo">'+esc(d.nombre.slice(0,2).toUpperCase())+'</span></div><div><b>'+esc(d.nombre)+'</b><small>'+esc(d.tallo.pinyin)+' · '+esc(cap(d.tallo.elemento))+' '+(d.tallo.yang?'Yang':'Yin')+' · '+esc(formaDinamica(d))+'</small></div></div>';
     });
 
-    h+='<p class="mesNota">Las dinámicas y los doce ritmos son nombres editoriales propios de Tu Elemento. Los meses se delimitan por los doce cortes solares Jié; la fecha civil mostrada corresponde a la zona horaria guardada en esta carta.</p></div></details>';
+    h+='<p class="mesNota">Las dinámicas y los doce ritmos son nombres editoriales propios de Tu Elemento. Los meses se delimitan por los cortes solares Jié; la fecha mostrada usa la zona horaria guardada en esta carta.</p></div></details>';
 
     var caja=$('#mesContenido');caja.classList.remove('mesEntrada');caja.innerHTML=h;void caja.offsetWidth;caja.classList.add('mesEntrada');
   }
